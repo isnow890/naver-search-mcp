@@ -1,20 +1,36 @@
 import { z } from "zod";
 
+const sortEnum = z.enum(["sim", "date"]);
+
 // 기본 검색 파라미터 스키마
 export const SearchArgsSchema = z.object({
-  query: z.string().describe("Search query"),
-  display: z
-    .number()
-    .optional()
-    .describe("Number of results to display (default: 10)"),
-  start: z
-    .number()
-    .optional()
-    .describe("Start position of search results (default: 1)"),
-  sort: z
-    .enum(["sim", "date"])
-    .optional()
-    .describe("Sort method (sim: similarity, date: date)"),
+  query: z.string(),
+  display: z.number().optional(),
+  start: z.number().optional(),
+  sort: sortEnum.optional(),
 });
 
-export type SearchArgs = z.infer<typeof SearchArgsSchema>; 
+export const UnifiedSearchArgsSchema = z.object({
+  query: z.string(),
+  display: z.number().optional(),
+  start: z.number().optional(),
+  sort: sortEnum.optional(),
+  types: z
+    .array(
+      z.enum([
+        "webkr",
+        "blog",
+        "news",
+        "encyc",
+        "book",
+        "cafearticle",
+        "kin",
+        "shop",
+        "image",
+      ])
+    )
+    .default(["webkr", "blog", "news"]), // 기본값으로 웹문서, 블로그, 뉴스 검색
+});
+
+export type SearchArgs = z.infer<typeof SearchArgsSchema>;
+export type UnifiedSearchArgs = z.infer<typeof UnifiedSearchArgsSchema>;

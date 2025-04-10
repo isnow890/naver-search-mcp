@@ -7,7 +7,10 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { NaverSearchClient } from "./naver-search.client.js";
-import { SearchArgsSchema } from "./schemas/search.schemas.js";
+import {
+  SearchArgsSchema,
+  UnifiedSearchArgsSchema,
+} from "./schemas/search.schemas.js";
 import { searchTools } from "./tools/search.tools.js";
 import { datalabTools } from "./tools/datalab.tools.js";
 import {
@@ -24,6 +27,7 @@ import {
   handleShopSearch,
   handleWebSearch,
   handleWebKrSearch,
+  handleUnifiedSearch,
 } from "./handlers/search.handlers.js";
 import {
   handleSearchTrend,
@@ -101,7 +105,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     let result;
 
     switch (name) {
-      // 검색 API
+      // 통합 검색
+      case "search_unified":
+        result = await handleUnifiedSearch(UnifiedSearchArgsSchema.parse(args));
+        break;
+
+      // 개별 검색 API
       case "search_webkr":
         result = await handleWebKrSearch(SearchArgsSchema.parse(args));
         break;

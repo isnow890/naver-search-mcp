@@ -4,10 +4,34 @@ import {
   NaverDocumentSearchParams,
   NaverLocalSearchParams,
 } from "../types/naver-search.types.js";
-import { SearchArgs } from "../schemas/search.schemas.js";
+import { SearchArgs, UnifiedSearchArgs } from "../schemas/search.schemas.js";
 
 // 클라이언트 인스턴스
 const client = NaverSearchClient.getInstance();
+
+/**
+ * 통합 검색 핸들러
+ */
+export async function handleUnifiedSearch(params: UnifiedSearchArgs) {
+  const { types, ...searchParams } = params;
+  const results: Record<string, any> = {};
+
+  await Promise.all(
+    types.map(async (type) => {
+      try {
+        const result = await client.search({ type, ...searchParams });
+        results[type] = result;
+      } catch (error) {
+        console.error(`Error searching ${type}:`, error);
+        results[type] = {
+          error: error instanceof Error ? error.message : String(error),
+        };
+      }
+    })
+  );
+
+  return results;
+}
 
 /**
  * 기본 검색 핸들러
