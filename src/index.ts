@@ -39,6 +39,7 @@ import {
   handleShoppingKeywordByDeviceTrend,
   handleShoppingKeywordByGenderTrend,
   handleShoppingKeywordsTrend,
+  handleUnifiedDatalab,
 } from "./handlers/datalab.handlers.js";
 
 // 환경 변수 유효성 검사
@@ -105,9 +106,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     let result;
 
     switch (name) {
-      // 통합 검색
+      // 통합 검색/분석
       case "search_unified":
         result = await handleUnifiedSearch(UnifiedSearchArgsSchema.parse(args));
+        break;
+      case "datalab_unified":
+        result = await handleUnifiedDatalab(args);
         break;
 
       // 개별 검색 API
