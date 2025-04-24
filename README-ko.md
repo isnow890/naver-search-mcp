@@ -99,7 +99,7 @@ export NAVER_CLIENT_SECRET=your_client_secret
 #### NPX로 실행
 
 ```bash
-npx @modelcontextprotocol/server-naver-search
+npx @isnow890/naver-search-mcp
 ```
 
 #### Docker로 실행
@@ -111,7 +111,7 @@ docker run -i --rm \
   mcp/naver-search
 ```
 
-## Cursor Desktop 구성
+## Claude Desktop 구성
 
 `claude_desktop_config.json`에 추가:
 
@@ -120,7 +120,26 @@ docker run -i --rm \
   "mcpServers": {
     "naver-search": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-naver-search"],
+      "args": ["-y", "@isnow890/naver-search-mcp"],
+      "env": {
+        "NAVER_CLIENT_ID": "your_client_id",
+        "NAVER_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
+## Cursor AI 구성
+
+Add to `mcp.json`에 추가:
+
+```json
+{
+  "mcpServers": {
+    "naver-search": {
+      "command": "npx",
+      "args": ["-y", "@isnow890/naver-search-mcp"],
       "env": {
         "NAVER_CLIENT_ID": "your_client_id",
         "NAVER_CLIENT_SECRET": "your_client_secret"
@@ -151,6 +170,7 @@ Docker의 경우:
   }
 }
 ```
+
 ## 빌드
 
 Docker 빌드:

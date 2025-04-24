@@ -99,7 +99,7 @@ export NAVER_CLIENT_SECRET=your_client_secret
 #### Run with NPX
 
 ```bash
-npx @modelcontextprotocol/server-naver-search
+npx @isnow890/naver-search-mcp
 ```
 
 #### Run with Docker
@@ -111,7 +111,7 @@ docker run -i --rm \
   mcp/naver-search
 ```
 
-## Cursor Desktop Configuration
+## Claude Desktop Configuration
 
 Add to `claude_desktop_config.json`:
 
@@ -120,7 +120,26 @@ Add to `claude_desktop_config.json`:
   "mcpServers": {
     "naver-search": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-naver-search"],
+      "args": ["-y", "@isnow890/naver-search-mcp"],
+      "env": {
+        "NAVER_CLIENT_ID": "your_client_id",
+        "NAVER_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
+## Cursor AI Configuration
+
+Add to `mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "naver-search": {
+      "command": "npx",
+      "args": ["-y", "@isnow890/naver-search-mcp"],
       "env": {
         "NAVER_CLIENT_ID": "your_client_id",
         "NAVER_CLIENT_SECRET": "your_client_secret"
@@ -151,6 +170,7 @@ For Docker:
   }
 }
 ```
+
 ## Build
 
 Docker build:
@@ -158,8 +178,6 @@ Docker build:
 ```bash
 docker build -t mcp/naver-search .
 ```
-
-
 
 ## License
 
