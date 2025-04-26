@@ -61,7 +61,7 @@ client.initialize({
 const server = new Server(
   {
     name: "naver-search",
-    version: "1.0.0",
+    version: "1.0.14",
   },
   {
     capabilities: {
