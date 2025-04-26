@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import pkg from "../package.json" with { type: "json" };
 
 console.error("[MCP] dotenv import 완료");
 
@@ -42,7 +43,7 @@ console.error("[MCP] NaverSearchClient 초기화 완료");
 const server = new Server(
   {
     name: "naver-search",
-    version: "1.0.6",
+    version: pkg.version,
   },
   {
     capabilities: {
