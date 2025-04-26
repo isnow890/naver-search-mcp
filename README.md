@@ -8,19 +8,23 @@ MCP server for Naver Search API and DataLab API integration, enabling comprehens
 
 #### Version History
 
-## 1.0.1 (2025-04-26)
+###### 1.0.2 (2025-04-26)
+
+- README updated: cafe article search tool and version history section improved
+
+###### 1.0.1 (2025-04-26)
 
 - Cafe article search feature added
 - Shopping category info added to zod
 - Source code refactored
 
-## 1.0.0 (2025-04-08)
+###### 1.0.0 (2025-04-08)
 
 - Initial release
 
 #### Information
 
-If you want to install the MCP via npm, do NOT use @mseep/server-naver-search (https://www.npmjs.com/package/@mseep/server-naver-search). That package is a copy of my work and was published without my permission. The npx version of that package is also broken and will not work properly. Please use this official package instead.
+**If you want to install the MCP via npm, do NOT use @mseep/server-naver-search (https://www.npmjs.com/package/@mseep/server-naver-search). That package is a copy of my work and was published without my permission. The npx version of that package is also broken and will not work properly. Please use this official package instead.**
 
 #### Prerequisites
 
@@ -46,6 +50,7 @@ If you want to install the MCP via npm, do NOT use @mseep/server-naver-search (h
 - **search_webkr**: Search Naver web documents
 - **search_news**: Search Naver news
 - **search_blog**: Search Naver blogs
+- **search_cafearticle**: Search Naver cafe articles
 - **search_shop**: Search Naver shopping
 - **search_image**: Search Naver images
 - **search_kin**: Search Naver KnowledgeiN
