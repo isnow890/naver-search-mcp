@@ -90,10 +90,9 @@ function createErrorResponse(error: unknown): {
 
 // 도구 실행 요청 핸들러 등록
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+  console.error(`[CallTool] 요청: ${name} | 파라미터:`, args);
   try {
-    const { name, arguments: args } = request.params;
-    console.error(`Executing tool: ${name} with args:`, args);
-
     if (!args) {
       throw new Error("Arguments are required");
     }
@@ -161,16 +160,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "datalab_shopping_keyword_by_age":
         result = await handleShoppingKeywordByAgeTrend(args as any);
         break;
-
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
-
-    console.error(`Tool ${name} executed successfully`);
-    return {
-      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-    };
+    console.error(`[CallTool] 결과: ${name} | 결과:`, result);
+    return result;
   } catch (error) {
+    console.error(`[CallTool] 에러: ${name} | 에러:`, error);
     return createErrorResponse(error);
   }
 });
