@@ -1,8 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
-  NaverSearchType,
-  NaverSearchConfig,
-  NaverSearchParams,
   NaverSearchResponse,
   DatalabSearchRequest,
   DatalabShoppingResponse,
@@ -15,9 +12,15 @@ import {
   NaverDocumentSearchResponse,
   NaverEncyclopediaSearchResponse,
   NaverLocalSearchResponse,
+} from "./types/naver-search.types.js";
+
+import {
+  NaverSearchType,
+  NaverSearchConfig,
+  NaverSearchParams,
   NaverLocalSearchParams,
   NaverDocumentSearchParams,
-} from "./types/naver-search.types.js";
+} from "./schemas/search.schemas.js";
 
 /**
  * NaverSearchClient - 네이버 API 서비스를 위한 싱글톤 클라이언트
@@ -71,17 +74,15 @@ export class NaverSearchClient {
   /**
    * 모든 검색 유형을 지원하는 일반 검색 메서드
    */
-  async search<T extends NaverSearchResponse, P extends NaverSearchParams = NaverSearchParams>(
-    params: P & { type: NaverSearchType }
-  ): Promise<T> {
+  async search<
+    T extends NaverSearchResponse,
+    P extends NaverSearchParams = NaverSearchParams
+  >(params: P & { type: NaverSearchType }): Promise<T> {
     const { type, ...searchParams } = params;
-    const response = await axios.get<T>(
-      `${this.searchBaseUrl}/${type}`,
-      {
-        params: searchParams,
-        ...this.getHeaders(),
-      }
-    );
+    const response = await axios.get<T>(`${this.searchBaseUrl}/${type}`, {
+      params: searchParams,
+      ...this.getHeaders(),
+    });
     return response.data;
   }
 

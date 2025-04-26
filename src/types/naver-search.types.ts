@@ -1,224 +1,152 @@
-import { z } from "zod";
-
-export const NaverSearchTypeSchema = z.enum([
-  "news",
-  "encyc",
-  "blog",
-  "shop",
-  "webkr",
-  "image",
-  "doc",
-  "kin",
-  "book",
-  "cafearticle",
-  "local",
-]);
-
-export type NaverSearchType = z.infer<typeof NaverSearchTypeSchema>;
-
-export const NaverSearchParamsSchema = z.object({
-  query: z.string().describe("Search query"),
-  display: z
-    .number()
-    .optional()
-    .describe("Number of results to display (default: 10)"),
-  start: z
-    .number()
-    .optional()
-    .describe("Start position of search results (default: 1)"),
-  sort: z
-    .enum(["sim", "date"])
-    .optional()
-    .describe("Sort method (sim: similarity, date: chronological)"),
-});
-
-export type NaverSearchParams = z.infer<typeof NaverSearchParamsSchema>;
-
-export const NaverSearchConfigSchema = z.object({
-  clientId: z.string().describe("Client ID issued by Naver Developer Center"),
-  clientSecret: z
-    .string()
-    .describe("Client Secret issued by Naver Developer Center"),
-});
-
-export type NaverSearchConfig = z.infer<typeof NaverSearchConfigSchema>;
-
+// 네이버 검색 API 공통 응답 타입
 export interface NaverSearchResponse {
-  lastBuildDate: string; // Timestamp when the search results were generated
-  total: number; // Total number of search results
-  start: number; // Start position of search results
-  display: number; // Number of items displayed
-  items: NaverSearchItem[];
-  isError?: boolean;
+  lastBuildDate: string; // 검색 결과 생성 시각 (RFC822)
+  total: number; // 전체 검색 결과 수
+  start: number; // 검색 시작 위치
+  display: number; // 한 번에 표시할 검색 결과 수
+  items: NaverSearchItem[]; // 검색 결과 아이템 목록
+  isError?: boolean; // 에러 여부(선택)
 }
 
+// 네이버 검색 API 공통 아이템 타입
 export interface NaverSearchItem {
-  title: string; // Item title
-  link: string; // Item URL
-  description: string; // Item description
+  title: string; // 아이템 제목 (검색어는 <b> 태그로 강조)
+  link: string; // 아이템 URL
+  description: string; // 아이템 설명 (검색어는 <b> 태그로 강조)
 }
 
+// 전문자료 검색 응답 타입
 export interface NaverDocumentSearchResponse extends NaverSearchResponse {
-  items: NaverDocumentItem[];
+  items: NaverDocumentItem[]; // 전문자료 아이템 목록
 }
 
+// 전문자료 아이템 타입
 export interface NaverDocumentItem extends NaverSearchItem {
-  title: string; // Document title (search term is wrapped in <b> tags)
-  link: string; // Document URL
-  description: string; // Document summary (search term is wrapped in <b> tags)
+  title: string; // 문서 제목 (<b> 태그 강조)
+  link: string; // 문서 URL
+  description: string; // 문서 요약 (<b> 태그 강조)
 }
 
-// 전문자료 검색 파라미터 스키마
-export const NaverDocumentSearchParamsSchema = z.object({
-  query: z.string().describe("Search query"),
-  display: z
-    .number()
-    .optional()
-    .describe("Number of results to display (default: 10, max: 100)"),
-  start: z
-    .number()
-    .optional()
-    .describe("Start position of search results (default: 1, max: 1000)"),
-});
-
-export type NaverDocumentSearchParams = z.infer<typeof NaverDocumentSearchParamsSchema>;
-
+// 지식백과 검색 응답 타입
 export interface NaverEncyclopediaSearchResponse extends NaverSearchResponse {
-  items: NaverEncyclopediaItem[];
+  items: NaverEncyclopediaItem[]; // 지식백과 아이템 목록
 }
 
+// 지식백과 아이템 타입
 export interface NaverEncyclopediaItem extends NaverSearchItem {
-  title: string; // Encyclopedia title (search term is wrapped in <b> tags)
-  link: string; // Encyclopedia article URL
-  description: string; // Encyclopedia article summary (search term is wrapped in <b> tags)
-  thumbnail: string; // Thumbnail image URL
+  title: string; // 백과사전 제목 (<b> 태그 강조)
+  link: string; // 백과사전 문서 URL
+  description: string; // 백과사전 요약 (<b> 태그 강조)
+  thumbnail: string; // 썸네일 이미지 URL
 }
 
-// DataLab Search Types
+// 데이터랩 검색 요청 타입
 export interface DatalabSearchRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
+  startDate: string; // 분석 시작일 (yyyy-mm-dd)
+  endDate: string; // 분석 종료일 (yyyy-mm-dd)
+  timeUnit: "date" | "week" | "month"; // 분석 단위
   keywordGroups: Array<{
-    groupName: string; // Group name
-    keywords: string[]; // List of keywords in the group
+    groupName: string; // 키워드 그룹명
+    keywords: string[]; // 그룹 내 키워드 목록
   }>;
 }
 
+// 데이터랩 쇼핑 응답 타입
 export interface DatalabShoppingResponse {
-  startDate: string; // Start date of analysis
-  endDate: string; // End date of analysis
-  timeUnit: string; // Time unit used for analysis
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: string; // 분석 단위
   results: {
-    title: string; // Result title
-    category?: string[]; // Category information
-    keyword?: string[]; // Keyword information
+    title: string; // 결과 제목
+    category?: string[]; // 카테고리 정보
+    keyword?: string[]; // 키워드 정보
     data: {
-      period: string; // Time period
-      group?: string; // Group information
-      ratio: number; // Ratio/percentage value
+      period: string; // 기간
+      group?: string; // 그룹 정보
+      ratio: number; // 비율 값
     }[];
   }[];
 }
 
-export interface NaverWebSearchParams extends NaverSearchParams {
-  type?: "webkr"; // Web search type identifier
-}
-
-// DataLab Shopping Category Types
+// 데이터랩 쇼핑 카테고리 요청 타입
 export interface DatalabShoppingCategoryRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
+  startDate: string; // 분석 시작일 (yyyy-mm-dd)
+  endDate: string; // 분석 종료일 (yyyy-mm-dd)
+  timeUnit: "date" | "week" | "month"; // 분석 단위
   category: Array<{
-    name: string; // Category name
-    param: string[]; // Category parameters
+    name: string; // 카테고리명
+    param: string[]; // 카테고리 파라미터
   }>;
-  device?: "pc" | "mo"; // Device type (pc or mobile)
-  gender?: "f" | "m"; // Gender (female or male)
-  ages?: string[]; // Age groups
+  device?: "pc" | "mo"; // 기기 구분 (PC/모바일)
+  gender?: "f" | "m"; // 성별
+  ages?: string[]; // 연령대
 }
 
-// DataLab Shopping Device Types
+// 데이터랩 쇼핑 기기별 요청 타입
 export interface DatalabShoppingDeviceRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
-  category: string; // Category code
-  device: "pc" | "mo"; // Device type (pc or mobile)
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: "date" | "week" | "month"; // 분석 단위
+  category: string; // 카테고리 코드
+  device: "pc" | "mo"; // 기기 구분
 }
 
-// DataLab Shopping Gender Types
+// 데이터랩 쇼핑 성별 요청 타입
 export interface DatalabShoppingGenderRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
-  category: string; // Category code
-  gender: "f" | "m"; // Gender (female or male)
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: "date" | "week" | "month"; // 분석 단위
+  category: string; // 카테고리 코드
+  gender: "f" | "m"; // 성별
 }
 
-// DataLab Shopping Age Types
+// 데이터랩 쇼핑 연령별 요청 타입
 export interface DatalabShoppingAgeRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
-  category: string; // Category code
-  ages: string[]; // Age groups
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: "date" | "week" | "month"; // 분석 단위
+  category: string; // 카테고리 코드
+  ages: string[]; // 연령대
 }
 
-// DataLab Shopping Keywords Types
+// 데이터랩 쇼핑 키워드 그룹 요청 타입
 export interface DatalabShoppingKeywordsRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
-  category: string; // Category code
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: "date" | "week" | "month"; // 분석 단위
+  category: string; // 카테고리 코드
   keyword: Array<{
-    name: string; // Keyword name
-    param: string[]; // Keyword parameters
+    name: string; // 키워드명
+    param: string[]; // 키워드 파라미터
   }>;
 }
 
-// DataLab Shopping Keyword Types
+// 데이터랩 쇼핑 키워드 단일 요청 타입
 export interface DatalabShoppingKeywordRequest {
-  startDate: string; // Start date in yyyy-mm-dd format
-  endDate: string; // End date in yyyy-mm-dd format
-  timeUnit: "date" | "week" | "month"; // Time unit for analysis
-  category: string; // Category code
-  keyword: string; // Search keyword
-  device?: "pc" | "mo"; // Device type (pc or mobile)
-  gender?: "f" | "m"; // Gender (female or male)
-  ages?: string[]; // Age groups
+  startDate: string; // 분석 시작일
+  endDate: string; // 분석 종료일
+  timeUnit: "date" | "week" | "month"; // 분석 단위
+  category: string; // 카테고리 코드
+  keyword: string; // 검색 키워드
+  device?: "pc" | "mo"; // 기기 구분
+  gender?: "f" | "m"; // 성별
+  ages?: string[]; // 연령대
 }
 
+// 지역 검색 응답 타입
 export interface NaverLocalSearchResponse extends NaverSearchResponse {
-  items: NaverLocalItem[];
+  items: NaverLocalItem[]; // 지역 아이템 목록
 }
 
-export interface NaverLocalItem extends Omit<NaverSearchItem, 'description'> {
-  title: string; // 업체, 기관의 이름
-  link: string; // 업체, 기관의 상세 정보 URL
-  category: string; // 업체, 기관의 분류 정보
-  description: string; // 업체, 기관에 대한 설명
-  telephone: string; // 전화번호 (값을 반환하지 않음)
-  address: string; // 업체, 기관명의 지번 주소
-  roadAddress: string; // 업체, 기관명의 도로명 주소
-  mapx: number; // 업체, 기관이 위치한 장소의 x 좌표(KATECH 좌표계)
-  mapy: number; // 업체, 기관이 위치한 장소의 y 좌표(KATECH 좌표계)
+// 지역 아이템 타입
+export interface NaverLocalItem extends Omit<NaverSearchItem, "description"> {
+  title: string; // 업체/기관명
+  link: string; // 상세 정보 URL
+  category: string; // 분류 정보
+  description: string; // 설명
+  telephone: string; // 전화번호(반환 안함)
+  address: string; // 지번 주소
+  roadAddress: string; // 도로명 주소
+  mapx: number; // x좌표(KATECH)
+  mapy: number; // y좌표(KATECH)
 }
-
-// 지역 검색 파라미터 스키마
-export const NaverLocalSearchParamsSchema = NaverSearchParamsSchema.extend({
-  sort: z.enum(["random", "comment"])
-    .optional()
-    .describe("Sort method (random: accuracy, comment: review count)"),
-  display: z
-    .number()
-    .optional()
-    .describe("Number of results to display (default: 1, max: 5)"),
-  start: z
-    .number()
-    .optional()
-    .describe("Start position of search results (default: 1, max: 1)"),
-});
-
-export type NaverLocalSearchParams = z.infer<typeof NaverLocalSearchParamsSchema>;

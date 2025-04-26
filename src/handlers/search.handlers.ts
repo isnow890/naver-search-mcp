@@ -3,12 +3,12 @@ import {
   NaverSearchType,
   NaverDocumentSearchParams,
   NaverLocalSearchParams,
-} from "../types/naver-search.types.js";
+} from "../schemas/search.schemas.js";
+
 import { SearchArgs } from "../schemas/search.schemas.js";
 
 // 클라이언트 인스턴스
 const client = NaverSearchClient.getInstance();
-
 
 /**
  * 전문자료 검색 핸들러
@@ -72,7 +72,6 @@ export async function handleBlogSearch(params: SearchArgs) {
 export async function handleShopSearch(params: SearchArgs) {
   return client.search<any>({ type: "shop", ...params });
 }
-
 
 /**
  * 카페글 검색 핸들러
