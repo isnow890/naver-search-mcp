@@ -37,24 +37,6 @@ import {
   handleShoppingKeywordsTrend,
 } from "./handlers/datalab.handlers.js";
 
-// 환경 변수 유효성 검사
-const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID!;
-const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET!;
-
-if (!NAVER_CLIENT_ID || !NAVER_CLIENT_SECRET) {
-  console.error(
-    "Error: NAVER_CLIENT_ID and NAVER_CLIENT_SECRET environment variables are required"
-  );
-  process.exit(1);
-}
-
-// 네이버 검색 클라이언트 초기화
-const client = NaverSearchClient.getInstance();
-client.initialize({
-  clientId: NAVER_CLIENT_ID,
-  clientSecret: NAVER_CLIENT_SECRET,
-});
-
 // MCP 서버 인스턴스 생성
 const server = new Server(
   {
@@ -92,6 +74,25 @@ function createErrorResponse(error: unknown): {
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
   console.error(`[CallTool] 요청: ${name} | 파라미터:`, args);
+
+  // 여기서만 환경변수 체크 및 클라이언트 초기화
+  const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID;
+  const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET;
+  if (!NAVER_CLIENT_ID || !NAVER_CLIENT_SECRET) {
+    return createErrorResponse(
+      "NAVER_CLIENT_ID and NAVER_CLIENT_SECRET environment variables are required"
+    );
+  }
+
+  // 클라이언트 초기화(이미 되어있으면 무시)
+  const client = NaverSearchClient.getInstance();
+  if (!client["config"]) {
+    client.initialize({
+      clientId: NAVER_CLIENT_ID,
+      clientSecret: NAVER_CLIENT_SECRET,
+    });
+  }
+
   try {
     if (!args) {
       throw new Error("Arguments are required");
