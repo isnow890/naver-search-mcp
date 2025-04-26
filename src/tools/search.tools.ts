@@ -1,8 +1,6 @@
 import { zodToJsonSchema } from "zod-to-json-schema";
-import {
-  SearchArgsSchema,
-  NaverLocalSearchParamsSchema,
-} from "../schemas/search.schemas.js";
+import { SearchArgsSchema } from "../schemas/search.schemas.js";
+import { NaverLocalSearchParamsSchema } from "../types/naver-search.types.js";
 
 /**
  * 검색 관련 도구 정의
