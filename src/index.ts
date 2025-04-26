@@ -36,6 +36,9 @@ import {
   handleShoppingKeywordByGenderTrend,
   handleShoppingKeywordsTrend,
 } from "./handlers/datalab.handlers.js";
+import { join, dirname } from "path";
+import { fileURLToPath, pathToFileURL } from "url";
+import { platform } from "os";
 
 // MCP 서버 인스턴스 생성
 const server = new Server(
@@ -172,30 +175,200 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-// 서버 시작 함수
-async function runServer() {
+async function runSetup() {
   try {
-    const transport = new StdioServerTransport();
+    console.error("[Lifecycle] Entering setup mode...");
+    // Fix for Windows ESM path issue
+    const setupScriptPath = join(__dirname, "setup-claude-server.js");
+    const setupScriptUrl = pathToFileURL(setupScriptPath);
 
-    // 서버 에러 핸들링
-    process.on("uncaughtException", (error) => {
-      console.error("Uncaught Exception:", error);
-    });
-
-    process.on("unhandledRejection", (reason, promise) => {
-      console.error("Unhandled Rejection at:", promise, "reason:", reason);
-    });
-
-    await server.connect(transport);
-    console.error("Naver Search MCP Server running on stdio");
+    // Now import using the URL format
+    const { default: setupModule } = await import(setupScriptUrl.href);
+    if (typeof setupModule === "function") {
+      await setupModule();
+      console.error("[Lifecycle] Setup module executed successfully.");
+    } else {
+      console.error("[Lifecycle] Setup module is not a function.");
+    }
   } catch (error) {
-    console.error("Fatal error running server:", error);
+    console.error("[Lifecycle] Error running setup:", error);
+    process.stderr.write(
+      `[Lifecycle] Error running setup: ${
+        error instanceof Error ? error.stack : String(error)
+      }\n`
+    );
     process.exit(1);
   }
 }
 
-// 서버 시작
-runServer().catch((error) => {
-  console.error("Fatal error running server:", error);
+async function runServer() {
+  try {
+    console.error("[Lifecycle] Server process started.");
+    console.error(
+      `[Lifecycle] Command-line arguments: ${JSON.stringify(process.argv)}`
+    );
+    console.error(`[Lifecycle] NODE_ENV: ${process.env.NODE_ENV}`);
+    // 주요 환경변수 로그 (보안상 민감정보는 마스킹)
+    if (process.env.BRAVE_API_KEY) {
+      console.error("[Lifecycle] BRAVE_API_KEY is set.");
+    }
+    if (process.env.NAVER_CLIENT_ID) {
+      console.error("[Lifecycle] NAVER_CLIENT_ID is set.");
+    }
+    if (process.env.NAVER_CLIENT_SECRET) {
+      console.error("[Lifecycle] NAVER_CLIENT_SECRET is set.");
+    }
+
+    const transport = new StdioServerTransport();
+
+    console.error("[Lifecycle] Transport created.");
+    // Check if first argument is "setup"
+    if (process.argv[2] === "setup") {
+      await runSetup();
+      console.error("[Lifecycle] Setup mode completed. Exiting.");
+      return;
+    }
+
+    // Handle uncaught exceptions
+    process.on("uncaughtException", async (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      process.stderr.write(
+        `[desktop-commander] Uncaught exception: ${errorMessage}\n`
+      );
+      process.stderr.write(
+        `[desktop-commander] Stack: ${
+          error instanceof Error && error.stack
+            ? error.stack
+            : "No stack trace available"
+        }\n`
+      );
+      process.stderr.write(
+        `[desktop-commander] Error object: ${JSON.stringify(
+          error,
+          Object.getOwnPropertyNames(error)
+        )}\n`
+      );
+      // If this is a JSON parsing error, log it to stderr but don't crash
+      if (
+        errorMessage.includes("JSON") &&
+        errorMessage.includes("Unexpected token")
+      ) {
+        process.stderr.write(
+          `[desktop-commander] JSON parsing error: ${errorMessage}\n`
+        );
+        return; // Don't exit on JSON parsing errors
+      }
+      // capture('run_server_uncaught_exception', {
+      //   error: errorMessage
+      // });
+      process.exit(1);
+    });
+
+    // Handle unhandled rejections
+    process.on("unhandledRejection", async (reason) => {
+      const errorMessage =
+        reason instanceof Error ? reason.message : String(reason);
+      process.stderr.write(
+        `[desktop-commander] Unhandled rejection: ${errorMessage}\n`
+      );
+      process.stderr.write(
+        `[desktop-commander] Stack: ${
+          reason instanceof Error && reason.stack
+            ? reason.stack
+            : "No stack trace available"
+        }\n`
+      );
+      process.stderr.write(
+        `[desktop-commander] Error object: ${JSON.stringify(
+          reason,
+          Object.getOwnPropertyNames(reason)
+        )}\n`
+      );
+      // If this is a JSON parsing error, log it to stderr but don't crash
+      if (
+        errorMessage.includes("JSON") &&
+        errorMessage.includes("Unexpected token")
+      ) {
+        process.stderr.write(
+          `[desktop-commander] JSON parsing rejection: ${errorMessage}\n`
+        );
+        return; // Don't exit on JSON parsing errors
+      }
+      // capture('run_server_unhandled_rejection', {
+      //   error: errorMessage
+      // });
+      process.exit(1);
+    });
+
+    // capture('run_server_start');
+
+    try {
+      // console.error('[Lifecycle] Loading configuration...');
+      // await configManager.loadConfig();
+      // console.error('[Lifecycle] Configuration loaded successfully');
+    } catch (configError) {
+      // console.error(`[Lifecycle] Failed to load configuration: ${configError instanceof Error ? configError.message : String(configError)}`);
+      // console.error(configError instanceof Error && configError.stack ? configError.stack : 'No stack trace available');
+      // process.stderr.write(`[Lifecycle] Failed to load configuration: ${configError instanceof Error ? configError.stack : String(configError)}\n`);
+      // console.error('[Lifecycle] Continuing with in-memory configuration only');
+      // // Continue anyway - we'll use an in-memory config
+    }
+
+    console.error("[Lifecycle] Connecting server...");
+    await server.connect(transport);
+    console.error("[Lifecycle] Server connected successfully");
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`[Lifecycle] FATAL ERROR: ${errorMessage}`);
+    console.error(
+      error instanceof Error && error.stack
+        ? error.stack
+        : "No stack trace available"
+    );
+    process.stderr.write(
+      JSON.stringify({
+        type: "error",
+        timestamp: new Date().toISOString(),
+        message: `Failed to start server: ${errorMessage}`,
+      }) + "\n"
+    );
+    process.stderr.write(
+      `[Lifecycle] Error object: ${JSON.stringify(
+        error,
+        Object.getOwnPropertyNames(error)
+      )}\n`
+    );
+    // capture('run_server_failed_start_error', {
+    //   error: errorMessage
+    // });
+    process.exit(1);
+  }
+}
+
+runServer().catch(async (error) => {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  console.error(`[Lifecycle] RUNTIME ERROR: ${errorMessage}`);
+  console.error(
+    error instanceof Error && error.stack
+      ? error.stack
+      : "No stack trace available"
+  );
+  process.stderr.write(
+    JSON.stringify({
+      type: "error",
+      timestamp: new Date().toISOString(),
+      message: `Fatal error running server: ${errorMessage}`,
+    }) + "\n"
+  );
+  process.stderr.write(
+    `[Lifecycle] Error object: ${JSON.stringify(
+      error,
+      Object.getOwnPropertyNames(error)
+    )}\n`
+  );
+  // capture('run_server_fatal_error', {
+  //   error: errorMessage
+  // });
   process.exit(1);
 });
