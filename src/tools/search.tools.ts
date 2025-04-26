@@ -58,4 +58,10 @@ export const searchTools = [
     description: "Perform a search on Naver Local. (네이버 지역 검색)",
     inputSchema: zodToJsonSchema(NaverLocalSearchParamsSchema),
   },
+  {
+    name: "search_cafearticle",
+    description:
+      "Perform a search on Naver Cafe Articles. (네이버 카페글 검색)",
+    inputSchema: zodToJsonSchema(SearchArgsSchema),
+  },
 ];

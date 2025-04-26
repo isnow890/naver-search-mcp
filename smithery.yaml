@@ -77,45 +77,6 @@ environment:
 
 capabilities:
   tools:
-    - name: search
-      description: |
-        [KOR]
-        모든 타입의 컨텐츠를 검색할 수 있는 통합 검색 기능입니다.
-
-        [ENG]
-        A unified search function that can search for all types of content.
-      schema:
-        type: "object"
-        required: ["type", "query"]
-        properties:
-          type:
-            type: "string"
-            enum:
-              [
-                "news",
-                "blog",
-                "shop",
-                "image",
-                "kin",
-                "book",
-                "encyc",
-                "doc",
-                "cafearticle",
-              ]
-          query:
-            type: "string"
-            description: "Search query"
-          display:
-            type: "number"
-            description: "Number of results to return"
-          start:
-            type: "number"
-            description: "Start index for pagination"
-          sort:
-            type: "string"
-            enum: ["sim", "date"]
-            description: "Sort order (sim: similarity, date: date)"
-
     - name: search_news
       description: |
         [KOR]
@@ -315,7 +276,23 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
 
     - name: datalab_shopping_by_device
       description: "Analyze shopping trends by device type (PC/Mobile) in Naver Shopping"
@@ -335,7 +312,23 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           device:
             type: "string"
             enum: ["pc", "mo"]
@@ -359,7 +352,23 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           gender:
             type: "string"
             enum: ["f", "m"]
@@ -383,7 +392,23 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           ages:
             type: "array"
             items:
@@ -408,7 +433,48 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           keyword:
             type: "string"
             description: "Search keyword"
+
+    - name: search_cafearticle
+      description: |
+        [KOR]
+        네이버 카페글 검색 기능입니다. 카페 게시글을 검색할 수 있습니다.
+
+        [ENG]
+        Naver Cafe Article search function. Search for cafe articles.
+      schema:
+        type: "object"
+        required: ["query"]
+        properties:
+          query:
+            type: "string"
+            description: "Search query"
+          display:
+            type: "number"
+            description: "Number of results to return"
+          start:
+            type: "number"
+            description: "Start index for pagination"
+          sort:
+            type: "string"
+            enum: ["sim", "date"]
+            description: "Sort order (sim: similarity, date: date)"

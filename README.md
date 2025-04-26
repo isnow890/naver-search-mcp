@@ -6,6 +6,10 @@
 
 MCP server for Naver Search API and DataLab API integration, enabling comprehensive search across various Naver services and data trend analysis.
 
+#### Information
+
+If you want to install the MCP via npm, do NOT use @mseep/server-naver-search (https://www.npmjs.com/package/@mseep/server-naver-search). That package is a copy of my work and was published without my permission. The npx version of that package is also broken and will not work properly. Please use this official package instead.
+
 #### Prerequisites
 
 - Naver Developers API Key (Client ID and Secret)

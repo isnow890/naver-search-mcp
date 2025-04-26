@@ -9,14 +9,6 @@ import { SearchArgs } from "../schemas/search.schemas.js";
 // 클라이언트 인스턴스
 const client = NaverSearchClient.getInstance();
 
-/**
- * 기본 검색 핸들러
- */
-export async function handleSearch(
-  params: SearchArgs & { type: NaverSearchType }
-) {
-  return client.search({ ...params });
-}
 
 /**
  * 전문자료 검색 핸들러
@@ -81,12 +73,6 @@ export async function handleShopSearch(params: SearchArgs) {
   return client.search<any>({ type: "shop", ...params });
 }
 
-/**
- * 웹문서 검색 핸들러
- */
-export async function handleWebSearch(params: SearchArgs) {
-  return client.search<any>({ type: "webkr", ...params });
-}
 
 /**
  * 카페글 검색 핸들러

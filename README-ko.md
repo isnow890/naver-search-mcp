@@ -6,6 +6,10 @@
 
 Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
 
+#### 안내
+npx로 설치하시려는 분들은
+@mseep/server-naver-search(https://www.npmjs.com/package/@mseep/server-naver-search) 에서 절대 설치 하시 마세요. 해당버전의 npx는 문제가 있어 설치해도 제대로 동작하지 않습니다.
+
 #### 필수 요구 사항
 
 - Naver Developers API 키(클라이언트 ID 및 시크릿)

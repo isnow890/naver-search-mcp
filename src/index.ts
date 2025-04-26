@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import * as dotenv from "dotenv";
+import pkg from "../package.json" assert { type: "json" };
+
 dotenv.config();
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -22,9 +24,7 @@ import {
   handleKinSearch,
   handleLocalSearch,
   handleNewsSearch,
-  handleSearch,
   handleShopSearch,
-  handleWebSearch,
   handleWebKrSearch,
 } from "./handlers/search.handlers.js";
 import {
@@ -61,7 +61,7 @@ client.initialize({
 const server = new Server(
   {
     name: "naver-search",
-    version: "1.0.0",
+    version: pkg.version,
   },
   {
     capabilities: {
@@ -133,6 +133,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         break;
       case "search_local":
         result = await handleLocalSearch(args as any);
+        break;
+      case "search_cafearticle":
+        result = await handleCafeArticleSearch(args as any);
         break;
 
       // 데이터랩 API
