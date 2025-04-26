@@ -1,4 +1,4 @@
-import { NaverSearchClient } from "../naver-search.client.js";
+import { NaverSearchClient } from "../clients/naver-search.client.js";
 import { NaverLocalSearchParams } from "../schemas/search.schemas.js";
 
 import { SearchArgs } from "../schemas/search.schemas.js";
@@ -32,28 +32,28 @@ export async function handleAcademicSearch(params: SearchArgs) {
  * 도서 검색 핸들러
  */
 export async function handleBookSearch(params: SearchArgs) {
-  return client.search<any>({ type: "book", ...params });
+  return client.search("book", params);
 }
 
 /**
  * 지식백과 검색 핸들러
  */
 export async function handleEncycSearch(params: SearchArgs) {
-  return client.search<any>({ type: "encyc", ...params });
+  return client.search("encyc", params);
 }
 
 /**
  * 이미지 검색 핸들러
  */
 export async function handleImageSearch(params: SearchArgs) {
-  return client.search<any>({ type: "image", ...params });
+  return client.search("image", params);
 }
 
 /**
  * 지식iN 검색 핸들러
  */
 export async function handleKinSearch(params: SearchArgs) {
-  return client.search<any>({ type: "kin", ...params });
+  return client.search("kin", params);
 }
 
 /**
@@ -67,31 +67,31 @@ export async function handleLocalSearch(params: NaverLocalSearchParams) {
  * 뉴스 검색 핸들러
  */
 export async function handleNewsSearch(params: SearchArgs) {
-  return client.search<any>({ type: "news", ...params });
+  return client.search("news", params);
 }
 
 /**
  * 블로그 검색 핸들러
  */
 export async function handleBlogSearch(params: SearchArgs) {
-  return client.search<any>({ type: "blog", ...params });
+  return client.search("blog", params);
 }
 
 /**
  * 쇼핑 검색 핸들러
  */
 export async function handleShopSearch(params: SearchArgs) {
-  return client.search<any>({ type: "shop", ...params });
+  return client.search("shop", params);
 }
 
 /**
  * 카페글 검색 핸들러
  */
 export async function handleCafeArticleSearch(params: SearchArgs) {
-  return client.search<any>({ type: "cafearticle", ...params });
+  return client.search("cafearticle", params);
 }
 
 export async function handleWebKrSearch(args: SearchArgs) {
   const client = NaverSearchClient.getInstance();
-  return await client.search({ type: "webkr", ...args });
+  return await client.search("webkr", args);
 }

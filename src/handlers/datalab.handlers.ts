@@ -1,4 +1,4 @@
-import { NaverSearchClient } from "../naver-search.client.js";
+import { NaverSearchClient } from "../clients/naver-search.client.js";
 import {
   DatalabSearch,
   DatalabShopping,

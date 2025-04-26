@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import pkg from "../package.json" assert { type: "json" };
+import pkg from "../package.json" with { type: "json" };
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -7,7 +7,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { NaverSearchClient } from "./naver-search.client.js";
+import { NaverSearchClient } from "./clients/naver-search.client.js";
 import { searchTools } from "./tools/search.tools.js";
 import { datalabTools } from "./tools/datalab.tools.js";
 import { searchToolHandlers } from "./handlers/search.handlers.js";
