@@ -286,6 +286,7 @@ capabilities:
             type: "array"
             items:
               type: "object"
+              required: [groupName, keywords]
               properties:
                 groupName:
                   type: "string"
