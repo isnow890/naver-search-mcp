@@ -1,9 +1,13 @@
 {
-  "name": "@isnow890/naver-search-mcp",
-  "version": "1.0.14",
+  "name": "@modelcontextprotocol/server-naver-search",
+  "version": "1.0.0",
   "description": "Naver Search MCP Server",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mcp-server-naver-search": "dist/index.js"
+  },
   "files": [
     "dist"
   ],
@@ -22,18 +26,11 @@
     "axios": "^1.6.7",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.23.5",
-    "sharp": "^0.33.2",
-    "dotenv": "^16.4.5"
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "@types/node": "^22",
     "shx": "^0.3.4",
     "typescript": "^5.3.3"
-  },
-  "author": "isnow890",
-  "license": "MIT",
-  "bin": {
-    "naver-search-mcp": "dist/src/index.js"
-  },
-  "type": "module"
+  }
 }

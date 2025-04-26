@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import * as dotenv from "dotenv";
-dotenv.config();
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -61,7 +59,7 @@ client.initialize({
 const server = new Server(
   {
     name: "naver-search",
-    version: "1.0.14",
+    version: "1.0.0",
   },
   {
     capabilities: {
