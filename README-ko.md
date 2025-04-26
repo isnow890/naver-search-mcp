@@ -6,10 +6,6 @@
 
 Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
 
-#### 안내
-npx로 설치하시려는 분들은
-@mseep/server-naver-search(https://www.npmjs.com/package/@mseep/server-naver-search) 에서 절대 설치 하시 마세요. 해당버전의 npx는 문제가 있어 설치해도 제대로 동작하지 않습니다.
-
 #### 필수 요구 사항
 
 - Naver Developers API 키(클라이언트 ID 및 시크릿)
@@ -103,7 +99,7 @@ export NAVER_CLIENT_SECRET=your_client_secret
 #### NPX로 실행
 
 ```bash
-npx @isnow890/naver-search-mcp
+npx @modelcontextprotocol/server-naver-search
 ```
 
 #### Docker로 실행
@@ -115,7 +111,7 @@ docker run -i --rm \
   mcp/naver-search
 ```
 
-## Claude Desktop 구성
+## Cursor Desktop 구성
 
 `claude_desktop_config.json`에 추가:
 
@@ -124,26 +120,7 @@ docker run -i --rm \
   "mcpServers": {
     "naver-search": {
       "command": "npx",
-      "args": ["-y", "@isnow890/naver-search-mcp"],
-      "env": {
-        "NAVER_CLIENT_ID": "your_client_id",
-        "NAVER_CLIENT_SECRET": "your_client_secret"
-      }
-    }
-  }
-}
-```
-
-## Cursor AI 구성
-
-Add to `mcp.json`에 추가:
-
-```json
-{
-  "mcpServers": {
-    "naver-search": {
-      "command": "npx",
-      "args": ["-y", "@isnow890/naver-search-mcp"],
+      "args": ["-y", "@modelcontextprotocol/server-naver-search"],
       "env": {
         "NAVER_CLIENT_ID": "your_client_id",
         "NAVER_CLIENT_SECRET": "your_client_secret"
@@ -174,7 +151,6 @@ Docker의 경우:
   }
 }
 ```
-
 ## 빌드
 
 Docker 빌드:
