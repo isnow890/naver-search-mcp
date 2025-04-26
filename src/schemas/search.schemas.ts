@@ -13,6 +13,22 @@ export const NaverSearchTypeSchema = z.enum([
   "cafearticle",
   "local",
 ]);
+
+export const NaverSearchParamsSchema = z.object({
+  query: z.string().describe("Search query"),
+  display: z
+    .number()
+    .optional()
+    .describe("Number of results to display (default: 10)"),
+  start: z
+    .number()
+    .optional()
+    .describe("Start position of search results (default: 1)"),
+  sort: z
+    .enum(["sim", "date"])
+    .optional()
+    .describe("Sort method (sim: similarity, date: chronological)"),
+});
 // 네이버 검색 공통 파라미터
 export const SearchArgsSchema = z.object({
   query: z.string().describe("검색어"),
@@ -51,6 +67,7 @@ export const NaverLocalSearchParamsSchema = SearchArgsSchema.extend({
 export type NaverLocalSearchParams = z.infer<
   typeof NaverLocalSearchParamsSchema
 >;
+export type NaverSearchParams = z.infer<typeof NaverSearchParamsSchema>;
 
 export type SearchArgs = z.infer<typeof SearchArgsSchema>;
 export type NaverSearchType = z.infer<typeof NaverSearchTypeSchema>;
