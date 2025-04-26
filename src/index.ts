@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as dotenv from "dotenv";
-import pkg from "../package.json" assert { type: "json" };
+import pkg from "../package.json" with { type: "json" };
 
 dotenv.config();
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
