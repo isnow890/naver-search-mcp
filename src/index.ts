@@ -1,9 +1,6 @@
-#!/usr/bin/env node
-
 import * as dotenv from "dotenv";
 import pkg from "../package.json" assert { type: "json" };
 
-dotenv.config();
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -11,33 +8,12 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { NaverSearchClient } from "./naver-search.client.js";
-import { SearchArgsSchema } from "./schemas/search.schemas.js";
 import { searchTools } from "./tools/search.tools.js";
 import { datalabTools } from "./tools/datalab.tools.js";
-import {
-  handleAcademicSearch,
-  handleBlogSearch,
-  handleBookSearch,
-  handleCafeArticleSearch,
-  handleEncycSearch,
-  handleImageSearch,
-  handleKinSearch,
-  handleLocalSearch,
-  handleNewsSearch,
-  handleShopSearch,
-  handleWebKrSearch,
-} from "./handlers/search.handlers.js";
-import {
-  handleSearchTrend,
-  handleShoppingByAgeTrend,
-  handleShoppingByDeviceTrend,
-  handleShoppingByGenderTrend,
-  handleShoppingCategoryTrend,
-  handleShoppingKeywordByAgeTrend,
-  handleShoppingKeywordByDeviceTrend,
-  handleShoppingKeywordByGenderTrend,
-  handleShoppingKeywordsTrend,
-} from "./handlers/datalab.handlers.js";
+import { searchToolHandlers } from "./handlers/search.handlers.js";
+import { datalabToolHandlers } from "./handlers/datalab.handlers.js";
+
+dotenv.config();
 
 // 환경 변수 유효성 검사
 const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID!;
@@ -77,6 +53,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
+const toolHandlers: Record<string, (args: any) => Promise<any>> = {
+  ...searchToolHandlers,
+  ...datalabToolHandlers,
+};
+
 // 에러 응답 헬퍼 함수
 function createErrorResponse(error: unknown): {
   content: Array<{ type: string; text: string }>;
@@ -100,76 +81,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       throw new Error("Arguments are required");
     }
 
-    let result;
-
-    switch (name) {
-      // 검색 API
-      case "search_webkr":
-        result = await handleWebKrSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_news":
-        result = await handleNewsSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_blog":
-        result = await handleBlogSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_shop":
-        result = await handleShopSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_image":
-        result = await handleImageSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_kin":
-        result = await handleKinSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_book":
-        result = await handleBookSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_encyc":
-        result = await handleEncycSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_academic":
-        result = await handleAcademicSearch(SearchArgsSchema.parse(args));
-        break;
-      case "search_local":
-        result = await handleLocalSearch(args as any);
-        break;
-      case "search_cafearticle":
-        result = await handleCafeArticleSearch(args as any);
-        break;
-
-      // 데이터랩 API
-      case "datalab_search":
-        result = await handleSearchTrend(args as any);
-        break;
-      case "datalab_shopping_category":
-        result = await handleShoppingCategoryTrend(args as any);
-        break;
-      case "datalab_shopping_by_device":
-        result = await handleShoppingByDeviceTrend(args as any);
-        break;
-      case "datalab_shopping_by_gender":
-        result = await handleShoppingByGenderTrend(args as any);
-        break;
-      case "datalab_shopping_by_age":
-        result = await handleShoppingByAgeTrend(args as any);
-        break;
-      case "datalab_shopping_keywords":
-        result = await handleShoppingKeywordsTrend(args as any);
-        break;
-      case "datalab_shopping_keyword_by_device":
-        result = await handleShoppingKeywordByDeviceTrend(args as any);
-        break;
-      case "datalab_shopping_keyword_by_gender":
-        result = await handleShoppingKeywordByGenderTrend(args as any);
-        break;
-      case "datalab_shopping_keyword_by_age":
-        result = await handleShoppingKeywordByAgeTrend(args as any);
-        break;
-
-      default:
-        throw new Error(`Unknown tool: ${name}`);
-    }
+    const handler = toolHandlers[name];
+    if (!handler) throw new Error(`Unknown tool: ${name}`);
+    const result = await handler(args);
 
     console.error(`Tool ${name} executed successfully`);
     return {

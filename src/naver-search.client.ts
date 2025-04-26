@@ -10,7 +10,6 @@ import {
   DatalabShoppingKeywordsRequest,
   DatalabShoppingKeywordRequest,
   NaverDocumentSearchResponse,
-  NaverEncyclopediaSearchResponse,
   NaverLocalSearchResponse,
 } from "./types/naver-search.types.js";
 
