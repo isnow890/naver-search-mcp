@@ -6,6 +6,27 @@
 
 Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
 
+#### 버전 히스토리
+
+###### 1.0.2 (2025-04-26)
+
+- README 업데이트: 카페글 검색 도구 및 버전 히스토리 안내 개선
+
+###### 1.0.1 (2025-04-26)
+
+- 카페글 검색 기능 추가
+- zod에 쇼핑 카테고리 정보 추가
+- 소스코드 리팩토링
+
+###### 1.0.0 (2025-04-08)
+
+- 오픈오픈
+
+#### 안내
+
+**npx로 설치하시려는 분들은
+@mseep/server-naver-search(https://www.npmjs.com/package/@mseep/server-naver-search) 에서 절대 설치 하시지 마세요. 누군가 올렸는데 메일 보내도 응답이 없어요. 해당버전의 npx는 문제가 있어 설치해도 제대로 동작하지 않습니다.**
+
 #### 필수 요구 사항
 
 - Naver Developers API 키(클라이언트 ID 및 시크릿)
@@ -27,16 +48,17 @@ Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 
 
 ### 사용 가능한 도구:
 
-- **search_webkr**: Naver 웹 문서 검색
-- **search_news**: Naver 뉴스 검색
-- **search_blog**: Naver 블로그 검색
-- **search_shop**: Naver 쇼핑 검색
-- **search_image**: Naver 이미지 검색
-- **search_kin**: Naver 지식iN 검색
-- **search_book**: Naver 책 검색
-- **search_encyc**: Naver 백과사전 검색
-- **search_academic**: Naver 학술 논문 검색
-- **search_local**: Naver 지역 장소 검색
+- **search_webkr**: 웹 문서 검색
+- **search_news**: 뉴스 검색
+- **search_blog**: 블로그 검색
+- **search_cafearticle**: 카페글 검색
+- **search_shop**: 쇼핑 검색
+- **search_image**: 이미지 검색
+- **search_kin**: 지식iN 검색
+- **search_book**: 책 검색
+- **search_encyc**: 백과사전 검색
+- **search_academic**: 학술 논문 검색
+- **search_local**: 지역 장소 검색
 - **datalab_search**: 검색어 트렌드 분석
 - **datalab_shopping_category**: 쇼핑 카테고리 트렌드 분석
 - **datalab_shopping_by_device**: 기기별 쇼핑 트렌드 분석

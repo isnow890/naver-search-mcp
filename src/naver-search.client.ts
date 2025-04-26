@@ -1,9 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
-  NaverSearchType,
-  NaverSearchConfig,
-  NaverSearchParams,
   NaverSearchResponse,
+  NaverDocumentSearchResponse,
+  NaverEncyclopediaSearchResponse,
+  NaverLocalSearchResponse,
+} from "./types/search.types.js";
+
+import {
   DatalabSearchRequest,
   DatalabShoppingResponse,
   DatalabShoppingCategoryRequest,
@@ -12,12 +15,15 @@ import {
   DatalabShoppingAgeRequest,
   DatalabShoppingKeywordsRequest,
   DatalabShoppingKeywordRequest,
-  NaverDocumentSearchResponse,
-  NaverEncyclopediaSearchResponse,
-  NaverLocalSearchResponse,
+} from "./types/datalab.types.js";
+
+import {
   NaverLocalSearchParams,
   NaverDocumentSearchParams,
-} from "./types/naver-search.types.js";
+  NaverSearchType,
+  NaverSearchConfig,
+  NaverSearchParams,
+} from "./schemas/search.schemas.js";
 
 /**
  * NaverSearchClient - 네이버 API 서비스를 위한 싱글톤 클라이언트

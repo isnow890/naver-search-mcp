@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "@modelcontextprotocol/server-naver-search",
   "version": "1.0.0",
+=======
+  "name": "@isnow890/naver-search-mcp",
+  "version": "1.0.10",
+>>>>>>> feature/catching-error
   "description": "Naver Search MCP Server",
   "main": "dist/src/index.js",
   "license": "MIT",

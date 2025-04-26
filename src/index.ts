@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 #!/usr/bin/env node
+=======
+import * as dotenv from "dotenv";
+
+console.error("[MCP] dotenv import 완료");
+>>>>>>> feature/catching-error
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -6,10 +12,10 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { NaverSearchClient } from "./naver-search.client.js";
-import { SearchArgsSchema } from "./schemas/search.schemas.js";
+import { NaverSearchClient } from "./clients/naver-search.client.js";
 import { searchTools } from "./tools/search.tools.js";
 import { datalabTools } from "./tools/datalab.tools.js";
+<<<<<<< HEAD
 import {
   handleAcademicSearch,
   handleBlogSearch,
@@ -39,12 +45,40 @@ import {
 import { join, dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { platform } from "os";
+=======
+import { searchToolHandlers } from "./handlers/search.handlers.js";
+import { datalabToolHandlers } from "./handlers/datalab.handlers.js";
+
+dotenv.config();
+console.error("[MCP] dotenv.config() 실행됨");
+
+// 환경 변수 유효성 검사
+const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID!;
+const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET!;
+
+console.error("[MCP] 환경변수 읽음", { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET });
+
+if (!NAVER_CLIENT_ID || !NAVER_CLIENT_SECRET) {
+  console.error(
+    "[MCP] Error: NAVER_CLIENT_ID and NAVER_CLIENT_SECRET environment variables are required"
+  );
+  process.exit(1);
+}
+
+// 네이버 검색 클라이언트 초기화
+const client = NaverSearchClient.getInstance();
+client.initialize({
+  clientId: NAVER_CLIENT_ID,
+  clientSecret: NAVER_CLIENT_SECRET,
+});
+console.error("[MCP] NaverSearchClient 초기화 완료");
+>>>>>>> feature/catching-error
 
 // MCP 서버 인스턴스 생성
 const server = new Server(
   {
     name: "naver-search",
-    version: "1.0.0",
+    version: "1.0.6",
   },
   {
     capabilities: {
@@ -52,13 +86,20 @@ const server = new Server(
     },
   }
 );
+console.error("[MCP] Server 인스턴스 생성 완료");
 
 // 도구 목록을 반환하는 핸들러 등록
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  console.error("[MCP] ListToolsRequestSchema 핸들러 호출됨");
   return {
     tools: [...searchTools, ...datalabTools],
   };
 });
+
+const toolHandlers: Record<string, (args: any) => Promise<any>> = {
+  ...searchToolHandlers,
+  ...datalabToolHandlers,
+};
 
 // 에러 응답 헬퍼 함수
 function createErrorResponse(error: unknown): {
@@ -66,7 +107,7 @@ function createErrorResponse(error: unknown): {
   isError: boolean;
 } {
   const errorMessage = error instanceof Error ? error.message : String(error);
-  console.error("API Error:", errorMessage);
+  console.error("[MCP] API Error:", errorMessage);
   return {
     content: [{ type: "text", text: `Error: ${errorMessage}` }],
     isError: true,
@@ -75,8 +116,14 @@ function createErrorResponse(error: unknown): {
 
 // 도구 실행 요청 핸들러 등록
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
+<<<<<<< HEAD
   const { name, arguments: args } = request.params;
   console.error(`[CallTool] 요청: ${name} | 파라미터:`, args);
+=======
+  try {
+    const { name, arguments: args } = request.params;
+    console.error(`[MCP] Executing tool: ${name} with args:`, args);
+>>>>>>> feature/catching-error
 
   // 여기서만 환경변수 체크 및 클라이언트 초기화
   const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID;
@@ -101,8 +148,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       throw new Error("Arguments are required");
     }
 
-    let result;
+    const handler = toolHandlers[name];
+    if (!handler) throw new Error(`Unknown tool: ${name}`);
+    const result = await handler(args);
 
+<<<<<<< HEAD
     switch (name) {
       // 검색 API
       case "search_webkr":
@@ -169,6 +219,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
     console.error(`[CallTool] 결과: ${name} | 결과:`, result);
     return result;
+=======
+    console.error(`[MCP] Tool ${name} executed successfully`);
+    return {
+      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+    };
+>>>>>>> feature/catching-error
   } catch (error) {
     console.error(`[CallTool] 에러: ${name} | 에러:`, error);
     return createErrorResponse(error);
@@ -177,6 +233,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function runSetup() {
   try {
+<<<<<<< HEAD
     console.error("[Lifecycle] Entering setup mode...");
     // Fix for Windows ESM path issue
     const setupScriptPath = join(__dirname, "setup-claude-server.js");
@@ -197,10 +254,34 @@ async function runSetup() {
         error instanceof Error ? error.stack : String(error)
       }\n`
     );
+=======
+    console.error("[MCP] runServer 진입");
+    const transport = new StdioServerTransport();
+
+    // 서버 에러 핸들링
+    process.on("uncaughtException", (error) => {
+      console.error("[MCP] Uncaught Exception:", error);
+    });
+
+    process.on("unhandledRejection", (reason, promise) => {
+      console.error(
+        "[MCP] Unhandled Rejection at:",
+        promise,
+        "reason:",
+        reason
+      );
+    });
+
+    await server.connect(transport);
+    console.error("[MCP] Naver Search MCP Server running on stdio");
+  } catch (error) {
+    console.error("[MCP] Fatal error running server:", error);
+>>>>>>> feature/catching-error
     process.exit(1);
   }
 }
 
+<<<<<<< HEAD
 async function runServer() {
   try {
     console.error("[Lifecycle] Server process started.");
@@ -370,5 +451,11 @@ runServer().catch(async (error) => {
   // capture('run_server_fatal_error', {
   //   error: errorMessage
   // });
+=======
+// 서버 시작
+console.error("[MCP] runServer 호출 직전");
+runServer().catch((error) => {
+  console.error("[MCP] Fatal error running server (catch):", error);
+>>>>>>> feature/catching-error
   process.exit(1);
 });

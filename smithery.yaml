@@ -1,5 +1,5 @@
 name: naver-search
-version: 1.0.0
+version: 1.0.2
 description: |
   [KOR]
   네이버 검색 API를 활용한 MCP 서버입니다. 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 다양한 컨텐츠를 검색할 수 있으며, 데이터랩 API를 통해 검색어 트렌드와 쇼핑 인사이트를 분석할 수 있습니다. 검색 결과는 유사도 또는 날짜 기준으로 정렬이 가능하며, 페이지네이션을 지원합니다.
@@ -77,31 +77,17 @@ environment:
 
 capabilities:
   tools:
-    - name: search
+    - name: search_news
       description: |
         [KOR]
-        모든 타입의 컨텐츠를 검색할 수 있는 통합 검색 기능입니다.
+        네이버 뉴스 검색 기능입니다. 최신 뉴스 기사를 검색할 수 있습니다.
 
         [ENG]
-        A unified search function that can search for all types of content.
+        Naver News search function. Search for the latest news articles.
       schema:
         type: "object"
-        required: ["type", "query"]
+        required: ["query"]
         properties:
-          type:
-            type: "string"
-            enum:
-              [
-                "news",
-                "blog",
-                "shop",
-                "image",
-                "kin",
-                "book",
-                "encyc",
-                "doc",
-                "cafearticle",
-              ]
           query:
             type: "string"
             description: "Search query"
@@ -115,14 +101,13 @@ capabilities:
             type: "string"
             enum: ["sim", "date"]
             description: "Sort order (sim: similarity, date: date)"
-
-    - name: search_news
+    - name: search_cafearticle
       description: |
         [KOR]
-        네이버 뉴스 검색 기능입니다. 최신 뉴스 기사를 검색할 수 있습니다.
+        네이버 카페글 검색 기능입니다. 카페 게시글을 검색할 수 있습니다.
 
         [ENG]
-        Naver News search function. Search for the latest news articles.
+        Naver Cafe Article search function. Search for cafe articles.
       schema:
         type: "object"
         required: ["query"]
@@ -267,7 +252,12 @@ capabilities:
             description: "Sort order (sim: similarity, date: date)"
 
     - name: datalab_search
-      description: "Analyze search trends across Naver services"
+      description: |
+        [KOR]
+        네이버 서비스 전반의 검색어 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze search trends across Naver services.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "keywordGroups"]
@@ -286,6 +276,7 @@ capabilities:
             type: "array"
             items:
               type: "object"
+              required: [groupName, keywords]
               properties:
                 groupName:
                   type: "string"
@@ -297,7 +288,12 @@ capabilities:
                   description: "List of keywords"
 
     - name: datalab_shopping_category
-      description: "Analyze shopping trends by category in Naver Shopping"
+      description: |
+        [KOR]
+        네이버 쇼핑 카테고리별 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze shopping trends by category in Naver Shopping.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "category"]
@@ -314,10 +310,50 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              [KOR]
+              쇼핑 카테고리 코드 (아래 예시 참고)
+                패션의류: 50000000
+                패션잡화: 50000001
+                화장품/미용: 50000002
+                디지털/가전: 50000003
+                가구/인테리어: 50000004
+                출산/육아: 50000005
+                식품: 50000006
+                스포츠/레저: 50000007
+                생활/건강: 50000008
+                자동차용품: 50000009
+                도서/음반/DVD: 50000010
+                완구/취미: 50000011
+                문구/오피스: 50000012
+                반려동물용품: 50000013
+                여행/문화상품권: 50000014
+
+              [ENG]
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
 
     - name: datalab_shopping_by_device
-      description: "Analyze shopping trends by device type (PC/Mobile) in Naver Shopping"
+      description: |
+        [KOR]
+        네이버 쇼핑의 디바이스(PC/모바일)별 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze shopping trends by device type (PC/Mobile) in Naver Shopping.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "category", "device"]
@@ -334,14 +370,56 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              [KOR]
+              쇼핑 카테고리 코드 (아래 예시 참고)
+                패션의류: 50000000
+                패션잡화: 50000001
+                화장품/미용: 50000002
+                디지털/가전: 50000003
+                가구/인테리어: 50000004
+                출산/육아: 50000005
+                식품: 50000006
+                스포츠/레저: 50000007
+                생활/건강: 50000008
+                자동차용품: 50000009
+                도서/음반/DVD: 50000010
+                완구/취미: 50000011
+                문구/오피스: 50000012
+                반려동물용품: 50000013
+                여행/문화상품권: 50000014
+
+              [ENG]
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           device:
             type: "string"
             enum: ["pc", "mo"]
-            description: "Device type (pc or mo)"
+            description: |
+              [KOR] 디바이스 종류 (pc 또는 mo)
+              [ENG] Device type (pc or mo)
 
     - name: datalab_shopping_by_gender
-      description: "Analyze shopping trends by gender in Naver Shopping"
+      description: |
+        [KOR]
+        네이버 쇼핑의 성별 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze shopping trends by gender in Naver Shopping.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "category", "gender"]
@@ -358,14 +436,56 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              [KOR]
+              쇼핑 카테고리 코드 (아래 예시 참고)
+                패션의류: 50000000
+                패션잡화: 50000001
+                화장품/미용: 50000002
+                디지털/가전: 50000003
+                가구/인테리어: 50000004
+                출산/육아: 50000005
+                식품: 50000006
+                스포츠/레저: 50000007
+                생활/건강: 50000008
+                자동차용품: 50000009
+                도서/음반/DVD: 50000010
+                완구/취미: 50000011
+                문구/오피스: 50000012
+                반려동물용품: 50000013
+                여행/문화상품권: 50000014
+
+              [ENG]
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           gender:
             type: "string"
             enum: ["f", "m"]
-            description: "Gender (f or m)"
+            description: |
+              [KOR] 성별 (f 또는 m)
+              [ENG] Gender (f or m)
 
     - name: datalab_shopping_by_age
-      description: "Analyze shopping trends by age groups in Naver Shopping"
+      description: |
+        [KOR]
+        네이버 쇼핑의 연령대별 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze shopping trends by age groups in Naver Shopping.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "category", "ages"]
@@ -382,15 +502,57 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              [KOR]
+              쇼핑 카테고리 코드 (아래 예시 참고)
+                패션의류: 50000000
+                패션잡화: 50000001
+                화장품/미용: 50000002
+                디지털/가전: 50000003
+                가구/인테리어: 50000004
+                출산/육아: 50000005
+                식품: 50000006
+                스포츠/레저: 50000007
+                생활/건강: 50000008
+                자동차용품: 50000009
+                도서/음반/DVD: 50000010
+                완구/취미: 50000011
+                문구/오피스: 50000012
+                반려동물용품: 50000013
+                여행/문화상품권: 50000014
+
+              [ENG]
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           ages:
             type: "array"
             items:
               type: "string"
-            description: 'Age groups (e.g. ["10","20","30"])'
+            description: |
+              [KOR] 연령대 그룹 (예: ["10","20","30"])
+              [ENG] Age groups (e.g. ["10","20","30"])
 
     - name: datalab_shopping_keywords
-      description: "Analyze shopping trends by keywords in Naver Shopping"
+      description: |
+        [KOR]
+        네이버 쇼핑의 키워드별 트렌드를 분석합니다.
+
+        [ENG]
+        Analyze shopping trends by keywords in Naver Shopping.
       schema:
         type: "object"
         required: ["startDate", "endDate", "timeUnit", "category", "keyword"]
@@ -407,7 +569,44 @@ capabilities:
             description: "Time unit for analysis"
           category:
             type: "string"
-            description: "Shopping category code"
+            description: |
+              [KOR]
+              쇼핑 카테고리 코드 (아래 예시 참고)
+                패션의류: 50000000
+                패션잡화: 50000001
+                화장품/미용: 50000002
+                디지털/가전: 50000003
+                가구/인테리어: 50000004
+                출산/육아: 50000005
+                식품: 50000006
+                스포츠/레저: 50000007
+                생활/건강: 50000008
+                자동차용품: 50000009
+                도서/음반/DVD: 50000010
+                완구/취미: 50000011
+                문구/오피스: 50000012
+                반려동물용품: 50000013
+                여행/문화상품권: 50000014
+
+              [ENG]
+              Shopping category code (see examples below)
+                Fashion Clothing: 50000000
+                Fashion Accessories: 50000001
+                Cosmetics/Beauty: 50000002
+                Digital/Electronics: 50000003
+                Furniture/Interior: 50000004
+                Maternity/Baby: 50000005
+                Food: 50000006
+                Sports/Leisure: 50000007
+                Living/Health: 50000008
+                Automotive: 50000009
+                Books/Music/DVD: 50000010
+                Toys/Hobbies: 50000011
+                Stationery/Office: 50000012
+                Pet Supplies: 50000013
+                Travel/Culture Gift Cards: 50000014
           keyword:
             type: "string"
-            description: "Search keyword"
+            description: |
+              [KOR] 검색 키워드
+              [ENG] Search keyword
