@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/isnow890-naver-search-mcp-badge.png)](https://mseep.ai/app/isnow890-naver-search-mcp)
+
 # Naver Search MCP Server
 
 [![한국어](https://img.shields.io/badge/한국어-README-yellow)](README-ko.md)
