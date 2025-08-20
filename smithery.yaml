@@ -28,16 +28,25 @@ license: MIT
 runtime: "typescript"
 
 startCommand:
-  type: http
+  type: stdio
   configSchema:
     type: object
-    required: ["NAVER_CLIENT_ID", "NAVER_CLIENT_SECRET"]
+    required: ["naverClientId", "naverClientSecret"]
     properties:
-      NAVER_CLIENT_ID:
+      naverClientId:
         type: string
         title: "Naver API Client ID"
-        description: "Naver API Client ID issued from Naver Developers Center"
-      NAVER_CLIENT_SECRET:
+        description: "Naver API Client ID from Naver Developers Center (https://developers.naver.com/apps)"
+      naverClientSecret:
         type: string
         title: "Naver API Client Secret"
-        description: "Naver API Client Secret issued from Naver Developers Center"
+        description: "Naver API Client Secret from Naver Developers Center (https://developers.naver.com/apps)"
+  commandFunction: |-
+    config => ({ 
+      command: 'node', 
+      args: ['dist/src/index.js'], 
+      env: { 
+        NAVER_CLIENT_ID: config.naverClientId,
+        NAVER_CLIENT_SECRET: config.naverClientSecret
+      } 
+    })

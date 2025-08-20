@@ -34,4 +34,10 @@ coverage/
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# MCP and Claude Code files
+.mcp.json
+.claude/
+CLAUDE.md
+settings.local.json

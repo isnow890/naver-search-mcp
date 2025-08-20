@@ -1,21 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm publish:*)",
-      "Bash(npm ls:*)",
+      "mcp__sequential-thinking-mac__sequentialthinking",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
       "Bash(npm run build:*)",
-      "Bash(npm run dev:*)",
-      "Bash(npm run:*)",
-      "Bash(node:*)",
-      "Bash(npx tsc:*)",
-      "Bash(rm:*)",
+      "Bash(git checkout:*)",
       "Bash(npm install)",
-      "Bash(NAVER_CLIENT_ID=xFgVuGN4saIIvMiWOG7d NAVER_CLIENT_SECRET=kYpjXci3HV node dist/src/index.js)",
-      "Bash(ls:*)",
-      "Bash(find:*)",
-      "Bash(timeout 5s npm start)",
-      "Bash(npx -y @smithery/cli@1.2.17 build -o .smithery/index.cjs)"
-    ],
-    "deny": []
-  }
+      "Bash(node:*)",
+      "Bash(NAVER_CLIENT_ID=test_id NAVER_CLIENT_SECRET=test_secret node dist/src/index.js)",
+      "Bash(docker build:*)",
+      "Bash(rm:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "context7",
+    "sequential-thinking",
+    "sequential-thinking-mac",
+    "playwright",
+    "playwright-mac",
+    "book-information-mcp",
+    "book-information-mcp-mac"
+  ]
 }
