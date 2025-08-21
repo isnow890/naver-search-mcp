@@ -9,6 +9,15 @@ import {
   DatalabShoppingKeywordDevice,
   DatalabShoppingKeywordGender,
   DatalabShoppingKeywordAge,
+  DatalabSearchSchema,
+  DatalabShoppingSchema,
+  DatalabShoppingDeviceSchema,
+  DatalabShoppingGenderSchema,
+  DatalabShoppingAgeSchema,
+  DatalabShoppingKeywordsSchema,
+  DatalabShoppingKeywordDeviceSchema,
+  DatalabShoppingKeywordGenderSchema,
+  DatalabShoppingKeywordAgeSchema
 } from "../schemas/datalab.schemas.js";
 
 // 클라이언트 인스턴스 (싱글톤)
@@ -23,39 +32,39 @@ export const datalabToolHandlers: Record<string, (args: any) => Promise<any>> =
   {
     datalab_search: (args) => {
       console.error("datalab_search called with args:", JSON.stringify(args, null, 2));
-      return handleSearchTrend(args);
+      return handleSearchTrend(DatalabSearchSchema.parse(args));
     },
     datalab_shopping_category: (args) => {
       console.error("datalab_shopping_category called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingCategoryTrend(args);
+      return handleShoppingCategoryTrend(DatalabShoppingSchema.parse(args));
     },
     datalab_shopping_by_device: (args) => {
       console.error("datalab_shopping_by_device called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingByDeviceTrend(args);
+      return handleShoppingByDeviceTrend(DatalabShoppingDeviceSchema.parse(args));
     },
     datalab_shopping_by_gender: (args) => {
       console.error("datalab_shopping_by_gender called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingByGenderTrend(args);
+      return handleShoppingByGenderTrend(DatalabShoppingGenderSchema.parse(args));
     },
     datalab_shopping_by_age: (args) => {
       console.error("datalab_shopping_by_age called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingByAgeTrend(args);
+      return handleShoppingByAgeTrend(DatalabShoppingAgeSchema.parse(args));
     },
     datalab_shopping_keywords: (args) => {
       console.error("datalab_shopping_keywords called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingKeywordsTrend(args);
+      return handleShoppingKeywordsTrend(DatalabShoppingKeywordsSchema.parse(args));
     },
     datalab_shopping_keyword_by_device: (args) => {
       console.error("datalab_shopping_keyword_by_device called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingKeywordByDeviceTrend(args);
+      return handleShoppingKeywordByDeviceTrend(DatalabShoppingKeywordDeviceSchema.parse(args));
     },
     datalab_shopping_keyword_by_gender: (args) => {
       console.error("datalab_shopping_keyword_by_gender called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingKeywordByGenderTrend(args);
+      return handleShoppingKeywordByGenderTrend(DatalabShoppingKeywordGenderSchema.parse(args));
     },
     datalab_shopping_keyword_by_age: (args) => {
       console.error("datalab_shopping_keyword_by_age called with args:", JSON.stringify(args, null, 2));
-      return handleShoppingKeywordByAgeTrend(args);
+      return handleShoppingKeywordByAgeTrend(DatalabShoppingKeywordAgeSchema.parse(args));
     },
   };
 

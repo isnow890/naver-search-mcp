@@ -10,6 +10,15 @@ MCP server for Naver Search API and DataLab API integration, enabling comprehens
 
 #### Version History
 
+###### 1.0.4 (2025-08-21)
+
+- Migration to Fast MCP 3.1.1 architecture (simplified codebase)
+- Added `find_category` tool with fuzzy matching and ranking system
+- Enhanced parameter validation using Zod schemas
+- Improved category search workflow
+- Implemented level-based category ranking system (대분류 priority)
+- Added dynamic Excel file detection
+
 ###### 1.0.30 (2025-08-04)
 
 - MCP SDK upgraded to 1.17.1
@@ -37,7 +46,7 @@ MCP server for Naver Search API and DataLab API integration, enabling comprehens
 #### Prerequisites
 
 - Naver Developers API Key (Client ID and Secret)
-- Node.js 18 or higher
+- Node.js 22 or higher
 - NPM 8 or higher
 - Docker (optional, for container deployment)
 
@@ -55,6 +64,9 @@ MCP server for Naver Search API and DataLab API integration, enabling comprehens
 
 ### Available tools:
 
+#### 🆕 Smart Category Search
+- **find_category**: Category search tool with fuzzy matching and ranking system for efficient category discovery
+
 #### Search Tools
 - **search_webkr**: Search Naver web documents
 - **search_news**: Search Naver news
@@ -68,52 +80,118 @@ MCP server for Naver Search API and DataLab API integration, enabling comprehens
 - **search_academic**: Search Naver academic papers
 - **search_local**: Search Naver local places
 
-#### DataLab Tools
+#### DataLab Shopping Intelligence 📊
 - **datalab_search**: Analyze search term trends
 - **datalab_shopping_category**: Analyze shopping category trends
-- **datalab_shopping_by_device**: Analyze shopping trends by device
-- **datalab_shopping_by_gender**: Analyze shopping trends by gender
-- **datalab_shopping_by_age**: Analyze shopping trends by age group
-- **datalab_shopping_keywords**: Analyze shopping keyword trends
-- **datalab_shopping_keyword_by_device**: Analyze shopping keyword trends by device
-- **datalab_shopping_keyword_by_gender**: Analyze shopping keyword trends by gender
-- **datalab_shopping_keyword_by_age**: Analyze shopping keyword trends by age group
+- **datalab_shopping_device**: Analyze shopping trends by device (PC vs Mobile)
+- **datalab_shopping_gender**: Analyze shopping trends by gender
+- **datalab_shopping_age**: Analyze shopping trends by age group (10s-60s+)
+- **datalab_shopping_keywords**: Compare keyword performance within categories
+- **datalab_shopping_keyword_device**: Analyze keyword trends by device
+- **datalab_shopping_keyword_gender**: Analyze keyword trends by gender
+- **datalab_shopping_keyword_age**: Analyze keyword trends by age group
 
-### DataLab Shopping Category Codes
+## 🚀 Smart Category Search & Shopping Intelligence
 
-For DataLab shopping analysis tools, you need to use specific **8-digit category codes**. Here are some common examples:
+### Improved Workflow
 
-#### Popular Category Codes:
-- **50000000**: Fashion/Clothing (패션의류)
-- **50000002**: Cosmetics/Beauty (화장품/미용)
-- **50000003**: Digital/Home Appliances (디지털/가전)
-- **50000004**: Sports/Leisure (스포츠/레저)
-- **50000005**: Automotive/Tools (자동차/공구)
-- **50000006**: Books/Music/DVDs (도서/음반/DVD)
-- **50000007**: Toys/Hobbies (완구/취미)
-- **50000008**: Food/Beverages (식품/음료)
-- **50000009**: Health/Medical (건강/의료용품)
-- **50000010**: Household/Living (생활/주방용품)
-
-#### How to Find Category Codes:
-1. Visit [Naver Shopping](https://shopping.naver.com)
-2. Navigate to desired category
-3. Check the `cat_id` parameter in the URL
-4. Use the 8-digit code (e.g., `cat_id=50000000` → use `"50000000"`)
-
-#### Usage Example:
-When using shopping category tools, specify category like:
-```json
-{
-  "category": "50000000",
-  "startDate": "2024-01-01",
-  "endDate": "2024-01-31",
-  "timeUnit": "month"
-}
+**Before v1.0.4** (Complex, Manual):
+```
+1. Visit Naver Shopping website
+2. Browse categories manually
+3. Extract 8-digit codes from URLs
+4. Remember or document codes
+5. Use codes in DataLab tools
 ```
 
-#### Complete Category List:
-For a complete list of category codes, you can download from Naver Shopping Partner Center or extract them by browsing Naver Shopping categories.
+**After v1.0.4** (Simple, Efficient):
+```
+1. Use find_category("fashion") 
+2. Get ranked results
+3. Direct path to trend analysis
+```
+
+### 🎯 Business Use Cases & Scenarios
+
+#### 🛍️ E-commerce Market Research
+```javascript
+// Discover fashion trends
+find_category("패션") → Get top fashion categories with codes
+datalab_shopping_category → Analyze seasonal fashion trends
+datalab_shopping_age → Target age demographics for fashion
+datalab_shopping_keywords → Compare "원피스" vs "자켓" vs "드레스"
+```
+
+#### 📱 Digital Marketing Strategy
+```javascript
+// Beauty industry analysis
+find_category("화장품") → Find beauty categories
+datalab_shopping_gender → 95% female vs 5% male shoppers
+datalab_shopping_device → Mobile dominance in beauty shopping
+datalab_shopping_keywords → "틴트" vs "립스틱" keyword performance
+```
+
+#### 🏢 Business Intelligence & Competitive Analysis
+```javascript
+// Tech product insights
+find_category("스마트폰") → Get electronics categories
+datalab_shopping_category → Track iPhone vs Galaxy trends
+datalab_shopping_age → 20s-30s are primary smartphone buyers
+datalab_shopping_device → PC vs Mobile shopping behavior
+```
+
+#### 📊 Seasonal Business Planning
+```javascript
+// Holiday shopping analysis
+find_category("선물") → Gift categories
+datalab_shopping_category → Black Friday, Christmas trends
+datalab_shopping_keywords → "어버이날 선물" vs "생일선물"
+datalab_shopping_age → Gift-giving patterns by age group
+```
+
+#### 🎯 Customer Persona Development
+```javascript
+// Fitness market analysis
+find_category("운동") → Sports/fitness categories  
+datalab_shopping_gender → Male vs female fitness spending
+datalab_shopping_age → Peak fitness demographics (20s-40s)
+datalab_shopping_keywords → "홈트" vs "헬스장" trend analysis
+```
+
+### 📈 Advanced Analytics Scenarios
+
+#### Market Entry Strategy
+1. **Category Discovery**: Use `find_category` to explore market segments
+2. **Trend Analysis**: Identify growing vs declining categories  
+3. **Demographic Targeting**: Age/gender analysis for customer targeting
+4. **Competitive Intelligence**: Keyword performance comparison
+5. **Device Strategy**: Mobile vs PC shopping optimization
+
+#### Product Launch Planning
+1. **Market Validation**: Category growth trends and seasonality
+2. **Target Audience**: Demographic analysis for product positioning
+3. **Marketing Channels**: Device preference for advertising strategy
+4. **Competitive Landscape**: Keyword competition and opportunities
+5. **Pricing Strategy**: Category performance correlation with pricing
+
+#### Performance Monitoring
+1. **Category Health**: Monitor your product category trends
+2. **Keyword Tracking**: Track brand and product keyword performance
+3. **Demographic Shifts**: Monitor changing customer demographics
+4. **Seasonal Patterns**: Plan inventory and marketing campaigns
+5. **Competitive Benchmarking**: Compare performance against category averages
+
+### Quick Reference: Popular Category Codes
+| Category | Code | Korean |
+|----------|------|---------|
+| Fashion/Clothing | 50000000 | 패션의류 |
+| Cosmetics/Beauty | 50000002 | 화장품/미용 |
+| Digital/Electronics | 50000003 | 디지털/가전 |
+| Sports/Leisure | 50000004 | 스포츠/레저 |
+| Food/Beverages | 50000008 | 식품/음료 |
+| Health/Medical | 50000009 | 건강/의료용품 |
+
+💡 **Tip**: Use `find_category` with fuzzy search like "뷰티", "패션", "전자제품" to easily find categories.
 
 ## Installation
 

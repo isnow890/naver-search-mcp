@@ -1,314 +1,137 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
-import { NaverSearchClient } from "./clients/naver-search.client.js";
-import { searchToolHandlers } from "./handlers/search.handlers.js";
-import { datalabToolHandlers } from "./handlers/datalab.handlers.js";
-import { 
-  SearchArgsSchema, 
-  NaverLocalSearchParamsSchema 
-} from "./schemas/search.schemas.js";
-import {
-  DatalabSearchSchema,
-  DatalabShoppingSchema,
-  DatalabShoppingDeviceSchema,
-  DatalabShoppingGenderSchema,
-  DatalabShoppingAgeSchema,
-  DatalabShoppingKeywordsSchema,
-  DatalabShoppingKeywordDeviceSchema,
-  DatalabShoppingKeywordGenderSchema,
-  DatalabShoppingKeywordAgeSchema
-} from "./schemas/datalab.schemas.js";
+#!/usr/bin/env node
+'use strict'; /*jslint node:true es9:true*/
 
-// Configuration schema for Smithery
-export const configSchema = z.object({
-  NAVER_CLIENT_ID: z.string().describe("Naver API Client ID"),
-  NAVER_CLIENT_SECRET: z.string().describe("Naver API Client Secret")
+import { FastMCP } from 'fastmcp';
+import { NaverSearchClient } from "./clients/naver-search.client.js";
+import { createSearchTools } from "./tools/search.tools.js";
+import { createDatalabTools } from "./tools/datalab.tools.js";
+import { createUtilityTools } from "./tools/utility.tools.js";
+import { createCategoryTools } from "./tools/category.tools.js";
+
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const package_json = require('../../package.json');
+
+// Environment variables
+const naver_client_id = process.env.NAVER_CLIENT_ID;
+const naver_client_secret = process.env.NAVER_CLIENT_SECRET;
+
+if (!naver_client_id || !naver_client_secret)
+    throw new Error('Cannot run MCP server without NAVER_CLIENT_ID and NAVER_CLIENT_SECRET env');
+
+// Initialize Naver client
+const client = NaverSearchClient.getInstance();
+client.initialize({
+    clientId: naver_client_id,
+    clientSecret: naver_client_secret,
 });
 
-export function createNaverSearchServer({ config }: { config: z.infer<typeof configSchema> }) {
-  // Create a new MCP server per MCP spec
-  const server = new McpServer({
-    name: "naver-search",
-    version: "1.0.30",
-  });
+let server = new FastMCP({
+    name: 'Naver Search',
+    version: package_json.version,
+});
 
-  // Initialize Naver client with config
-  const client = NaverSearchClient.getInstance();
-  client.initialize({
-    clientId: config.NAVER_CLIENT_ID,
-    clientSecret: config.NAVER_CLIENT_SECRET,
-  });
+let debug_stats: any = { tool_calls: {}, session_calls: 0 };
 
-  // Register search tools using new 1.17.1 API
-  server.registerTool("search_webkr", {
-    description: "Perform a search on Naver Web Documents. (네이버 웹문서 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_webkr(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
+// Create all tools using the modular structure
+const searchTools = createSearchTools(tool_fn);
+const datalabTools = createDatalabTools(tool_fn);
+const utilityTools = createUtilityTools(tool_fn, debug_stats);
+const categoryTools = createCategoryTools(tool_fn);
 
-  server.registerTool("search_news", {
-    description: "Perform a search on Naver News. (네이버 뉴스 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_news(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
+// Export all tools as array
+export const tools = [
+    ...searchTools,
+    ...datalabTools,
+    ...utilityTools,
+    ...categoryTools,
+];
 
-  server.registerTool("search_blog", {
-    description: "Perform a search on Naver Blog. (네이버 블로그 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_blog(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_shop", {
-    description: "Perform a search on Naver Shopping. (네이버 쇼핑 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_shop(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_image", {
-    description: "Perform a search on Naver Image. (네이버 이미지 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_image(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_kin", {
-    description: "Perform a search on Naver KnowledgeiN. (네이버 지식iN 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_kin(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_book", {
-    description: "Perform a search on Naver Book. (네이버 책 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_book(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_encyc", {
-    description: "Perform a search on Naver Encyclopedia. (네이버 지식백과 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_encyc(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_academic", {
-    description: "Perform a search on Naver Academic. (네이버 전문자료 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_academic(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_local", {
-    description: "Perform a search on Naver Local. (네이버 지역 검색)",
-    inputSchema: NaverLocalSearchParamsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_local(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("search_cafearticle", {
-    description: "Perform a search on Naver Cafe Articles. (네이버 카페글 검색)",
-    inputSchema: SearchArgsSchema.shape
-  }, async (args) => {
-    const result = await searchToolHandlers.search_cafearticle(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  // Register datalab tools
-  server.registerTool("datalab_search", {
-    description: "Perform a trend analysis on Naver search keywords. (네이버 검색어 트렌드 분석)",
-    inputSchema: DatalabSearchSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_search(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_category", {
-    description: "Perform a trend analysis on Naver Shopping category. (네이버 쇼핑 카테고리별 트렌드 분석)",
-    inputSchema: DatalabShoppingSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_category(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_by_device", {
-    description: "Perform a trend analysis on Naver Shopping by device. (네이버 쇼핑 기기별 트렌드 분석)",
-    inputSchema: DatalabShoppingDeviceSchema.pick({
-      startDate: true,
-      endDate: true,
-      timeUnit: true,
-      category: true,
-      device: true,
-    }).shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_by_device(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_by_gender", {
-    description: "Perform a trend analysis on Naver Shopping by gender. (네이버 쇼핑 성별 트렌드 분석)",
-    inputSchema: DatalabShoppingGenderSchema.pick({
-      startDate: true,
-      endDate: true,
-      timeUnit: true,
-      category: true,
-      gender: true,
-    }).shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_by_gender(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_by_age", {
-    description: "Perform a trend analysis on Naver Shopping by age. (네이버 쇼핑 연령별 트렌드 분석)",
-    inputSchema: DatalabShoppingAgeSchema.pick({
-      startDate: true,
-      endDate: true,
-      timeUnit: true,
-      category: true,
-      ages: true,
-    }).shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_by_age(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_keywords", {
-    description: "Perform a trend analysis on Naver Shopping keywords. (네이버 쇼핑 키워드별 트렌드 분석)",
-    inputSchema: DatalabShoppingKeywordsSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_keywords(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_keyword_by_device", {
-    description: "Perform a trend analysis on Naver Shopping keywords by device. (네이버 쇼핑 키워드 기기별 트렌드 분석)",
-    inputSchema: DatalabShoppingKeywordDeviceSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_keyword_by_device(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_keyword_by_gender", {
-    description: "Perform a trend analysis on Naver Shopping keywords by gender. (네이버 쇼핑 키워드 성별 트렌드 분석)",
-    inputSchema: DatalabShoppingKeywordGenderSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_keyword_by_gender(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  server.registerTool("datalab_shopping_keyword_by_age", {
-    description: "Perform a trend analysis on Naver Shopping keywords by age. (네이버 쇼핑 키워드 연령별 트렌드 분석)",
-    inputSchema: DatalabShoppingKeywordAgeSchema.shape
-  }, async (args) => {
-    const result = await datalabToolHandlers.datalab_shopping_keyword_by_age(args);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-  });
-
-  return server.server;
+// Register all tools
+for (let tool of tools) {
+    server.addTool(tool);
 }
 
-// Export default for Smithery compatibility
-export default createNaverSearchServer;
+console.error('Starting server...');
+server.start({ transportType: 'stdio' });
 
-// Main function to run the server when executed directly
-async function main() {
-  try {
-    console.error("Starting Naver Search MCP Server...");
-    
-    // Get config from environment variables - check for empty strings too
-    const clientId = process.env.NAVER_CLIENT_ID?.trim();
-    const clientSecret = process.env.NAVER_CLIENT_SECRET?.trim();
-    
-    console.error("Environment variables:", {
-      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID ? `[${process.env.NAVER_CLIENT_ID.length} chars]` : 'undefined',
-      NAVER_CLIENT_SECRET: process.env.NAVER_CLIENT_SECRET ? `[${process.env.NAVER_CLIENT_SECRET.length} chars]` : 'undefined'
-    });
-    
-    if (!clientId || !clientSecret) {
-      throw new Error(`Missing required environment variables:
-        NAVER_CLIENT_ID: ${clientId ? 'provided' : 'missing'}
-        NAVER_CLIENT_SECRET: ${clientSecret ? 'provided' : 'missing'}
-        
-        Please set these environment variables before running the server.`);
-    }
-    
-    const config = {
-      NAVER_CLIENT_ID: clientId,
-      NAVER_CLIENT_SECRET: clientSecret
+// Tool function wrapper
+function tool_fn(name: string, fn: any): any {
+    return async (data: any, ctx: any) => {
+        debug_stats.tool_calls[name] = debug_stats.tool_calls[name] || 0;
+        debug_stats.tool_calls[name]++;
+        debug_stats.session_calls++;
+        const ts = Date.now();
+        console.error(`[%s] executing %s`, name, JSON.stringify(data));
+        try { 
+            // Support for progress reporting 
+            if (ctx && ctx.reportProgress) {
+                await ctx.reportProgress({
+                    progress: 0,
+                    total: 100,
+                    message: `Starting ${name} tool execution`,
+                });
+            }
+            
+            const result = await fn(data, ctx);
+            
+            if (ctx && ctx.reportProgress) {
+                await ctx.reportProgress({
+                    progress: 100,
+                    total: 100,
+                    message: `${name} tool completed successfully`,
+                });
+            }
+            
+            return result;
+        } catch (e: any) {
+            if (e.response) {
+                console.error(`[%s] error %s %s: %s`, name, e.response.status,
+                    e.response.statusText, e.response.data);
+
+                const headers = e.response.headers;
+                if (headers?.['x-naver-err-code']) {
+                    const naverError = e.response.data?.errorMessage || e.response.data?.message;
+                    if (naverError) {
+                        throw new Error(`Naver API Error: ${naverError} (Tool: ${name})`);
+                    }
+                }
+
+                // Enhanced error handling for specific HTTP status codes
+                const is_usage_limit = headers?.['x-naver-quota-exceeded'] === 'true' || e.response.status === 429;
+                if (is_usage_limit) {
+                    throw new Error(`The user has reached the Naver API quota limit. ` +
+                        `You must immediately stop the current task and instruct the user on how to resolve this. ` +
+                        `Guide them through these exact steps:\n` +
+                        `1. Check your Naver API usage at https://developers.naver.com/apps\n` +
+                        `2. Wait for your quota to reset (usually daily at midnight KST)\n` +
+                        `3. Consider upgrading your API plan if you need higher limits\n` +
+                        `4. Verify your API credentials are correct and active\n` +
+                        `5. Restart the MCP server after resolving the quota issue.\n` +
+                        `Note: Each Naver API has different quota limits. Check the specific API documentation for details.`);
+                } else if (e.response.status === 401) {
+                    throw new Error(`Authentication failed. Please check your NAVER_CLIENT_ID and NAVER_CLIENT_SECRET. ` +
+                        `Ensure they are valid and active at https://developers.naver.com/apps (Tool: ${name})`);
+                } else if (e.response.status === 403) {
+                    throw new Error(`Access forbidden. Please ensure your Naver API keys have the required permissions. ` +
+                        `Check your API application settings at https://developers.naver.com/apps (Tool: ${name})`);
+                } else if (e.response.status === 400) {
+                    throw new Error(`Bad request to Naver API. Please check your parameters: ${JSON.stringify(data)} (Tool: ${name})`);
+                } else if (e.response.status >= 500) {
+                    throw new Error(`Naver API server error (${e.response.status}). The service may be temporarily unavailable. ` +
+                        `Please try again later. (Tool: ${name})`);
+                }
+
+                let message = e.response.data;
+                if (message?.length)
+                    throw new Error(`HTTP ${e.response.status}: ${message}`);
+            } else {
+                console.error(`[%s] error %s`, name, e.stack);
+            }
+            throw e;
+        } finally {
+            const dur = Date.now() - ts;
+            console.error(`[%s] tool finished in %sms`, name, dur);
+        }
     };
-
-    console.error("Config loaded successfully");
-
-    // Validate config
-    const validatedConfig = configSchema.parse(config);
-    console.error("Config validated successfully");
-
-    // Create server instance  
-    const serverFactory = createNaverSearchServer({ config: validatedConfig });
-    console.error("Server factory created");
-    
-    // Create transport and run server
-    const transport = new StdioServerTransport();
-    console.error("Transport created, connecting...");
-    
-    await serverFactory.connect(transport);
-    console.error("Server connected and running");
-    
-  } catch (error) {
-    console.error("Error in main function:", error);
-    throw error;
-  }
-}
-
-// Run main function if this file is executed directly
-// Note: Always run main in CLI mode since this is an MCP server
-console.error("Starting MCP server initialization...");
-console.error("process.argv:", process.argv);
-
-// Check if running as main module - compatible with both ESM and CommonJS
-let isMainModule = false;
-try {
-  // Try ESM approach first
-  if (typeof import.meta !== 'undefined' && import.meta.url) {
-    console.error("import.meta.url:", import.meta.url);
-    isMainModule = import.meta.url === `file://${process.argv[1]}` || 
-                   import.meta.url.endsWith(process.argv[1]) ||
-                   process.argv[1].endsWith("index.js");
-  } else {
-    // Fallback for CommonJS or when import.meta is not available
-    isMainModule = process.argv[1].endsWith("index.js") || 
-                   process.argv[1].includes("naver-search-mcp");
-  }
-} catch (error) {
-  // Fallback for environments where import.meta causes issues
-  isMainModule = process.argv[1].endsWith("index.js") || 
-                 process.argv[1].includes("naver-search-mcp");
-}
-
-console.error("isMainModule:", isMainModule);
-
-if (isMainModule) {
-  console.error("Running as main module, starting server...");
-  main().catch((error) => {
-    console.error("Server failed to start:", error);
-    process.exit(1);
-  });
-} else {
-  console.error("Not running as main module, skipping server start");
 }

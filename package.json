@@ -1,6 +1,6 @@
 {
   "name": "@isnow890/naver-search-mcp",
-  "version": "1.0.30",
+  "version": "1.0.4",
   "description": "Naver Search MCP Server",
   "main": "dist/index.js",
   "module": "./src/index.ts",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "prebuild": "npx shx rm -rf dist",
-    "build": "tsc",
+    "build": "tsc && npx shx cp -r data dist/",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "start": "node dist/src/index.js"
@@ -19,12 +19,10 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.17.1",
     "axios": "^1.6.7",
-    "zod": "^3.23.0",
-    "zod-to-json-schema": "^3.23.0",
-    "sharp": "^0.33.2",
-    "dotenv": "^16.4.5"
+    "fastmcp": "^3.1.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/node": "^22",
