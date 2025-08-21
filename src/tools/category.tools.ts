@@ -4,8 +4,20 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { FindCategorySchema } from '../schemas/category.schemas.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Bundle-safe directory resolution
+let __dirname: string;
+try {
+  if (typeof import.meta.url !== 'undefined') {
+    const __filename = fileURLToPath(import.meta.url);
+    __dirname = path.dirname(__filename);
+  } else {
+    // Fallback for bundled environments
+    __dirname = path.join(process.cwd(), 'dist', 'src', 'tools');
+  }
+} catch {
+  // Final fallback
+  __dirname = path.join(process.cwd(), 'dist', 'src', 'tools');
+}
 
 // Tool function wrapper type
 type ToolFunction = (name: string, fn: any) => any;

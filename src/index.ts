@@ -9,8 +9,23 @@ import { createUtilityTools } from "./tools/utility.tools.js";
 import { createCategoryTools } from "./tools/category.tools.js";
 
 import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-const package_json = require('../../package.json');
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+// Bundle-safe way to get package.json
+let package_json: any;
+try {
+  if (typeof import.meta.url !== 'undefined') {
+    const require = createRequire(import.meta.url);
+    package_json = require('../../package.json');
+  } else {
+    // Fallback for bundled environments
+    package_json = { version: '1.0.4' };
+  }
+} catch {
+  // Fallback if package.json can't be loaded
+  package_json = { version: '1.0.4' };
+}
 
 // Environment variables
 const naver_client_id = process.env.NAVER_CLIENT_ID;

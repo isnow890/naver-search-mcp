@@ -30,6 +30,9 @@ license: MIT
 # Smithery.ai configuration
 runtime: "typescript"
 
+# Build configuration similar to exa-mcp-server
+buildCommand: "npm run build:smithery"
+
 startCommand:
   type: stdio
   configSchema:
