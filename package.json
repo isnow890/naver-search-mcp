@@ -2,7 +2,7 @@
   "name": "@isnow890/naver-search-mcp",
   "version": "1.0.4",
   "description": "Naver Search MCP Server",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "module": "./src/index.ts",
   "types": "dist/index.d.ts",
   "files": [
@@ -13,6 +13,7 @@
     "prebuild": "npx shx rm -rf dist",
     "build": "tsc && npx shx cp -r data dist/",
     "build:smithery": "npx @smithery/cli@latest build src/index.ts -o .smithery/index.cjs",
+    "dev": "npx @smithery/cli dev",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "start": "node dist/src/index.js"
