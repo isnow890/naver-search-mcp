@@ -35,6 +35,8 @@ buildCommand: "npm run build:smithery"
 
 startCommand:
   type: stdio
+  healthCheck:
+    enabled: false
   configSchema:
     type: object
     required: ["naverClientId", "naverClientSecret"]
@@ -50,7 +52,7 @@ startCommand:
   commandFunction: |-
     config => ({ 
       command: 'node', 
-      args: ['dist/src/index.js'], 
+      args: ['.smithery/index.cjs'], 
       env: { 
         NAVER_CLIENT_ID: config.naverClientId,
         NAVER_CLIENT_SECRET: config.naverClientSecret
