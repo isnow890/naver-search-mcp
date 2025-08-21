@@ -1,13 +1,16 @@
 name: naver-search
-version: 1.0.30
+version: 1.0.4
 description: |
   [KOR]
-  네이버 검색 API를 활용한 MCP 서버입니다. 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 다양한 컨텐츠를 검색할 수 있으며, 데이터랩 API를 통해 검색어 트렌드와 쇼핑 인사이트를 분석할 수 있습니다. 검색 결과는 유사도 또는 날짜 기준으로 정렬이 가능하며, 페이지네이션을 지원합니다.
+  네이버 검색 API를 활용한 MCP 서버입니다. 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 다양한 컨텐츠를 검색할 수 있으며, 데이터랩 API를 통해 검색어 트렌드와 쇼핑 인사이트를 분석할 수 있습니다. v1.0.4부터 스마트 카테고리 검색 기능이 추가되어 더욱 효율적인 카테고리 발견이 가능합니다.
 
   [ENG]
-  An MCP server leveraging the Naver Search API and Datalab API capabilities. Search across diverse content types including news, blogs, shopping items, images, Knowledge-iN, books, encyclopedia, web documents, and cafe articles. Analyze search trends and shopping insights through Datalab API. Features include relevance/date-based sorting and pagination support.
+  A MCP server leveraging the Naver Search API and Datalab API capabilities. Search across diverse content types including news, blogs, shopping items, images, Knowledge-iN, books, encyclopedia, web documents, and cafe articles. Analyze search trends and shopping insights through Datalab API. v1.0.4 introduces smart category search with fuzzy matching for efficient category discovery.
+
+  - 카테고리코드 검색기능이 추가되었습니다. 이제 트렌드와 쇼핑 인사이트 기능이 훨씬 효율적으로 동작합니다.
 
   주요 기능:
+  - 스마트 카테고리 검색: 퍼지 매칭과 순위 시스템으로 효율적인 카테고리 발견
   - 통합 검색: 모든 타입의 컨텐츠를 한 번에 검색
   - 카테고리별 검색: 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 개별 검색
   - 검색 결과 정렬: 유사도순 또는 날짜순 정렬 지원
