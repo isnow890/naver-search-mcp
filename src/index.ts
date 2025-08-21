@@ -6,6 +6,7 @@ import { NaverSearchClient } from "./clients/naver-search.client.js";
 import { createSearchTools } from "./tools/search.tools.js";
 import { createDatalabTools } from "./tools/datalab.tools.js";
 import { createUtilityTools } from "./tools/utility.tools.js";
+import { createCategoryTools } from "./tools/category.tools.js";
 
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
@@ -36,12 +37,14 @@ let debug_stats: any = { tool_calls: {}, session_calls: 0 };
 const searchTools = createSearchTools(tool_fn);
 const datalabTools = createDatalabTools(tool_fn);
 const utilityTools = createUtilityTools(tool_fn, debug_stats);
+const categoryTools = createCategoryTools(tool_fn);
 
 // Export all tools as array
 export const tools = [
     ...searchTools,
     ...datalabTools,
     ...utilityTools,
+    ...categoryTools,
 ];
 
 // Register all tools

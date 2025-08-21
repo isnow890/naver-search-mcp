@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "prebuild": "npx shx rm -rf dist",
-    "build": "tsc",
+    "build": "tsc && npx shx cp -r data dist/",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "start": "node dist/src/index.js"
@@ -19,8 +19,9 @@
     "node": ">=18"
   },
   "dependencies": {
-    "fastmcp": "^3.1.1",
     "axios": "^1.6.7",
+    "fastmcp": "^3.1.1",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.0"
   },
   "devDependencies": {
