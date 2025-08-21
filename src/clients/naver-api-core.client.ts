@@ -25,11 +25,28 @@ export abstract class NaverApiCoreClient {
 
   protected async get<T>(url: string, params: any): Promise<T> {
     const response = await axios.get<T>(url, { params, ...this.getHeaders() });
-    return response.data;
+    return this.decodeUnicodeInResponse(response.data);
   }
 
   protected async post<T>(url: string, data: any): Promise<T> {
     const response = await axios.post<T>(url, data, this.getHeaders());
-    return response.data;
+    return this.decodeUnicodeInResponse(response.data);
+  }
+
+  private decodeUnicodeInResponse(data: any): any {
+    if (typeof data === 'string') {
+      return data.replace(/\\u[\dA-F]{4}/gi, (match) => {
+        return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+      });
+    } else if (Array.isArray(data)) {
+      return data.map(item => this.decodeUnicodeInResponse(item));
+    } else if (data !== null && typeof data === 'object') {
+      const decoded: any = {};
+      for (const [key, value] of Object.entries(data)) {
+        decoded[this.decodeUnicodeInResponse(key)] = this.decodeUnicodeInResponse(value);
+      }
+      return decoded;
+    }
+    return data;
   }
 }
