@@ -16,7 +16,6 @@ declare global {
     }
 
     interface Global {
-      gc?: () => void;
     }
   }
 

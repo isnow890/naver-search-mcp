@@ -1,4 +1,5 @@
 import { NaverSearchClient } from "../clients/naver-search.client.js";
+import { resolveDateRange } from "../utils/date.utils.js";
 import {
   DatalabSearch,
   DatalabShopping,
@@ -65,7 +66,8 @@ export const datalabToolHandlers: Record<string, (args: any) => Promise<any>> =
  * @param params DatalabSearch
  */
 export async function handleSearchTrend(params: DatalabSearch) {
-  return client.searchTrend(params);
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
+  return client.searchTrend({ ...params, startDate, endDate });
 }
 
 /**
@@ -74,7 +76,8 @@ export async function handleSearchTrend(params: DatalabSearch) {
  * @param params DatalabShopping
  */
 export async function handleShoppingCategoryTrend(params: DatalabShopping) {
-  return client.datalabShoppingCategory(params);
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
+  return client.datalabShoppingCategory({ ...params, startDate, endDate });
 }
 
 /**
@@ -85,9 +88,10 @@ export async function handleShoppingCategoryTrend(params: DatalabShopping) {
 export async function handleShoppingByDeviceTrend(
   params: DatalabShoppingDevice
 ) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingByDevice({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     device: params.device,
@@ -102,9 +106,10 @@ export async function handleShoppingByDeviceTrend(
 export async function handleShoppingByGenderTrend(
   params: DatalabShoppingGender
 ) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingByGender({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     gender: params.gender,
@@ -117,9 +122,10 @@ export async function handleShoppingByGenderTrend(
  * @param params DatalabShoppingAge
  */
 export async function handleShoppingByAgeTrend(params: DatalabShoppingAge) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingByAge({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     ages: params.ages,
@@ -134,10 +140,10 @@ export async function handleShoppingByAgeTrend(params: DatalabShoppingAge) {
 export async function handleShoppingKeywordsTrend(
   params: DatalabShoppingKeywords
 ) {
-  // 키워드 배열을 네이버 API에 맞는 형식으로 변환
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingKeywords({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
@@ -152,9 +158,10 @@ export async function handleShoppingKeywordsTrend(
 export async function handleShoppingKeywordByDeviceTrend(
   params: DatalabShoppingKeywordDevice
 ) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingKeywordByDevice({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
@@ -170,9 +177,10 @@ export async function handleShoppingKeywordByDeviceTrend(
 export async function handleShoppingKeywordByGenderTrend(
   params: DatalabShoppingKeywordGender
 ) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingKeywordByGender({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
@@ -188,9 +196,10 @@ export async function handleShoppingKeywordByGenderTrend(
 export async function handleShoppingKeywordByAgeTrend(
   params: DatalabShoppingKeywordAge
 ) {
+  const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
   return client.datalabShoppingKeywordByAge({
-    startDate: params.startDate,
-    endDate: params.endDate,
+    startDate,
+    endDate,
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,

@@ -21,10 +21,7 @@ import {
   DatalabShoppingKeywordAgeSchema,
 } from "./schemas/datalab.schemas.js";
 import { FindCategorySchema } from "./schemas/category.schemas.js";
-import { findCategoryHandler } from "./handlers/category.handlers.js";
-import { GetKoreanTimeSchema } from "./schemas/time.schemas.js";
-import { timeToolHandlers } from "./handlers/time.handlers.js";
-import { startGlobalMemoryMonitoring, stopGlobalMemoryMonitoring } from "./utils/memory-manager.js";
+import { findCategoryHandler, clearCategoriesCache } from "./handlers/category.handlers.js";
 
 // Configuration schema for Smithery
 export const configSchema = z.object({
@@ -41,16 +38,11 @@ let currentConfig: z.infer<typeof configSchema> | null = null;
  */
 export function resetServerInstance(): void {
   if (globalServerInstance) {
-    // 메모리 모니터링 중지
-    stopGlobalMemoryMonitoring();
-
     // 클라이언트 인스턴스 정리
     NaverSearchClient.destroyInstance();
 
     // 카테고리 캐시 정리
-    import('./handlers/category.handlers.js').then(({ clearCategoriesCache }) => {
-      clearCategoriesCache();
-    });
+    clearCategoriesCache();
 
     globalServerInstance = null;
     currentConfig = null;
@@ -422,22 +414,6 @@ export function createNaverSearchServer({
     }
   );
 
-  // Register current time tool
-  server.registerTool(
-    "get_current_korean_time",
-    {
-      description:
-        "🕐 Get current Korean time (KST) with date and time information. Use this tool whenever you need to know 'today', 'now', 'current time', or any time-related queries. Essential for understanding what 'today' means in Korean context. Always use this tool when users mention 'today' or 'current' to provide accurate time context. (현재 한국 시간 조회 - '오늘', '현재', '지금' 등의 시간 정보가 필요할 때 항상 사용하세요)",
-      inputSchema: GetKoreanTimeSchema.shape,
-    },
-    async (args) => {
-      const result = await timeToolHandlers.getCurrentKoreanTime(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
   // Register category search tool
   server.registerTool(
     "find_category",
@@ -458,15 +434,56 @@ export function createNaverSearchServer({
   globalServerInstance = server;
   currentConfig = config;
 
-  // 메모리 모니터링 시작 (5분 간격)
-  startGlobalMemoryMonitoring(5 * 60 * 1000);
-  console.error("Memory monitoring started");
-
   return server.server;
 }
 
 // Export default for Smithery compatibility
 export default createNaverSearchServer;
+
+function registerShutdownHandlers({
+  server,
+  transport,
+}: {
+  server: ReturnType<typeof createNaverSearchServer>;
+  transport: StdioServerTransport;
+}): void {
+  let shuttingDown = false;
+
+  const shutdown = async (reason: string, exitCode = 0) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.error(`Shutting down: ${reason}`);
+
+    try {
+      await server.close();
+    } catch (error) {
+      console.error("Error while closing server:", error);
+    } finally {
+      resetServerInstance();
+    }
+
+    process.exit(exitCode);
+  };
+
+  transport.onclose = () => {
+    void shutdown("transport closed");
+  };
+
+  transport.onerror = (error) => {
+    console.error("Transport error:", error);
+    void shutdown("transport error", 1);
+  };
+
+  const handleStdinClosed = () => {
+    void shutdown("stdin closed");
+  };
+
+  process.stdin.once("end", handleStdinClosed);
+  process.stdin.once("close", handleStdinClosed);
+
+  process.once("SIGINT", () => void shutdown("SIGINT"));
+  process.once("SIGTERM", () => void shutdown("SIGTERM"));
+}
 
 // Main function to run the server when executed directly
 async function main() {
@@ -512,6 +529,8 @@ async function main() {
     // Create transport and run server
     const transport = new StdioServerTransport();
     console.error("Transport created, connecting...");
+
+    registerShutdownHandlers({ server: serverFactory, transport });
 
     await serverFactory.connect(transport);
     console.error("Server connected and running");
