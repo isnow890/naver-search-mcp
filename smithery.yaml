@@ -1,43 +1,12 @@
-name: naver-search
-version: 1.0.30
-description: |
-  [KOR]
-  네이버 검색 API를 활용한 MCP 서버입니다. 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 다양한 컨텐츠를 검색할 수 있으며, 데이터랩 API를 통해 검색어 트렌드와 쇼핑 인사이트를 분석할 수 있습니다. 검색 결과는 유사도 또는 날짜 기준으로 정렬이 가능하며, 페이지네이션을 지원합니다.
+# Smithery.ai configuration for TypeScript runtime
+# Metadata (name, version, description, author, license) is read from package.json
 
-  [ENG]
-  An MCP server leveraging the Naver Search API and Datalab API capabilities. Search across diverse content types including news, blogs, shopping items, images, Knowledge-iN, books, encyclopedia, web documents, and cafe articles. Analyze search trends and shopping insights through Datalab API. Features include relevance/date-based sorting and pagination support.
-
-  주요 기능:
-  - 통합 검색: 모든 타입의 컨텐츠를 한 번에 검색
-  - 카테고리별 검색: 뉴스, 블로그, 쇼핑, 이미지, 지식iN, 책, 백과사전, 웹문서, 카페글 등 개별 검색
-  - 검색 결과 정렬: 유사도순 또는 날짜순 정렬 지원
-  - 페이지네이션: 검색 결과 페이징 처리 지원
-  - 데이터랩 분석:
-    * 검색어 트렌드 분석
-    * 쇼핑 카테고리별 트렌드
-    * 디바이스별 쇼핑 트렌드 (PC/모바일)
-    * 성별 쇼핑 트렌드
-    * 연령대별 쇼핑 트렌드
-    * 쇼핑 키워드 트렌드
-
-author: isnow890
-repository: https://github.com/isnow890/naver-search-mcp
-license: MIT
-
-# Smithery.ai configuration
-runtime: "typescript"
-
-startCommand:
-  type: http
-  configSchema:
-    type: object
-    required: ["NAVER_CLIENT_ID", "NAVER_CLIENT_SECRET"]
-    properties:
-      NAVER_CLIENT_ID:
-        type: string
-        title: "Naver API Client ID"
-        description: "Naver API Client ID issued from Naver Developers Center"
-      NAVER_CLIENT_SECRET:
-        type: string
-        title: "Naver API Client Secret"
-        description: "Naver API Client Secret issued from Naver Developers Center"
+runtime: typescript
+target: dist/src/index.js
+env:
+  NAVER_CLIENT_ID:
+    required: true
+    description: "Naver API Client ID issued from Naver Developers Center"
+  NAVER_CLIENT_SECRET:
+    required: true
+    description: "Naver API Client Secret issued from Naver Developers Center"
