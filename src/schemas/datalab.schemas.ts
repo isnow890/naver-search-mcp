@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // 기본 DataLab 스키마
 export const DatalabBaseSchema = z.object({
-  startDate: z.string().describe("Start date (yyyy-mm-dd)"),
-  endDate: z.string().describe("End date (yyyy-mm-dd)"),
+  startDate: z.string().describe("Start date (yyyy-mm-dd or 'today' for KST today)"),
+  endDate: z.string().describe("End date (yyyy-mm-dd or 'today' for KST today)"),
   timeUnit: z.enum(["date", "week", "month"]).describe("Time unit"),
 });
 
