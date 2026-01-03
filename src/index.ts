@@ -96,12 +96,12 @@ export function createNaverSearchServer({
     {
       description:
         "🌐 Search Korean web documents and general content. Comprehensive search across Korean websites and online content. Find articles, information, and documents from various Korean sources. For recent content or 'today's results', use get_current_korean_time first. (네이버 웹문서 검색 - 한국 웹사이트 종합 검색, 최근 콘텐츠나 오늘 결과를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_webkr(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -111,12 +111,12 @@ export function createNaverSearchServer({
     {
       description:
         "📰 Search latest Korean news articles from major outlets. Perfect for current events, breaking news, and recent developments. Covers politics, economy, society, and international news. For today's news or current events, use get_current_korean_time first to understand what 'today' means. (네이버 뉴스 검색 - 최신 뉴스와 시사 정보, 오늘 뉴스를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_news(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -126,12 +126,12 @@ export function createNaverSearchServer({
     {
       description:
         "✍️ Search personal blogs and reviews for authentic user experiences. Great for product reviews, personal stories, detailed tutorials, and real user opinions. Find genuine Korean perspectives. For recent posts or 'today's content', use get_current_korean_time first. (네이버 블로그 검색 - 실제 사용자 후기와 개인적 경험, 최근 글이나 오늘 내용을 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_blog(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -141,12 +141,12 @@ export function createNaverSearchServer({
     {
       description:
         "🛒 Search Naver Shopping for products, prices, and shopping deals. Compare prices across vendors, find product specifications, and discover shopping trends in Korea. For current deals or today's specials, use get_current_korean_time first. (네이버 쇼핑 검색 - 상품 정보와 가격 비교, 현재 할인이나 오늘 특가를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_shop(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -156,12 +156,12 @@ export function createNaverSearchServer({
     {
       description:
         "🖼️ Search for images with Korean context and relevance. Find visual content, infographics, charts, and photos related to your search terms. Great for visual research and content discovery. For recent images or current visual content, use get_current_korean_time first. (네이버 이미지 검색 - 시각적 컨텐츠 발견, 최근 이미지나 현재 시각 자료를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_image(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -171,12 +171,12 @@ export function createNaverSearchServer({
     {
       description:
         "❓ Search Naver KnowledgeiN for Q&A and community-driven answers. Find solutions to problems, get expert advice, and discover community insights on various topics. For recent questions or current discussions, use get_current_korean_time first. (네이버 지식iN 검색 - 질문과 답변, 커뮤니티 지식, 최근 질문이나 현재 토론을 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_kin(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -186,12 +186,12 @@ export function createNaverSearchServer({
     {
       description:
         "📚 Search for books, publications, and literary content. Find book reviews, author information, publication details, and reading recommendations in Korean literature and translated works. For new releases or current bestsellers, use get_current_korean_time first. (네이버 책 검색 - 도서 정보와 서평, 신간도서나 현재 베스트셀러를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_book(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -201,12 +201,12 @@ export function createNaverSearchServer({
     {
       description:
         "📖 Search Naver Encyclopedia for authoritative knowledge and definitions. Best for academic research, getting reliable information, and understanding Korean concepts and terminology. For current definitions or recent updates, use get_current_korean_time for context. (네이버 지식백과 검색 - 신뢰할 수 있는 정보와 정의, 현재 정의나 최근 업데이트를 찾을 때는 get_current_korean_time으로 상황을 파악하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_encyc(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -216,12 +216,12 @@ export function createNaverSearchServer({
     {
       description:
         "🎓 Search academic papers, research documents, and scholarly content. Access Korean academic resources, research papers, theses, and professional publications. For recent publications or current research, use get_current_korean_time first. (네이버 전문자료 검색 - 학술 논문과 전문 자료, 최근 발표나 현재 연구를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_academic(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -231,12 +231,12 @@ export function createNaverSearchServer({
     {
       description:
         "📍 Search for local businesses, restaurants, and places in Korea. Find location information, reviews, contact details, and business hours for Korean establishments. For current business hours or today's availability, use get_current_korean_time first. (네이버 지역 검색 - 지역 업체와 장소 정보, 현재 영업시간이나 오늘 이용 가능 여부를 확인할 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: NaverLocalSearchParamsSchema.shape,
+      inputSchema: NaverLocalSearchParamsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_local(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -246,12 +246,12 @@ export function createNaverSearchServer({
     {
       description:
         "☕ Search Naver Cafe articles for community discussions and specialized content. Find niche communities, hobby groups, and specialized discussions on various topics. For recent discussions or current community topics, use get_current_korean_time first. (네이버 카페글 검색 - 커뮤니티 토론과 전문 정보, 최근 논의나 현재 커뮤니티 주제를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchArgsSchema.shape as any,
     },
     async (args) => {
       const result = await searchToolHandlers.search_cafearticle(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -262,12 +262,12 @@ export function createNaverSearchServer({
     {
       description:
         "📊 Analyze search keyword trends over time using Naver DataLab. Track popularity changes, seasonal patterns, and compare multiple keywords. Perfect for market research and trend analysis. For current trend analysis or 'recent trends', use get_current_korean_time to determine proper date ranges. (네이버 데이터랩 검색어 트렌드 분석, 현재 트렌드나 최근 동향 분석 시 get_current_korean_time으로 적절한 날짜 범위를 설정하세요)",
-      inputSchema: DatalabSearchSchema.shape,
+      inputSchema: DatalabSearchSchema.shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_search(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -277,12 +277,12 @@ export function createNaverSearchServer({
     {
       description:
         "🛍️ STEP 2: Analyze shopping category trends over time. Use find_category first to get category codes. BUSINESS CASES: Market size analysis, seasonal trend identification, category performance comparison. EXAMPLE: Compare '패션의류' vs '화장품' trends over 6 months. For current period analysis, use get_current_korean_time to set proper date ranges. (네이버 쇼핑 카테고리별 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 기간 분석시 get_current_korean_time으로 적절한 날짜 범위 설정)",
-      inputSchema: DatalabShoppingSchema.shape,
+      inputSchema: DatalabShoppingSchema.shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_category(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -298,12 +298,12 @@ export function createNaverSearchServer({
         timeUnit: true,
         category: true,
         device: true,
-      }).shape,
+      }).shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_device(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -319,12 +319,12 @@ export function createNaverSearchServer({
         timeUnit: true,
         category: true,
         gender: true,
-      }).shape,
+      }).shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_gender(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -340,12 +340,12 @@ export function createNaverSearchServer({
         timeUnit: true,
         category: true,
         ages: true,
-      }).shape,
+      }).shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_age(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -355,12 +355,12 @@ export function createNaverSearchServer({
     {
       description:
         "🔍 Compare specific keywords within a shopping category. Use find_category first. BUSINESS CASES: Product keyword optimization, competitor analysis, search trend identification. EXAMPLE: Within '패션' category, compare '원피스' vs '자켓' vs '드레스' trends. For current keyword trends, use get_current_korean_time to set proper analysis period. (카테고리 내 키워드 비교 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 키워드 트렌드 분석시 get_current_korean_time으로 적절한 분석 기간 설정)",
-      inputSchema: DatalabShoppingKeywordsSchema.shape,
+      inputSchema: DatalabShoppingKeywordsSchema.shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_keywords(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -370,13 +370,13 @@ export function createNaverSearchServer({
     {
       description:
         "📱🔍 Analyze keyword performance by device within shopping categories. Use find_category first to get category codes. Perfect for understanding mobile vs desktop shopping behavior for specific products. (쇼핑 키워드 기기별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingKeywordDeviceSchema.shape,
+      inputSchema: DatalabShoppingKeywordDeviceSchema.shape as any,
     },
     async (args) => {
       const result =
         await datalabToolHandlers.datalab_shopping_keyword_by_device(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -386,13 +386,13 @@ export function createNaverSearchServer({
     {
       description:
         "👥🔍 Analyze keyword performance by gender within shopping categories. Use find_category first to get category codes. Essential for gender-targeted marketing and product positioning strategies. (쇼핑 키워드 성별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingKeywordGenderSchema.shape,
+      inputSchema: DatalabShoppingKeywordGenderSchema.shape as any,
     },
     async (args) => {
       const result =
         await datalabToolHandlers.datalab_shopping_keyword_by_gender(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -402,14 +402,14 @@ export function createNaverSearchServer({
     {
       description:
         "👶👦👨👴🔍 Analyze keyword performance by age groups within shopping categories. Use find_category first to get category codes. Perfect for age-targeted marketing and understanding generational shopping preferences. (쇼핑 키워드 연령별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingKeywordAgeSchema.shape,
+      inputSchema: DatalabShoppingKeywordAgeSchema.shape as any,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_keyword_by_age(
         args
       );
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
@@ -420,12 +420,12 @@ export function createNaverSearchServer({
     {
       description:
         "🚀 STEP 1: Find shopping categories with Korean search terms. Search in KOREAN (패션, 화장품, 가전제품, etc.) to find category codes needed for datalab tools. Smart fuzzy matching finds similar categories even with partial matches. (카테고리 검색: 한국어로 검색하여 데이터랩 분석에 필요한 카테고리 코드를 찾아주는 필수 도구)",
-      inputSchema: FindCategorySchema.shape,
+      inputSchema: FindCategorySchema.shape as any,
     },
     async (args) => {
       const result = await findCategoryHandler(args);
       return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       };
     }
   );
