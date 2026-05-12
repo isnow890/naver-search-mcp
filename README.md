@@ -3,7 +3,6 @@
 [![한국어](https://img.shields.io/badge/한국어-README-yellow)](README-ko.md)
 
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/isnow890/naver-search-mcp)](https://archestra.ai/mcp-catalog/isnow890__naver-search-mcp)
-[![smithery badge](https://smithery.ai/badge/@isnow890/naver-search-mcp)](https://smithery.ai/server/@isnow890/naver-search-mcp)
 [![MCP.so](https://img.shields.io/badge/MCP.so-Naver%20Search%20MCP-blue)](https://mcp.so/server/naver-search-mcp/isnow890)
 
 MCP server for Naver Search API and DataLab API integration, enabling comprehensive search across various Naver services and data trend analysis.
@@ -105,13 +104,21 @@ Add to your Claude Code settings:
 }
 ```
 
-### Method 2: Smithery Installation
+### Method 2: ClawHub Installation for OpenClaw
 
-Install via Smithery CLI:
+This MCP server can also be used from OpenClaw through the ClawHub skill wrapper. After the skill is published to ClawHub, install it with:
 
 ```bash
-npx -y @smithery/cli@latest install @isnow890/naver-search-mcp --client claude
+openclaw skills install naver-search-mcp
 ```
+
+The ClawHub skill uses the same published npm package internally:
+
+```bash
+npx -y @isnow890/naver-search-mcp
+```
+
+Make sure `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` are configured in your OpenClaw environment before using the skill.
 
 ### Method 3: Local Installation
 
@@ -245,10 +252,10 @@ MIT License
 
 ### 1.0.45 (2025-09-28)
 
-- Resolved Smithery compatibility issues so you can use the latest features through Smithery
+- Resolved platform compatibility issues for hosted MCP installations
 - Replaced the Excel export in category search with JSON for better compatibility
 - Restored the `search_webkr` tool for Korean web search
-- Fully compatible with Smithery platform installation
+- Improved hosted platform installation compatibility
 
 ### 1.0.44 (2025-08-31)
 
@@ -267,7 +274,7 @@ MIT License
 ### 1.0.30 (2025-08-04)
 
 - MCP SDK upgraded to 1.17.1
-- Fixed compatibility issues with Smithery specification changes
+- Fixed compatibility issues with hosted MCP platform specification changes
 - Added comprehensive DataLab shopping category code documentation
 
 ### 1.0.2 (2025-04-26)

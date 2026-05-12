@@ -23,7 +23,7 @@ import {
 import { FindCategorySchema } from "./schemas/category.schemas.js";
 import { findCategoryHandler, clearCategoriesCache } from "./handlers/category.handlers.js";
 
-// Configuration schema for Smithery
+// Configuration schema for programmatic server creation and stdio startup
 export const configSchema = z.object({
   NAVER_CLIENT_ID: z.string().describe("Naver API Client ID"),
   NAVER_CLIENT_SECRET: z.string().describe("Naver API Client Secret"),
@@ -437,7 +437,7 @@ export function createNaverSearchServer({
   return server.server;
 }
 
-// Export default for Smithery compatibility
+// Export the server factory for programmatic consumers
 export default createNaverSearchServer;
 
 function registerShutdownHandlers({

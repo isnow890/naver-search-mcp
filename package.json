@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.17.1",
-    "@smithery/sdk": "^1.6.6",
     "axios": "^1.6.7",
     "zod": "^3.23.0",
     "zod-to-json-schema": "^3.23.0",

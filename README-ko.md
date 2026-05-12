@@ -1,7 +1,6 @@
 # Naver Search MCP Server
 
 [![English](https://img.shields.io/badge/English-README-yellow)](README.md)
-[![smithery badge](https://smithery.ai/badge/@isnow890/naver-search-mcp)](https://smithery.ai/server/@isnow890/naver-search-mcp)
 [![MCP.so](https://img.shields.io/badge/MCP.so-Naver%20Search%20MCP-blue)](https://mcp.so/server/naver-search-mcp/isnow890)
 
 Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
@@ -103,13 +102,21 @@ Claude Code 설정에 다음을 추가하세요:
 }
 ```
 
-### 방법 2: Smithery 설치
+### 방법 2: OpenClaw용 ClawHub 설치
 
-Smithery CLI를 통해 설치:
+이 MCP 서버는 ClawHub skill wrapper를 통해 OpenClaw에서도 사용할 수 있습니다. ClawHub에 skill이 배포된 후 다음 명령으로 설치하세요:
 
 ```bash
-npx -y @smithery/cli@latest install @isnow890/naver-search-mcp --client claude
+openclaw skills install naver-search-mcp
 ```
+
+ClawHub skill은 내부적으로 동일한 npm 패키지를 사용합니다:
+
+```bash
+npx -y @isnow890/naver-search-mcp
+```
+
+사용 전에 OpenClaw 환경에 `NAVER_CLIENT_ID`와 `NAVER_CLIENT_SECRET`을 설정해야 합니다.
 
 ### 방법 3: 로컬 설치
 
@@ -253,10 +260,10 @@ MIT 라이선스
 
 ### 1.0.45 (2025-09-28)
 
-- Smithery 호환성 문제 해결 - 이제 Smithery를 통해 최신 기능으로 사용 가능
+- 호스팅 MCP 설치 환경 호환성 문제 해결
 - 카테고리 검색에서 엑셀 호환성 문제 해결 - JSON 기능으로 교체
 - 웹 한국어 검색(`search_webkr`) 기능 복구
-- Smithery 플랫폼 설치와 완전 호환
+- 호스팅 플랫폼 설치 호환성 개선
 
 ### 1.0.44 (2025-08-31)
 
@@ -277,7 +284,7 @@ MIT 라이선스
 ### 1.0.30 (2025-08-04)
 
 - MCP SDK 1.17.1로 업그레이드
-- Smithery 스펙 변경으로 인한 호환성 오류 수정
+- 호스팅 MCP 플랫폼 스펙 변경으로 인한 호환성 오류 수정
 - DataLab 쇼핑 카테고리 코드 상세 문서화 추가
 
 ### 1.0.2 (2025-04-26)
