@@ -11,7 +11,7 @@ metadata:
       bins:
         - node
         - npx
-    primaryEnv: NAVER_CLIENT_ID
+    primaryEnv: NAVER_CLIENT_SECRET
     envVars:
       - name: NAVER_CLIENT_ID
         required: true
@@ -81,6 +81,64 @@ Get credentials from Naver Developers:
 2. 애플리케이션을 등록합니다.
 3. 사용 API에서 검색, 데이터랩 검색어 트렌드, 데이터랩 쇼핑인사이트를 활성화합니다.
 4. 발급된 Client ID와 Client Secret을 OpenClaw 또는 MCP 클라이언트 환경변수에 설정합니다.
+
+## Installation / 설치
+
+OpenClaw에서 ClawHub를 통해 설치하려면 다음 순서를 안내하세요.
+
+Tell users to install this skill from ClawHub with:
+
+```bash
+openclaw skills install naver-search-mcp
+```
+
+If they are using the standalone ClawHub CLI instead:
+
+```bash
+npx -y clawhub install naver-search-mcp
+```
+
+After installing, they must configure the Naver credentials described below and restart OpenClaw or the Gateway process. This skill runs the MCP server with:
+
+```bash
+npx -y @isnow890/naver-search-mcp
+```
+
+Do not ask users to clone this repository for normal use. Cloning is only needed for development.
+
+## Environment Setup / 환경변수 설정
+
+OpenClaw에서 가장 편한 방식은 skill별 설정을 `~/.openclaw/openclaw.json`에 추가하는 것입니다. 이 skill은 `NAVER_CLIENT_SECRET`을 `primaryEnv`로 선언하므로 OpenClaw의 `apiKey` 편의 설정을 Client Secret에 사용할 수 있습니다.
+
+```json
+{
+  "skills": {
+    "entries": {
+      "naver-search-mcp": {
+        "enabled": true,
+        "apiKey": "your_naver_client_secret",
+        "env": {
+          "NAVER_CLIENT_ID": "your_naver_client_id"
+        }
+      }
+    }
+  }
+}
+```
+
+`apiKey` is mapped to `NAVER_CLIENT_SECRET` because this skill declares it as `primaryEnv`. `NAVER_CLIENT_ID` still needs to be provided in `env`.
+
+전역 `.env`를 선호하면 다음처럼 설정할 수도 있습니다:
+
+```bash
+mkdir -p ~/.openclaw
+cat >> ~/.openclaw/.env <<'EOF'
+NAVER_CLIENT_ID=your_naver_client_id
+NAVER_CLIENT_SECRET=your_naver_client_secret
+EOF
+```
+
+설정을 바꾼 뒤에는 OpenClaw 또는 Gateway 프로세스를 재시작하세요.
 
 ## MCP Configuration / MCP 설정
 
