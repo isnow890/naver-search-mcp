@@ -7,6 +7,16 @@
 
 MCP server for Naver Search API and DataLab API integration, enabling comprehensive search across various Naver services and data trend analysis.
 
+## Available on ClawHub for OpenClaw
+
+You can install this MCP server as an OpenClaw skill from ClawHub:
+
+```bash
+openclaw skills install naver-search-mcp
+```
+
+The ClawHub skill uses the published npm package internally and requires `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` in your OpenClaw environment.
+
 ## Quick Start: Use Without API Key
 
 You can use this server immediately without API keys through [Kakao PlayMCP](https://playmcp.kakao.com/mcp/154). Simply visit the link and start using it right away!
@@ -106,7 +116,7 @@ Add to your Claude Code settings:
 
 ### Method 2: ClawHub Installation for OpenClaw
 
-This MCP server can also be used from OpenClaw through the ClawHub skill wrapper. After the skill is published to ClawHub, install it with:
+This MCP server can also be used from OpenClaw through the ClawHub skill wrapper. Install it with:
 
 ```bash
 openclaw skills install naver-search-mcp
