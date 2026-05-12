@@ -1,3 +1,22 @@
+# Release 1.0.48 - find_category Data Path Fix
+
+## Summary
+
+This release fixes `find_category` when the MCP server is launched by `npx` or MCP runners from a working directory outside the installed npm package.
+
+## Bug Fixes
+
+- **Fixed**: `find_category` now loads `dist/data/categories.json` relative to the installed package location before checking `process.cwd()` fallbacks.
+- **Impact**: OpenClaw, npx, and other MCP runner environments can now resolve Naver shopping category data correctly.
+
+## Installation
+
+```bash
+npx -y @isnow890/naver-search-mcp@1.0.48
+```
+
+---
+
 # Release 1.0.47 - Server Termination Fix & "today" Keyword Support
 
 ## Summary

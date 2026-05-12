@@ -251,6 +251,11 @@ MIT License
 
 ## Version History
 
+### 1.0.48 (2026-05-12)
+
+- Fixed `find_category` data loading when the MCP server is launched by `npx` from a different working directory
+- Category data is now resolved relative to the installed package before falling back to local development paths
+
 ### 1.0.47 (2025-01-03)
 
 - **Added "today" keyword support** for all DataLab date parameters - no need to call separate time tool

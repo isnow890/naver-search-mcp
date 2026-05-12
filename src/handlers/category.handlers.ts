@@ -1,9 +1,12 @@
 // Import JSON data - bundle-safe approach
 import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 // 메모리 누수 방지를 위한 지연 로딩 캐시
 let categoriesCache: any[] | null = null;
+
+const moduleDir = dirname(fileURLToPath(import.meta.url));
 
 // Load categories data with fallback paths for different environments
 function getCategoriesData(): any[] {
@@ -13,21 +16,25 @@ function getCategoriesData(): any[] {
   }
 
   try {
-    // Try bundled data path first (dist/data)
-    const bundledPath = join(process.cwd(), 'dist', 'data', 'categories.json');
-    if (existsSync(bundledPath)) {
-      categoriesCache = JSON.parse(readFileSync(bundledPath, 'utf8') as string);
-      return categoriesCache!;
+    const candidatePaths = [
+      // Package-relative path. Works when launched by npx from any cwd.
+      join(moduleDir, '..', '..', 'data', 'categories.json'),
+      // Local development fallbacks.
+      join(process.cwd(), 'dist', 'data', 'categories.json'),
+      join(process.cwd(), 'data', 'categories.json'),
+    ];
+
+    for (const categoryPath of candidatePaths) {
+      if (existsSync(categoryPath)) {
+        const categoryJson = readFileSync(categoryPath, 'utf8').toString();
+        categoriesCache = JSON.parse(categoryJson);
+        return categoriesCache!;
+      }
     }
 
-    // Fallback to source data path
-    const sourcePath = join(process.cwd(), 'data', 'categories.json');
-    if (existsSync(sourcePath)) {
-      categoriesCache = JSON.parse(readFileSync(sourcePath, 'utf8') as string);
-      return categoriesCache!;
-    }
-
-    throw new Error('카테고리 데이터 파일을 찾을 수 없습니다');
+    throw new Error(
+      `카테고리 데이터 파일을 찾을 수 없습니다. Tried: ${candidatePaths.join(', ')}`
+    );
   } catch (error) {
     console.error('카테고리 데이터 로딩 실패:', error);
     return [];
