@@ -10,8 +10,29 @@ import { resolveCredentials } from "../dist/src/config/credentials.js";
 const RANGE = { startDate: "2026-01-01", endDate: "2026-03-31", timeUnit: "month" };
 const CATEGORY = "50000000";
 
-// expectedKey: 성공 응답이면 반드시 있어야 하는 최상위 필드.
-// 이걸 확인하지 않으면 200에 에러 본문이 실려와도 PASS로 세게 된다.
+// 성공 판정이 왜 이렇게 까다로운지:
+//  - 필드 존재만 보면 200에 에러 본문이 실려와도 PASS로 센다.
+//  - 존재 + 비어있음까지 허용하면 더 나쁘다. 네이버는 존재하지 않는 카테고리
+//    코드(99999999)에도 HTTP 200과 results:[{..., data: []}] 를 돌려준다
+//    (2026-07-26 실측). 없는 키워드도 같다. 그래서 데이터가 하나도 없는데
+//    "17/17 passed"가 찍히는 상황이 실제로 가능하다.
+// 따라서 배열이 비어있지 않은 것까지 확인한다.
+function emptinessProblem(expectedKey, value) {
+  if (!Array.isArray(value)) return `'${expectedKey}'가 배열이 아님`;
+  if (value.length === 0) return `'${expectedKey}'가 비어 있음`;
+
+  if (expectedKey === "results") {
+    const empty = value.filter(
+      (row) => !Array.isArray(row.data) || row.data.length === 0
+    );
+    if (empty.length > 0) {
+      return `results[].data 가 비어 있음 (${empty.length}/${value.length}건)`;
+    }
+  }
+
+  return null;
+}
+
 async function runOne(label, expectedKey, fn) {
   try {
     const result = await fn();
@@ -26,6 +47,12 @@ async function runOne(label, expectedKey, fn) {
       console.log(
         `  FAIL  ${label}  ('${expectedKey}' 필드 없음 — 받은 키: ${keys.join(",")})`
       );
+      return false;
+    }
+
+    const problem = emptinessProblem(expectedKey, result[expectedKey]);
+    if (problem) {
+      console.log(`  FAIL  ${label}  (${problem})`);
       return false;
     }
 
@@ -79,19 +106,29 @@ async function runProvider(credentials) {
   return passed === results.length;
 }
 
-const targets = [];
-if (process.env.NCP_APIGW_API_KEY_ID && process.env.NCP_APIGW_API_KEY) {
-  targets.push(resolveCredentials({
-    NCP_APIGW_API_KEY_ID: process.env.NCP_APIGW_API_KEY_ID,
-    NCP_APIGW_API_KEY: process.env.NCP_APIGW_API_KEY,
-  }));
+// 반쪽만 설정된 provider를 조용히 건너뛰면 안 된다. HUB 변수 하나에 오타가 났는데
+// legacy가 온전하면 "17/17 passed"가 찍히고 종료 코드도 0인데 정작 이번 이관의
+// 대상인 HUB는 한 번도 호출되지 않은 상태가 된다.
+function pickTarget(idVar, secretVar, label) {
+  const id = process.env[idVar];
+  const secret = process.env[secretVar];
+
+  if (id && secret) return resolveCredentials({ [idVar]: id, [secretVar]: secret });
+
+  if (id || secret) {
+    console.log(
+      `[경고] ${label} 자격증명이 반쪽이라 검사에서 제외합니다 — ${
+        id ? secretVar : idVar
+      } 가 설정되지 않았습니다.`
+    );
+  }
+  return null;
 }
-if (process.env.NAVER_CLIENT_ID && process.env.NAVER_CLIENT_SECRET) {
-  targets.push(resolveCredentials({
-    NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID,
-    NAVER_CLIENT_SECRET: process.env.NAVER_CLIENT_SECRET,
-  }));
-}
+
+const targets = [
+  pickTarget("NCP_APIGW_API_KEY_ID", "NCP_APIGW_API_KEY", "NAVER API HUB"),
+  pickTarget("NAVER_CLIENT_ID", "NAVER_CLIENT_SECRET", "네이버 개발자센터"),
+].filter(Boolean);
 
 if (targets.length === 0) {
   console.error("검사할 자격증명이 없습니다. .env를 확인하세요.");
