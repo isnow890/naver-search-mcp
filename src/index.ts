@@ -159,21 +159,6 @@ export function createNaverSearchServer({
   );
 
   server.registerTool(
-    "search_shop",
-    {
-      description:
-        "🛒 Search Naver Shopping for products, prices, and shopping deals. Compare prices across vendors, find product specifications, and discover shopping trends in Korea. For current deals or today's specials, use get_current_korean_time first. (네이버 쇼핑 검색 - 상품 정보와 가격 비교, 현재 할인이나 오늘 특가를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_shop(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
     "search_image",
     {
       description:
@@ -204,21 +189,6 @@ export function createNaverSearchServer({
   );
 
   server.registerTool(
-    "search_book",
-    {
-      description:
-        "📚 Search for books, publications, and literary content. Find book reviews, author information, publication details, and reading recommendations in Korean literature and translated works. For new releases or current bestsellers, use get_current_korean_time first. (네이버 책 검색 - 도서 정보와 서평, 신간도서나 현재 베스트셀러를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_book(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
     "search_encyc",
     {
       description:
@@ -227,21 +197,6 @@ export function createNaverSearchServer({
     },
     async (args) => {
       const result = await searchToolHandlers.search_encyc(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
-    "search_academic",
-    {
-      description:
-        "🎓 Search academic papers, research documents, and scholarly content. Access Korean academic resources, research papers, theses, and professional publications. For recent publications or current research, use get_current_korean_time first. (네이버 전문자료 검색 - 학술 논문과 전문 자료, 최근 발표나 현재 연구를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_academic(args);
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
       };

@@ -3,13 +3,9 @@ import {
   NaverSearchType,
   NaverSearchConfig,
   NaverLocalSearchParams,
-  NaverDocumentSearchParams,
   SearchArgs,
 } from "../schemas/search.schemas.js";
-import {
-  NaverDocumentSearchResponse,
-  NaverLocalSearchResponse,
-} from "../types/search.types.js";
+import { NaverLocalSearchResponse } from "../types/search.types.js";
 import {
   DatalabSearchRequest,
   DatalabShoppingResponse,
@@ -75,15 +71,6 @@ export class NaverSearchClient extends NaverApiCoreClient {
    */
   async search(type: NaverSearchType, params: SearchArgs): Promise<any> {
     return this.get(`${this.searchBaseUrl}/${type}`, params);
-  }
-
-  /**
-   * 전문자료 검색 메서드
-   */
-  async searchAcademic(
-    params: NaverDocumentSearchParams
-  ): Promise<NaverDocumentSearchResponse> {
-    return this.get(`${this.searchBaseUrl}/doc`, params);
   }
 
   /**

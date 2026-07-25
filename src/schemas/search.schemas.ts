@@ -4,12 +4,9 @@ export const NaverSearchTypeSchema = z.enum([
   "news",
   "encyc",
   "blog",
-  "shop",
   "webkr",
   "image",
-  "doc",
   "kin",
-  "book",
   "cafearticle",
   "local",
 ]);
@@ -49,13 +46,6 @@ export const NaverSearchConfigSchema = z.object({
   clientSecret: z.string().describe("발급받은 Client Secret"),
 });
 
-// 전문자료(논문 등) 검색 파라미터
-export const NaverDocumentSearchParamsSchema = z.object({
-  query: z.string().describe("검색어"),
-  display: z.number().optional().describe("한 번에 가져올 결과 수 (최대 100)"),
-  start: z.number().optional().describe("검색 시작 위치 (최대 1000)"),
-});
-
 // 지역 검색 파라미터
 export const NaverLocalSearchParamsSchema = SearchArgsSchema.extend({
   sort: z
@@ -73,6 +63,3 @@ export type NaverSearchParams = z.infer<typeof NaverSearchParamsSchema>;
 export type SearchArgs = z.infer<typeof SearchArgsSchema>;
 export type NaverSearchType = z.infer<typeof NaverSearchTypeSchema>;
 export type NaverSearchConfig = z.infer<typeof NaverSearchConfigSchema>;
-export type NaverDocumentSearchParams = z.infer<
-  typeof NaverDocumentSearchParamsSchema
->;

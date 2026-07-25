@@ -15,18 +15,6 @@ export interface NaverSearchItem {
   description: string; // 아이템 설명 (검색어는 <b> 태그로 강조)
 }
 
-// 전문자료 검색 응답 타입
-export interface NaverDocumentSearchResponse extends NaverSearchResponse {
-  items: NaverDocumentItem[]; // 전문자료 아이템 목록
-}
-
-// 전문자료 아이템 타입
-export interface NaverDocumentItem extends NaverSearchItem {
-  title: string; // 문서 제목 (<b> 태그 강조)
-  link: string; // 문서 URL
-  description: string; // 문서 요약 (<b> 태그 강조)
-}
-
 // 지식백과 검색 응답 타입
 export interface NaverEncyclopediaSearchResponse extends NaverSearchResponse {
   items: NaverEncyclopediaItem[]; // 지식백과 아이템 목록
