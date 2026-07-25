@@ -13,7 +13,7 @@ metadata:
       bins:
         - node
         - npx
-    primaryEnv: NCP_APIGW_API_KEY
+    primaryEnv: NAVER_CLIENT_SECRET
     envVars:
       - name: NCP_APIGW_API_KEY_ID
         required: false
@@ -55,12 +55,12 @@ npx -y @isnow890/naver-search-mcp
 - Supply **one** credential pair — never a partial mix of the two:
   - **NAVER API HUB** (forward path, recommended): `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY`.
   - **Naver Developers** (legacy, existing keys only): `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET`. Developers Center stops accepting new applications on 2026-07-31; existing keys keep working until 2027-06-30.
-- In OpenClaw, `apiKey` maps to `NCP_APIGW_API_KEY` because this skill declares `primaryEnv: NCP_APIGW_API_KEY`.
-- Provide the matching second variable of whichever pair you use through the skill `env` config or OpenClaw environment.
+- In OpenClaw, `apiKey` maps to `NAVER_CLIENT_SECRET` because this skill declares `primaryEnv: NAVER_CLIENT_SECRET` (kept for backward compatibility with existing legacy installs). HUB users should set both `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY` as explicit environment variables instead of using `apiKey`, since `apiKey` only ever maps to the legacy secret.
+- Provide the other variable in the pair through the skill `env` config or OpenClaw environment (legacy users: `NAVER_CLIENT_ID`).
 - Restart OpenClaw or the Gateway after changing credentials.
 - Do not ask users to clone this repository for normal use; cloning is only for development.
 
-Example OpenClaw config (NAVER API HUB):
+Example OpenClaw config (Naver Developers, legacy, using `apiKey`):
 
 ```json
 {
@@ -68,9 +68,9 @@ Example OpenClaw config (NAVER API HUB):
     "entries": {
       "naver-search-mcp": {
         "enabled": true,
-        "apiKey": "your_ncp_apigw_api_key",
+        "apiKey": "your_naver_client_secret",
         "env": {
-          "NCP_APIGW_API_KEY_ID": "your_ncp_apigw_api_key_id"
+          "NAVER_CLIENT_ID": "your_naver_client_id"
         }
       }
     }
@@ -78,7 +78,23 @@ Example OpenClaw config (NAVER API HUB):
 }
 ```
 
-If you only have legacy Naver Developers credentials, set `apiKey` to your `NAVER_CLIENT_SECRET` and put `NAVER_CLIENT_ID` under `env` instead.
+Example OpenClaw config (NAVER API HUB — set both variables explicitly, do not use `apiKey`):
+
+```json
+{
+  "skills": {
+    "entries": {
+      "naver-search-mcp": {
+        "enabled": true,
+        "env": {
+          "NCP_APIGW_API_KEY_ID": "your_ncp_apigw_api_key_id",
+          "NCP_APIGW_API_KEY": "your_ncp_apigw_api_key"
+        }
+      }
+    }
+  }
+}
+```
 
 ## Search Guidance
 

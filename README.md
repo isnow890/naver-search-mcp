@@ -15,7 +15,7 @@ You can install this MCP server as an OpenClaw skill from ClawHub:
 openclaw skills install naver-search-mcp
 ```
 
-The ClawHub skill uses the published npm package internally and requires `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` in your OpenClaw environment.
+The ClawHub skill uses the published npm package internally and needs **one** credential pair in your OpenClaw environment — either the NAVER API HUB pair (`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) or the Developers Center pair (`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw's `apiKey` field maps to `NAVER_CLIENT_SECRET`; HUB users should set both HUB variables explicitly in the environment instead of using `apiKey`.
 
 ## Quick Start: Use Without API Key
 
@@ -179,7 +179,7 @@ The ClawHub skill uses the same published npm package internally:
 npx -y @isnow890/naver-search-mcp
 ```
 
-Make sure `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` are configured in your OpenClaw environment before using the skill.
+Make sure **one** credential pair is configured in your OpenClaw environment before using the skill — the NAVER API HUB pair (`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) or the Developers Center pair (`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw's `apiKey` field maps to `NAVER_CLIENT_SECRET`; HUB users should set both HUB variables explicitly instead.
 
 ### Method 3: Local Installation
 
@@ -290,7 +290,7 @@ After completing the configuration, completely close and restart Claude Desktop 
 
 ## Prerequisites
 
-- Naver Developers API Key (Client ID and Secret)
+- A credential pair for one platform — NAVER API HUB or Naver Developers (see [Getting API Keys](#getting-api-keys))
 - Node.js 18 or higher
 - NPM 8 or higher
 

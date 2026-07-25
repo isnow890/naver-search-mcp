@@ -13,7 +13,7 @@ Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 
 openclaw skills install naver-search-mcp
 ```
 
-ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, OpenClaw 환경에 `NAVER_CLIENT_ID`와 `NAVER_CLIENT_SECRET`을 설정해야 합니다.
+ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, OpenClaw 환경에 **한 쌍**의 자격증명을 설정해야 합니다 — NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`) 중 하나입니다. OpenClaw의 `apiKey` 필드는 `NAVER_CLIENT_SECRET`에 매핑되므로, HUB 사용자는 `apiKey` 대신 두 HUB 변수를 환경에 직접 설정하세요.
 
 ## 빠른 시작: API 키 없이 사용하기
 
@@ -176,7 +176,7 @@ ClawHub skill은 내부적으로 동일한 npm 패키지를 사용합니다:
 npx -y @isnow890/naver-search-mcp
 ```
 
-사용 전에 OpenClaw 환경에 `NAVER_CLIENT_ID`와 `NAVER_CLIENT_SECRET`을 설정해야 합니다.
+사용 전에 OpenClaw 환경에 **한 쌍**의 자격증명을 설정해야 합니다 — NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw의 `apiKey`는 `NAVER_CLIENT_SECRET`에 매핑되므로, HUB 사용자는 `apiKey` 대신 두 HUB 변수를 직접 설정하세요.
 
 ### 방법 3: 로컬 설치
 
@@ -285,19 +285,9 @@ pwd
 
 설정 완료 후 Claude Desktop을 완전히 종료하고 다시 시작하면 Naver Search MCP 서버가 활성화됩니다.
 
-## API 키 얻기
-
-1. [Naver Developers](https://developers.naver.com/apps/#/register)에 방문
-2. "애플리케이션 등록"을 클릭
-3. 애플리케이션 이름을 입력하고 다음 API를 모두 선택:
-   - 검색 (블로그, 뉴스, 카페글 검색 등을 위한)
-   - DataLab (검색 트렌드)
-   - DataLab (쇼핑 인사이트)
-4. 얻은 클라이언트 ID와 클라이언트 시크릿을 환경 변수로 설정
-
 ## 필수 요구 사항
 
-- Naver Developers API 키(클라이언트 ID 및 시크릿)
+- 두 플랫폼 중 하나의 자격증명 — NAVER API HUB 또는 Naver Developers ([API 키 얻기](#api-키-얻기) 참고)
 - Node.js 18 이상
 - NPM 8 이상
 
