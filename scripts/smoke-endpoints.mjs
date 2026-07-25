@@ -10,13 +10,27 @@ import { resolveCredentials } from "../dist/src/config/credentials.js";
 const RANGE = { startDate: "2026-01-01", endDate: "2026-03-31", timeUnit: "month" };
 const CATEGORY = "50000000";
 
-async function runOne(label, fn) {
+// expectedKey: 성공 응답이면 반드시 있어야 하는 최상위 필드.
+// 이걸 확인하지 않으면 200에 에러 본문이 실려와도 PASS로 세게 된다.
+async function runOne(label, expectedKey, fn) {
   try {
     const result = await fn();
-    const keys = Object.keys(result ?? {}).join(",");
-    const parsed = typeof result === "object" && result !== null;
-    console.log(`  PASS  ${label}  (${parsed ? "object" : typeof result}: ${keys})`);
-    return parsed;
+
+    if (result === null || typeof result !== "object") {
+      console.log(`  FAIL  ${label}  (응답이 객체가 아님: ${typeof result})`);
+      return false;
+    }
+
+    const keys = Object.keys(result);
+    if (!keys.includes(expectedKey)) {
+      console.log(
+        `  FAIL  ${label}  ('${expectedKey}' 필드 없음 — 받은 키: ${keys.join(",")})`
+      );
+      return false;
+    }
+
+    console.log(`  PASS  ${label}  (object: ${keys.join(",")})`);
+    return true;
   } catch (error) {
     console.log(`  FAIL  ${label}\n        ${String(error.message).split("\n").join("\n        ")}`);
     return false;
@@ -34,30 +48,30 @@ async function runProvider(credentials) {
 
   const results = [];
   for (const type of ["blog", "news", "encyc", "cafearticle", "image", "kin", "webkr"]) {
-    results.push(await runOne(`search/${type}`, () => client.search(type, { query: "커피", display: 1 })));
+    results.push(await runOne(`search/${type}`, "items", () => client.search(type, { query: "커피", display: 1 })));
   }
-  results.push(await runOne("search/local", () => client.searchLocal({ query: "스타벅스", display: 1 })));
+  results.push(await runOne("search/local", "items", () => client.searchLocal({ query: "스타벅스", display: 1 })));
 
   results.push(
-    await runOne("datalab/search-trend", () =>
+    await runOne("datalab/search-trend", "results", () =>
       client.searchTrend({ ...RANGE, keywordGroups: [{ groupName: "커피", keywords: ["커피"] }] })
     )
   );
 
   const cat = [{ name: "패션의류", param: [CATEGORY] }];
-  results.push(await runOne("shopping/categories", () => client.datalabShoppingCategory({ ...RANGE, category: cat })));
-  results.push(await runOne("shopping/category/device", () => client.datalabShoppingByDevice({ ...RANGE, category: CATEGORY })));
-  results.push(await runOne("shopping/category/gender", () => client.datalabShoppingByGender({ ...RANGE, category: CATEGORY })));
-  results.push(await runOne("shopping/category/age", () => client.datalabShoppingByAge({ ...RANGE, category: CATEGORY })));
+  results.push(await runOne("shopping/categories", "results", () => client.datalabShoppingCategory({ ...RANGE, category: cat })));
+  results.push(await runOne("shopping/category/device", "results", () => client.datalabShoppingByDevice({ ...RANGE, category: CATEGORY })));
+  results.push(await runOne("shopping/category/gender", "results", () => client.datalabShoppingByGender({ ...RANGE, category: CATEGORY })));
+  results.push(await runOne("shopping/category/age", "results", () => client.datalabShoppingByAge({ ...RANGE, category: CATEGORY })));
   results.push(
-    await runOne("shopping/category/keywords", () =>
+    await runOne("shopping/category/keywords", "results", () =>
       client.datalabShoppingKeywords({ ...RANGE, category: CATEGORY, keyword: [{ name: "코트", param: ["코트"] }] })
     )
   );
   const kw = { ...RANGE, category: CATEGORY, keyword: "코트" };
-  results.push(await runOne("shopping/category/keyword/device", () => client.datalabShoppingKeywordByDevice(kw)));
-  results.push(await runOne("shopping/category/keyword/gender", () => client.datalabShoppingKeywordByGender(kw)));
-  results.push(await runOne("shopping/category/keyword/age", () => client.datalabShoppingKeywordByAge(kw)));
+  results.push(await runOne("shopping/category/keyword/device", "results", () => client.datalabShoppingKeywordByDevice(kw)));
+  results.push(await runOne("shopping/category/keyword/gender", "results", () => client.datalabShoppingKeywordByGender(kw)));
+  results.push(await runOne("shopping/category/keyword/age", "results", () => client.datalabShoppingKeywordByAge(kw)));
 
   NaverSearchClient.destroyInstance();
   const passed = results.filter(Boolean).length;
