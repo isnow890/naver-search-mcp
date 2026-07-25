@@ -88,3 +88,54 @@ test("값의 앞뒤 공백은 잘라낸다", () => {
   assert.equal(r.clientId, "hubid");
   assert.equal(r.clientSecret, "hubsecret");
 });
+
+test("HUB ID만 있어도 legacy 쌍이 온전하면 legacy로 폴백하고 경고를 반환한다", () => {
+  const r = resolveCredentials({
+    NCP_APIGW_API_KEY_ID: "hubid",
+    NAVER_CLIENT_ID: "legacyid",
+    NAVER_CLIENT_SECRET: "legacysecret",
+  });
+  assert.equal(r.provider, "legacy");
+  assert.equal(r.clientId, "legacyid");
+  assert.equal(r.clientSecret, "legacysecret");
+  assert.match(r.warning, /NCP_APIGW_API_KEY/);
+  assert.match(r.warning, /개발자센터/);
+});
+
+test("HUB 시크릿만 있어도 legacy 쌍이 온전하면 폴백한다", () => {
+  const r = resolveCredentials({
+    NCP_APIGW_API_KEY: "hubsecret",
+    NAVER_CLIENT_ID: "legacyid",
+    NAVER_CLIENT_SECRET: "legacysecret",
+  });
+  assert.equal(r.provider, "legacy");
+  assert.match(r.warning, /NCP_APIGW_API_KEY_ID/);
+});
+
+test("HUB가 반쪽이고 legacy도 반쪽이면 폴백하지 않고 실패한다", () => {
+  assert.throws(
+    () =>
+      resolveCredentials({
+        NCP_APIGW_API_KEY_ID: "hubid",
+        NAVER_CLIENT_ID: "legacyid",
+      }),
+    (err) => {
+      assert.match(err.message, /NCP_APIGW_API_KEY/);
+      return true;
+    }
+  );
+});
+
+test("경고가 없는 정상 해석 결과에는 warning 키가 아예 없다", () => {
+  const hub = resolveCredentials({
+    NCP_APIGW_API_KEY_ID: "hubid",
+    NCP_APIGW_API_KEY: "hubsecret",
+  });
+  assert.equal("warning" in hub, false);
+
+  const legacy = resolveCredentials({
+    NAVER_CLIENT_ID: "legacyid",
+    NAVER_CLIENT_SECRET: "legacysecret",
+  });
+  assert.equal("warning" in legacy, false);
+});

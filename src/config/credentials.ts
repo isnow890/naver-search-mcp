@@ -11,6 +11,8 @@ export interface ResolvedCredentials {
   provider: NaverApiProvider;
   clientId: string;
   clientSecret: string;
+  /** 해석은 성공했지만 사용자에게 알릴 것이 있을 때만 채운다. 없으면 키 자체를 넣지 않는다. */
+  warning?: string;
 }
 
 const SETUP_GUIDE = `
@@ -36,6 +38,20 @@ export function resolveCredentials(env: CredentialEnv): ResolvedCredentials {
   }
 
   if (hubId || hubSecret) {
+    const missing = hubId ? "NCP_APIGW_API_KEY" : "NCP_APIGW_API_KEY_ID";
+
+    // HUB 키가 반쪽이어도 개발자센터 키가 온전하면 서버를 죽이지 않는다.
+    // 이관 중에 HUB 키를 반만 넣어둔 기존 사용자를 막지 않되, 실수는 경고로 드러낸다.
+    if (legacyId && legacySecret) {
+      return {
+        provider: "legacy",
+        clientId: legacyId,
+        clientSecret: legacySecret,
+        warning: `NAVER API HUB 자격증명이 반쪽입니다. ${missing} 이(가) 설정되지 않아 개발자센터 키로 동작합니다.
+HUB로 이관하려면 ${missing} 을(를) 마저 설정하고, 이관할 생각이 없다면 남은 HUB 환경변수를 지우세요.`,
+      };
+    }
+
     throw new Error(
       `NAVER API HUB 자격증명이 불완전합니다.
   NCP_APIGW_API_KEY_ID: ${hubId ? "provided" : "missing"}
