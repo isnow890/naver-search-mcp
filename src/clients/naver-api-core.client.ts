@@ -62,6 +62,9 @@ export abstract class NaverApiCoreClient {
   }
 
   protected async get<T>(url: string, params: any): Promise<T> {
+    // provider를 요청 시점에 고정한다. 응답이 도착하기 전에 destroyInstance()가
+    // config를 비울 수 있고, 그때 this.provider를 읽으면 원래 에러가 사라진다.
+    const provider = this.provider;
     try {
       const response = await this.axiosInstance.get<T>(url, {
         params,
@@ -69,11 +72,12 @@ export abstract class NaverApiCoreClient {
       });
       return response.data;
     } catch (error) {
-      throw this.wrapError(url, error);
+      throw this.wrapError(provider, url, error);
     }
   }
 
   protected async post<T>(url: string, data: any): Promise<T> {
+    const provider = this.provider;
     try {
       const response = await this.axiosInstance.post<T>(
         url,
@@ -82,18 +86,23 @@ export abstract class NaverApiCoreClient {
       );
       return response.data;
     } catch (error) {
-      throw this.wrapError(url, error);
+      throw this.wrapError(provider, url, error);
     }
   }
 
   /**
    * 두 플랫폼의 오류 응답 형식이 다르므로 파싱하지 않고 그대로 감싼다.
    */
-  private wrapError(url: string, error: unknown): Error {
+  private wrapError(
+    provider: NaverApiProvider,
+    url: string,
+    error: unknown
+  ): Error {
     const response = (error as any)?.response;
-    return new Error(
-      formatApiError(this.provider, url, response?.status, response?.data)
-    );
+    // 응답이 아예 없는 실패(타임아웃, DNS 실패, 연결 거부)는 axios 메시지가 유일한
+    // 단서다. 이걸 버리면 모든 네트워크 오류가 똑같은 문장으로 뭉개진다.
+    const body = response ? response.data : (error as any)?.message;
+    return new Error(formatApiError(provider, url, response?.status, body));
   }
 
   /**
