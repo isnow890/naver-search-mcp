@@ -1,30 +1,40 @@
-## 2.0.0
+# Release 2.0.0 - NAVER API HUB Migration
 
-### Breaking
+## Summary
 
-- `search_shop`, `search_book`, `search_academic` 툴을 제거했습니다. 네이버가
-  2026-07-31에 검색 쇼핑/책/전문자료 API를 종료했으며 대체 API가 없습니다.
-  (공지: developers.naver.com/notice/article/32564)
-  쇼핑 인사이트(`datalab_shopping_*`)와 `find_category`는 별개 API로 그대로 유지됩니다.
+Naver is moving the Search, Search Trend, and Shopping Insight APIs from the Naver Developers Center to NAVER API HUB on NAVER Cloud Platform. This release supports both platforms from a single version, and removes three tools whose APIs Naver is shutting down entirely.
 
-### Added
+## Breaking Changes
 
-- NAVER API HUB(네이버 클라우드 플랫폼) 지원. `NCP_APIGW_API_KEY_ID`와
-  `NCP_APIGW_API_KEY`을 설정하면 API HUB로 호출합니다.
-  기존 `NAVER_CLIENT_ID`/`NAVER_CLIENT_SECRET`은 그대로 동작합니다.
-- 오류 메시지에 어느 플랫폼으로 호출했는지와 HTTP 상태 코드를 포함합니다.
-  인증 실패(401) 시 키를 반대쪽 환경변수에 넣지 않았는지 안내합니다.
+- **Removed**: `search_shop`, `search_book`, `search_academic`. Naver shut down the Shopping / Book / Academic-document search APIs on 2026-07-31 with no grace period and no replacement on any platform — they already return 404 on NAVER API HUB. See https://developers.naver.com/notice/article/32564
+- Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a different API and are **not** affected. They continue to work on both platforms.
 
-### Notes
+## New Features
 
-- 개발자센터 키는 2027-06-30까지 지원됩니다. 그 이후에는 API HUB 키가 필요합니다.
-- **개발자센터(레거시) 경로는 실제 API 호출로 검증되지 않았습니다.** 개발자센터 자격증명을
-  확보하지 못해 직접 호출 테스트를 하지 못했습니다. 검증된 것은: (1) 새 코드가 생성하는
-  URL이 이관 전 코드와 바이트 단위로 동일함을 3회 독립 확인, (2) 의도적으로 잘못된
-  자격증명으로 `openapi.naver.com`에 요청했을 때 404가 아닌 401을 반환함 — 즉 호스트,
-  경로, 헤더 이름은 실제 서버 기준으로 유효합니다. 검증되지 않은 것은 유효한 개발자센터
-  자격증명이 새 코드를 통해 실제로 200을 반환하는지 여부입니다. 이 부분이 확인되기 전까지
-  `npm publish`를 보류합니다.
+- **NAVER API HUB support**: set `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY` to call NAVER API HUB. Existing `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` keep working unchanged.
+- The platform is selected by which variable pair you set, never by inspecting key values — the two platforms' credentials are indistinguishable by sight, and Developers Center keys cannot be used against API HUB at all. NAVER API HUB wins if both pairs are set.
+- If only one HUB variable is set while a complete Developers Center pair exists, the server starts on the legacy platform and warns which HUB variable is missing, instead of refusing to start.
+- Error messages now name the platform and the HTTP status. On 401 they suggest checking whether a key was placed in the other platform's variables.
+
+## Migration Timeline
+
+| Date | What happens |
+|---|---|
+| 2026-06-25 | NAVER API HUB launched |
+| 2026-07-31 | Developers Center stops accepting new applications |
+| 2027-06-30 | Developers Center support ends — existing keys stop working |
+
+Existing Developers Center keys keep working until 2027-06-30. To migrate, get a key from the NAVER Cloud Platform console and set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`.
+
+## Known Limitations
+
+- **The Developers Center (legacy) code path has not been verified with a live API call.** No Developers Center credentials were available during development. What was verified: the URLs the new code produces are byte-identical to the pre-migration code, confirmed independently three times; and a request carrying deliberately wrong credentials reaches `openapi.naver.com` and returns 401 rather than 404, so the host, path, and header names are valid against the real server. What remains unproven is that a valid Developers Center credential returns 200 through the new code.
+
+## Installation
+
+```bash
+npx -y @isnow890/naver-search-mcp@2.0.0
+```
 
 ---
 
