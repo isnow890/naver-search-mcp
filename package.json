@@ -13,7 +13,8 @@
     "build": "tsc && shx cp -r data dist/",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "start": "node dist/src/index.js"
+    "start": "node dist/src/index.js",
+    "test": "npm run build && node --test tests/**/*.test.js"
   },
   "engines": {
     "node": ">=18"
