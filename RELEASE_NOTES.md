@@ -6,8 +6,9 @@ Naver is moving the Search, Search Trend, and Shopping Insight APIs from the Nav
 
 ## Breaking Changes
 
-- **Removed**: `search_shop`, `search_book`, `search_academic`. Naver shut down the Shopping / Book / Academic-document search APIs on 2026-07-31 with no grace period and no replacement on any platform — they already return 404 on NAVER API HUB. See https://developers.naver.com/notice/article/32564
+- **Removed**: `search_shop`, `search_book`, `search_academic`. Naver shuts down the Shopping / Book / Academic-document search APIs on 2026-07-31 with no grace period and no replacement on any platform — they already return 404 on NAVER API HUB. See https://developers.naver.com/notice/article/32564
 - Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a different API and are **not** affected. They continue to work on both platforms.
+- **Error type changed**: API errors now throw a plain `Error` instead of propagating the raw `AxiosError`. A consumer branching on `error.response?.status` will now see `undefined`. The `Error.message` carries the same information instead: the platform, the HTTP status, and the response body.
 
 ## New Features
 

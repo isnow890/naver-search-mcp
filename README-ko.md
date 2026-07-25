@@ -39,7 +39,7 @@ ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, Ope
 - **search_local**: 지역 장소 검색
 
 > **2.0.0에서 제거됨:** `search_shop`, `search_book`, `search_academic`
-> 네이버가 2026-07-31에 쇼핑·책·전문자료 검색 API를 종료했고 대체 API가 없습니다.
+> 네이버는 2026-07-31에 쇼핑·책·전문자료 검색 API를 종료하며 대체 API가 없습니다.
 > 쇼핑 **인사이트**(`datalab_shopping_*`)는 별개의 API이며 영향받지 않습니다.
 
 #### DataLab 도구
@@ -56,18 +56,36 @@ ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, Ope
 
 ## API 키 얻기
 
+이 서버는 두 플랫폼 중 하나에서 키를 발급받아 사용합니다. 환경변수 **한 쌍만** 설정하세요 —
+어느 쌍을 설정하는지에 따라 사용되는 플랫폼이 정해지는 원리는 아래 [설정](#설정)을 참고하세요.
+
+### 방법 A: NAVER API HUB (권장 — 앞으로의 방향)
+
+1. [네이버 클라우드 플랫폼 콘솔](https://www.ncloud.com)에서 회원가입하거나 로그인
+2. 콘솔 화면 우측 상단의 리전 & 플랫폼 선택 버튼을 클릭해 이용 중인 리전과 플랫폼을 선택한 후 **적용** 클릭
+3. **Menu > All Services > Application Services > [NAVER API HUB](https://www.ncloud.com/product/applicationService/naverApiHub)** 클릭
+4. 좌측의 **Application** 메뉴를 클릭하고 애플리케이션을 선택(또는 생성)한 다음, API 관리 하위의 **인증 정보** 버튼 클릭
+5. 팝업 창에 표시된 **Client ID**와 **Client Secret** 복사
+6. 아래 설정에서 Client ID는 `NCP_APIGW_API_KEY_ID`로, Client Secret은 `NCP_APIGW_API_KEY`로 사용하세요
+
+### 방법 B: 네이버 개발자센터 (기존 — 기존 키 보유자 전용)
+
+> 네이버 개발자센터는 **2026-07-31**부터 신규 애플리케이션 등록을 받지 않습니다.
+> 이 플랫폼의 Client ID/Secret이 아직 없다면 위 NAVER API HUB를 이용하세요.
+> 기존에 발급받은 개발자센터 키는 2027-06-30까지 계속 동작합니다.
+
 1. [Naver Developers](https://developers.naver.com/apps/#/register)에 방문하여 네이버 계정으로 로그인
 2. "애플리케이션 등록" 버튼 클릭
 3. 애플리케이션 정보 입력:
    - **애플리케이션 이름**: 원하는 이름 입력 (예: "Naver Search MCP")
    - **사용 API**: "검색" 선택
 4. API 설정에서 다음 API를 **모두 체크**:
-   - **검색** - 블로그, 뉴스, 책, 카페글, 웹문서, 이미지, 지식iN, 백과사전, 학술논문, 지역 검색에 필요
+   - **검색** - 블로그, 뉴스, 카페글, 웹문서, 이미지, 지식iN, 백과사전, 지역 검색에 필요
    - **데이터랩 - 검색어 트렌드** - 검색어 트렌드 분석에 필요
    - **데이터랩 - 쇼핑인사이트** - 쇼핑 트렌드 분석에 필요
 5. "등록하기" 버튼 클릭하여 등록 완료
 6. 등록 완료 후 애플리케이션 상세 페이지에서 **Client ID**와 **Client Secret** 확인
-7. 아래 설정에서 이 credentials를 사용하세요
+7. 아래 설정에서 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`로 사용하세요
 
 ## 설정
 
@@ -272,7 +290,7 @@ pwd
 1. [Naver Developers](https://developers.naver.com/apps/#/register)에 방문
 2. "애플리케이션 등록"을 클릭
 3. 애플리케이션 이름을 입력하고 다음 API를 모두 선택:
-   - 검색 (블로그, 뉴스, 책 검색 등을 위한)
+   - 검색 (블로그, 뉴스, 카페글 검색 등을 위한)
    - DataLab (검색 트렌드)
    - DataLab (쇼핑 인사이트)
 4. 얻은 클라이언트 ID와 클라이언트 시크릿을 환경 변수로 설정

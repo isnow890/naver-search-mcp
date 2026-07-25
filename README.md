@@ -41,7 +41,7 @@ You can use this server immediately without API keys through [Kakao PlayMCP](htt
 - **search_local**: Search Naver local places
 
 > **Removed in 2.0.0:** `search_shop`, `search_book`, `search_academic`.
-> Naver shut down the Shopping / Book / Academic search APIs on 2026-07-31 with
+> Naver shuts down the Shopping / Book / Academic search APIs on 2026-07-31 with
 > no replacement on any platform. This is not a limitation of this server.
 > Shopping **Insight** (`datalab_shopping_*`) is a different API and is unaffected.
 
@@ -59,18 +59,36 @@ You can use this server immediately without API keys through [Kakao PlayMCP](htt
 
 ## Getting API Keys
 
+Two platforms issue keys for this server. Set **one** pair of environment variables — see
+[Configuration](#configuration) below for how the pair you set determines the platform used.
+
+### Option A: NAVER API HUB (recommended — the forward path)
+
+1. Go to the [NAVER Cloud Platform console](https://www.ncloud.com) and sign up or log in.
+2. Click the region & platform selector in the top right of the console, choose your region/platform, and click **Apply**.
+3. Open **Menu > All Services > Application Services > [NAVER API HUB](https://www.ncloud.com/product/applicationService/naverApiHub)**.
+4. Click **Application**, select (or create) your application, then under API management click **인증 정보 (Authentication Info)**.
+5. Copy the **Client ID** and **Client Secret** shown in the popup.
+6. Use these as `NCP_APIGW_API_KEY_ID` (Client ID) and `NCP_APIGW_API_KEY` (Client Secret) in the configuration below.
+
+### Option B: Naver Developers (legacy — existing keys only)
+
+> Naver Developers Center stops accepting new applications on **2026-07-31**. If you don't
+> already have a Client ID/Secret from this platform, use NAVER API HUB above instead.
+> Existing Developers Center keys keep working until 2027-06-30.
+
 1. Visit [Naver Developers](https://developers.naver.com/apps/#/register) and log in with your Naver account
 2. Click the "Application Registration" (애플리케이션 등록) button
 3. Fill in the application information:
    - **Application Name**: Enter any name (e.g., "Naver Search MCP")
    - **Usage**: Select "Search" (검색)
 4. In the API Settings section, check ALL of the following APIs:
-   - **Search** (검색) - Required for blog, news, book, cafe article, web, image, kin, encyclopedia, academic, and local search
+   - **Search** (검색) - Required for blog, news, cafe article, web, image, kin, encyclopedia, and local search
    - **DataLab - Search Trends** (데이터랩 - 검색어 트렌드) - Required for search term trend analysis
    - **DataLab - Shopping Insight** (데이터랩 - 쇼핑인사이트) - Required for shopping trend analysis
 5. Click "Register" to complete registration
 6. After registration, you'll see your **Client ID** and **Client Secret** on the application detail page
-7. Use these credentials in the configuration below
+7. Use these as `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` in the configuration below
 
 ## Configuration
 
