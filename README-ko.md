@@ -33,13 +33,14 @@ ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, Ope
 - **search_news**: 뉴스 검색
 - **search_blog**: 블로그 검색
 - **search_cafearticle**: 카페글 검색
-- **search_shop**: 쇼핑 검색
 - **search_image**: 이미지 검색
 - **search_kin**: 지식iN 검색
-- **search_book**: 책 검색
 - **search_encyc**: 백과사전 검색
-- **search_academic**: 학술 논문 검색
 - **search_local**: 지역 장소 검색
+
+> **2.0.0에서 제거됨:** `search_shop`, `search_book`, `search_academic`
+> 네이버가 2026-07-31에 쇼핑·책·전문자료 검색 API를 종료했고 대체 API가 없습니다.
+> 쇼핑 **인사이트**(`datalab_shopping_*`)는 별개의 API이며 영향받지 않습니다.
 
 #### DataLab 도구
 
@@ -67,6 +68,37 @@ ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, Ope
 5. "등록하기" 버튼 클릭하여 등록 완료
 6. 등록 완료 후 애플리케이션 상세 페이지에서 **Client ID**와 **Client Secret** 확인
 7. 아래 설정에서 이 credentials를 사용하세요
+
+## 설정
+
+### 자격증명
+
+두 플랫폼을 지원합니다. **한 쌍만** 설정하세요. 키 문자열만으로는 어느 플랫폼 키인지
+구분할 수 없기 때문에, 어느 환경변수에 넣었는지로 플랫폼을 판단합니다.
+
+| 환경변수 | 플랫폼 | 호출 대상 |
+|---|---|---|
+| `NCP_APIGW_API_KEY_ID`, `NCP_APIGW_API_KEY` | NAVER API HUB (NCP) | `naverapihub.apigw.ntruss.com` |
+| `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | 네이버 개발자센터 (기존) | `openapi.naver.com` |
+
+두 쌍을 모두 설정하면 NAVER API HUB를 사용합니다.
+
+아래 설치 예시는 기존 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` 쌍을 사용합니다.
+NAVER API HUB 키를 가지고 있다면 위 표의 HUB 쌍으로 바꿔 넣으세요.
+
+### NAVER API HUB 이관 안내
+
+네이버는 이 API들을 개발자센터에서 네이버 클라우드 플랫폼의 NAVER API HUB로 이관하고 있습니다.
+
+| 날짜 | 내용 |
+|---|---|
+| 2026-06-25 | NAVER API HUB 출시 |
+| 2026-07-31 | 개발자센터 신규 신청 차단 |
+| 2027-06-30 | 개발자센터 지원 종료 — 기존 키도 사용 불가 |
+
+기존 키는 2027-06-30까지 그대로 동작합니다. 이관하려면 네이버 클라우드 플랫폼 콘솔에서
+NAVER API HUB 키를 발급받아 `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`에 넣으세요.
+개발자센터 키는 NAVER API HUB에서 사용할 수 없습니다.
 
 ## 설치
 

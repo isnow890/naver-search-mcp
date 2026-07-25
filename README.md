@@ -35,13 +35,15 @@ You can use this server immediately without API keys through [Kakao PlayMCP](htt
 - **search_news**: Search Naver news
 - **search_blog**: Search Naver blogs
 - **search_cafearticle**: Search Naver cafe articles
-- **search_shop**: Search Naver shopping
 - **search_image**: Search Naver images
 - **search_kin**: Search Naver KnowledgeiN
-- **search_book**: Search Naver books
 - **search_encyc**: Search Naver encyclopedia
-- **search_academic**: Search Naver academic papers
 - **search_local**: Search Naver local places
+
+> **Removed in 2.0.0:** `search_shop`, `search_book`, `search_academic`.
+> Naver shut down the Shopping / Book / Academic search APIs on 2026-07-31 with
+> no replacement on any platform. This is not a limitation of this server.
+> Shopping **Insight** (`datalab_shopping_*`) is a different API and is unaffected.
 
 #### DataLab Tools
 
@@ -69,6 +71,37 @@ You can use this server immediately without API keys through [Kakao PlayMCP](htt
 5. Click "Register" to complete registration
 6. After registration, you'll see your **Client ID** and **Client Secret** on the application detail page
 7. Use these credentials in the configuration below
+
+## Configuration
+
+### Credentials
+
+Two platforms are supported. Set **one** pair — the server picks the platform from
+which variables you set, since the key strings themselves are indistinguishable.
+
+| Variables | Platform | Endpoint |
+|---|---|---|
+| `NCP_APIGW_API_KEY_ID`, `NCP_APIGW_API_KEY` | NAVER API HUB (NCP) | `naverapihub.apigw.ntruss.com` |
+| `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | Naver Developers (legacy) | `openapi.naver.com` |
+
+If both pairs are set, NAVER API HUB wins.
+
+The installation examples below use the legacy `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`
+pair; swap in the HUB pair from the table above if that's what you have.
+
+### Migration to NAVER API HUB
+
+Naver is moving these APIs from the Developers Center to NAVER API HUB on NAVER Cloud Platform.
+
+| Date | What happens |
+|---|---|
+| 2026-06-25 | NAVER API HUB launched |
+| 2026-07-31 | Developers Center stops accepting new applications |
+| 2027-06-30 | Developers Center support ends — existing keys stop working |
+
+Existing keys keep working until 2027-06-30. To migrate, get a key from the
+NAVER Cloud Platform console and set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`.
+Developers Center keys cannot be used against NAVER API HUB.
 
 ## Installation
 
