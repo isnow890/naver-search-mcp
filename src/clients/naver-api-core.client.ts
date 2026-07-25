@@ -1,9 +1,13 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
 import { NaverSearchConfig } from "../schemas/search.schemas.js";
+import {
+  NaverApiProvider,
+  getEndpoints,
+  getAuthHeaderNames,
+} from "./naver-api-endpoints.js";
+import { formatApiError } from "./naver-api-error.js";
 
 export abstract class NaverApiCoreClient {
-  protected searchBaseUrl = "https://openapi.naver.com/v1/search";
-  protected datalabBaseUrl = "https://openapi.naver.com/v1/datalab";
   protected config: NaverSearchConfig | null = null;
   protected axiosInstance: AxiosInstance;
 
@@ -12,7 +16,6 @@ export abstract class NaverApiCoreClient {
     this.axiosInstance = axios.create({
       timeout: 30000, // 30초 타임아웃
       maxRedirects: 3,
-      // HTTP 연결 풀링 설정은 운영체제에서 처리하도록 단순화
     });
   }
 
@@ -20,14 +23,39 @@ export abstract class NaverApiCoreClient {
     this.config = config;
   }
 
+  private requireConfig(): NaverSearchConfig {
+    if (!this.config) throw new Error("NaverApiCoreClient is not initialized.");
+    return this.config;
+  }
+
+  get provider(): NaverApiProvider {
+    return this.requireConfig().provider;
+  }
+
+  /** 검색 API base. `${searchBaseUrl}/${type}` 형태로 사용한다. */
+  get searchBaseUrl(): string {
+    return getEndpoints(this.provider).search;
+  }
+
+  /** 검색어 트렌드 전체 URL. suffix를 붙이지 않는다. */
+  get trendUrl(): string {
+    return getEndpoints(this.provider).trend;
+  }
+
+  /** 쇼핑인사이트 base. `${shoppingBaseUrl}/categories` 형태로 사용한다. */
+  get shoppingBaseUrl(): string {
+    return getEndpoints(this.provider).shopping;
+  }
+
   protected getHeaders(
     contentType: string = "application/json"
   ): AxiosRequestConfig {
-    if (!this.config) throw new Error("NaverApiCoreClient is not initialized.");
+    const config = this.requireConfig();
+    const names = getAuthHeaderNames(config.provider);
     return {
       headers: {
-        "X-Naver-Client-Id": this.config.clientId,
-        "X-Naver-Client-Secret": this.config.clientSecret,
+        [names.id]: config.clientId,
+        [names.secret]: config.clientSecret,
         "Content-Type": contentType,
       },
     };
@@ -37,30 +65,41 @@ export abstract class NaverApiCoreClient {
     try {
       const response = await this.axiosInstance.get<T>(url, {
         params,
-        ...this.getHeaders()
+        ...this.getHeaders(),
       });
       return response.data;
     } catch (error) {
-      // 연결 정리는 axios가 자동으로 처리하지만 명시적으로 에러 처리
-      throw error;
+      throw this.wrapError(url, error);
     }
   }
 
   protected async post<T>(url: string, data: any): Promise<T> {
     try {
-      const response = await this.axiosInstance.post<T>(url, data, this.getHeaders());
+      const response = await this.axiosInstance.post<T>(
+        url,
+        data,
+        this.getHeaders()
+      );
       return response.data;
     } catch (error) {
-      // 연결 정리는 axios가 자동으로 처리하지만 명시적으로 에러 처리
-      throw error;
+      throw this.wrapError(url, error);
     }
+  }
+
+  /**
+   * 두 플랫폼의 오류 응답 형식이 다르므로 파싱하지 않고 그대로 감싼다.
+   */
+  private wrapError(url: string, error: unknown): Error {
+    const response = (error as any)?.response;
+    return new Error(
+      formatApiError(this.provider, url, response?.status, response?.data)
+    );
   }
 
   /**
    * 리소스 정리 메서드 (메모리 누수 방지)
    */
   protected cleanup(): void {
-    // 연결 정리 - axios가 자동으로 처리
     this.config = null;
   }
 }

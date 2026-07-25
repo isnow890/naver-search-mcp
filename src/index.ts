@@ -87,6 +87,7 @@ export function createNaverSearchServer({
   // Initialize Naver client with config
   const client = NaverSearchClient.getInstance();
   client.initialize({
+    provider: "legacy",
     clientId: config.NAVER_CLIENT_ID,
     clientSecret: config.NAVER_CLIENT_SECRET,
   });

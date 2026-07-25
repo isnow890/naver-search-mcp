@@ -42,10 +42,11 @@ export const SearchArgsSchema = z.object({
 
 // 네이버 API 인증 정보
 export const NaverSearchConfigSchema = z.object({
-  clientId: z.string().describe("네이버 개발자센터에서 발급받은 Client ID"),
-  clientSecret: z
-    .string()
-    .describe("네이버 개발자센터에서 발급받은 Client Secret"),
+  provider: z
+    .enum(["legacy", "hub"])
+    .describe("자격증명 발급 플랫폼 (legacy: 개발자센터, hub: NAVER API HUB)"),
+  clientId: z.string().describe("발급받은 Client ID"),
+  clientSecret: z.string().describe("발급받은 Client Secret"),
 });
 
 // 전문자료(논문 등) 검색 파라미터
