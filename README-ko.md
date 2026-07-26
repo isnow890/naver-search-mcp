@@ -318,6 +318,13 @@ MIT 라이선스
 
 ## 버전 히스토리
 
+### 1.0.49 (2026-07-26)
+
+- NAVER API HUB 지원: `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`를 설정하면 새 플랫폼으로 호출합니다. 기존 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`은 그대로 동작하며, 어느 변수 쌍을 설정했는지로 플랫폼이 결정됩니다
+- `search_shop`, `search_book`, `search_academic` **제거**. 네이버가 2026-07-31에 해당 검색 API를 종료하며 어느 플랫폼에도 대체가 없습니다
+- API 에러가 raw `AxiosError` 대신 일반 `Error`로 던져집니다. `error.response?.status`로 분기하던 코드는 `undefined`를 보게 되며, 같은 정보는 `Error.message`에 담깁니다
+- 에러 메시지에 플랫폼과 HTTP 상태가 표시되고, 401일 때는 키를 다른 플랫폼 변수에 넣지 않았는지 확인하도록 안내합니다
+
 ### 1.0.48 (2026-05-12)
 
 - `npx`로 실행될 때 현재 작업 디렉터리가 달라도 `find_category`가 카테고리 데이터를 정상적으로 읽도록 수정

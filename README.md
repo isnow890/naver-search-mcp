@@ -321,6 +321,13 @@ MIT License
 
 ## Version History
 
+### 1.0.49 (2026-07-26)
+
+- NAVER API HUB support: set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY` to call the new platform. Existing `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` keep working unchanged — the platform is chosen by which variable pair you set
+- **Removed** `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform
+- API errors now throw a plain `Error` instead of the raw `AxiosError`. Code branching on `error.response?.status` sees `undefined`; the same detail is in `Error.message`
+- Error messages name the platform and HTTP status, and 401s suggest checking whether a key was set on the other platform's variables
+
 ### 1.0.48 (2026-05-12)
 
 - Fixed `find_category` data loading when the MCP server is launched by `npx` from a different working directory
