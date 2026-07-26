@@ -16,6 +16,8 @@ Naver is moving Search, Search Trend, and Shopping Insight from the Naver Develo
 | **2026-07-31** | Developers Center stops accepting **new** key applications.<br>Shopping / Book / Academic search APIs shut down completely. |
 | **2027-06-30** | Developers Center support ends — **existing keys stop working**. |
 
+Source: [Naver Developers Center official notice](https://developers.naver.com/notice/article/32530) (Korean) — "Search API, Search Trend, Shopping Insight 서비스 종료 및 NAVER API HUB 이관 안내".
+
 **Setting this up for the first time?** Get your keys from NAVER API HUB. The Developers Center path closes to new applicants on 2026-07-31, so it is no longer the place to start. Step-by-step instructions are in [Option A: NAVER API HUB](#option-a-naver-api-hub-recommended--the-forward-path) below.
 
 **Already running with Developers Center keys?** Nothing to change. They keep working until 2027-06-30, and this version supports both platforms from the same install. When you're ready, get a HUB key and swap the two environment variables — no other changes.
