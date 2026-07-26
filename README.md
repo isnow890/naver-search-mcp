@@ -7,6 +7,21 @@
 
 MCP server for Naver Search API and DataLab API integration, enabling comprehensive search across various Naver services and data trend analysis.
 
+## ⚠️ Naver is migrating these APIs — read this before you set up
+
+Naver is moving Search, Search Trend, and Shopping Insight from the Naver Developers Center to **NAVER API HUB** on NAVER Cloud Platform, and is shutting down three search APIs entirely.
+
+| Date | What happens |
+|---|---|
+| **2026-07-31** | Developers Center stops accepting **new** key applications.<br>Shopping / Book / Academic search APIs shut down completely. |
+| **2027-06-30** | Developers Center support ends — **existing keys stop working**. |
+
+**Setting this up for the first time?** Get your keys from NAVER API HUB. The Developers Center path closes to new applicants on 2026-07-31, so it is no longer the place to start. Step-by-step instructions are in [Option A: NAVER API HUB](#option-a-naver-api-hub-recommended--the-forward-path) below.
+
+**Already running with Developers Center keys?** Nothing to change. They keep working until 2027-06-30, and this version supports both platforms from the same install. When you're ready, get a HUB key and swap the two environment variables — no other changes.
+
+**Three tools were removed in 2.0.0**: `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform, so there is nothing this server can do to keep them. Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a *different* API and are **not** affected.
+
 ## Available on ClawHub for OpenClaw
 
 You can install this MCP server as an OpenClaw skill from ClawHub:
