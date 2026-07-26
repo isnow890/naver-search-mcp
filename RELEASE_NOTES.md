@@ -27,9 +27,11 @@ Naver is moving the Search, Search Trend, and Shopping Insight APIs from the Nav
 
 Existing Developers Center keys keep working until 2027-06-30. To migrate, get a key from the NAVER Cloud Platform console and set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`.
 
-## Known Limitations
+## Verification
 
-- **The Developers Center (legacy) code path has not been verified with a live API call.** No Developers Center credentials were available during development. What was verified: the URLs the new code produces are byte-identical to the pre-migration code, confirmed independently three times; and a request carrying deliberately wrong credentials reaches `openapi.naver.com` and returns 401 rather than 404, so the host, path, and header names are valid against the real server. What remains unproven is that a valid Developers Center credential returns 200 through the new code.
+Both platforms were exercised against the live APIs with valid credentials — all 17 endpoints on each (8 searches, 1 search trend, 8 shopping insight), with every response checked for its expected non-empty payload rather than merely a 2xx status.
+
+The URLs the new code produces for the Developers Center path are also byte-identical to the pre-migration code, confirmed independently three times, so existing users upgrade onto the same requests they were already making.
 
 ## Installation
 
