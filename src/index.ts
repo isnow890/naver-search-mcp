@@ -117,7 +117,7 @@ export function createNaverSearchServer({
     "search_webkr",
     {
       description:
-        "🌐 Search Korean web documents and general content. Comprehensive search across Korean websites and online content. Find articles, information, and documents from various Korean sources. For recent content or 'today's results', use get_current_korean_time first. (네이버 웹문서 검색 - 한국 웹사이트 종합 검색, 최근 콘텐츠나 오늘 결과를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "🌐 Search Korean web documents and general content. Comprehensive search across Korean websites and online content. Find articles, information, and documents from various Korean sources. (네이버 웹문서 검색 - 한국 웹사이트 종합 검색)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -132,7 +132,7 @@ export function createNaverSearchServer({
     "search_news",
     {
       description:
-        "📰 Search latest Korean news articles from major outlets. Perfect for current events, breaking news, and recent developments. Covers politics, economy, society, and international news. For today's news or current events, use get_current_korean_time first to understand what 'today' means. (네이버 뉴스 검색 - 최신 뉴스와 시사 정보, 오늘 뉴스를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "📰 Search latest Korean news articles from major outlets. Perfect for current events, breaking news, and recent developments. Covers politics, economy, society, and international news. (네이버 뉴스 검색 - 최신 뉴스와 시사 정보)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -147,7 +147,7 @@ export function createNaverSearchServer({
     "search_blog",
     {
       description:
-        "✍️ Search personal blogs and reviews for authentic user experiences. Great for product reviews, personal stories, detailed tutorials, and real user opinions. Find genuine Korean perspectives. For recent posts or 'today's content', use get_current_korean_time first. (네이버 블로그 검색 - 실제 사용자 후기와 개인적 경험, 최근 글이나 오늘 내용을 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "✍️ Search personal blogs and reviews for authentic user experiences. Great for product reviews, personal stories, detailed tutorials, and real user opinions. Find genuine Korean perspectives. (네이버 블로그 검색 - 실제 사용자 후기와 개인적 경험)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -162,7 +162,7 @@ export function createNaverSearchServer({
     "search_image",
     {
       description:
-        "🖼️ Search for images with Korean context and relevance. Find visual content, infographics, charts, and photos related to your search terms. Great for visual research and content discovery. For recent images or current visual content, use get_current_korean_time first. (네이버 이미지 검색 - 시각적 컨텐츠 발견, 최근 이미지나 현재 시각 자료를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "🖼️ Search for images with Korean context and relevance. Find visual content, infographics, charts, and photos related to your search terms. Great for visual research and content discovery. (네이버 이미지 검색 - 시각적 컨텐츠 발견)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -177,7 +177,7 @@ export function createNaverSearchServer({
     "search_kin",
     {
       description:
-        "❓ Search Naver KnowledgeiN for Q&A and community-driven answers. Find solutions to problems, get expert advice, and discover community insights on various topics. For recent questions or current discussions, use get_current_korean_time first. (네이버 지식iN 검색 - 질문과 답변, 커뮤니티 지식, 최근 질문이나 현재 토론을 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "❓ Search Naver KnowledgeiN for Q&A and community-driven answers. Find solutions to problems, get expert advice, and discover community insights on various topics. (네이버 지식iN 검색 - 질문과 답변, 커뮤니티 지식)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -192,7 +192,7 @@ export function createNaverSearchServer({
     "search_encyc",
     {
       description:
-        "📖 Search Naver Encyclopedia for authoritative knowledge and definitions. Best for academic research, getting reliable information, and understanding Korean concepts and terminology. For current definitions or recent updates, use get_current_korean_time for context. (네이버 지식백과 검색 - 신뢰할 수 있는 정보와 정의, 현재 정의나 최근 업데이트를 찾을 때는 get_current_korean_time으로 상황을 파악하세요)",
+        "📖 Search Naver Encyclopedia for authoritative knowledge and definitions. Best for academic research, getting reliable information, and understanding Korean concepts and terminology. (네이버 지식백과 검색 - 신뢰할 수 있는 정보와 정의)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -207,7 +207,7 @@ export function createNaverSearchServer({
     "search_local",
     {
       description:
-        "📍 Search for local businesses, restaurants, and places in Korea. Find location information, reviews, contact details, and business hours for Korean establishments. For current business hours or today's availability, use get_current_korean_time first. (네이버 지역 검색 - 지역 업체와 장소 정보, 현재 영업시간이나 오늘 이용 가능 여부를 확인할 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "📍 Search for local businesses, restaurants, and places in Korea. Find location information, reviews, contact details, and business hours for Korean establishments. (네이버 지역 검색 - 지역 업체와 장소 정보)",
       inputSchema: NaverLocalSearchParamsSchema.shape,
     },
     async (args) => {
@@ -222,7 +222,7 @@ export function createNaverSearchServer({
     "search_cafearticle",
     {
       description:
-        "☕ Search Naver Cafe articles for community discussions and specialized content. Find niche communities, hobby groups, and specialized discussions on various topics. For recent discussions or current community topics, use get_current_korean_time first. (네이버 카페글 검색 - 커뮤니티 토론과 전문 정보, 최근 논의나 현재 커뮤니티 주제를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
+        "☕ Search Naver Cafe articles for community discussions and specialized content. Find niche communities, hobby groups, and specialized discussions on various topics. (네이버 카페글 검색 - 커뮤니티 토론과 전문 정보)",
       inputSchema: SearchArgsSchema.shape,
     },
     async (args) => {
@@ -238,7 +238,7 @@ export function createNaverSearchServer({
     "datalab_search",
     {
       description:
-        "📊 Analyze search keyword trends over time using Naver DataLab. Track popularity changes, seasonal patterns, and compare multiple keywords. Perfect for market research and trend analysis. For current trend analysis or 'recent trends', use get_current_korean_time to determine proper date ranges. (네이버 데이터랩 검색어 트렌드 분석, 현재 트렌드나 최근 동향 분석 시 get_current_korean_time으로 적절한 날짜 범위를 설정하세요)",
+        "📊 Analyze search keyword trends over time using Naver DataLab. Track popularity changes, seasonal patterns, and compare multiple keywords. Perfect for market research and trend analysis. (네이버 데이터랩 검색어 트렌드 분석)",
       inputSchema: DatalabSearchSchema.shape,
     },
     async (args) => {
@@ -253,7 +253,7 @@ export function createNaverSearchServer({
     "datalab_shopping_category",
     {
       description:
-        "🛍️ STEP 2: Analyze shopping category trends over time. Use find_category first to get category codes. BUSINESS CASES: Market size analysis, seasonal trend identification, category performance comparison. EXAMPLE: Compare '패션의류' vs '화장품' trends over 6 months. For current period analysis, use get_current_korean_time to set proper date ranges. (네이버 쇼핑 카테고리별 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 기간 분석시 get_current_korean_time으로 적절한 날짜 범위 설정)",
+        "🛍️ STEP 2: Analyze shopping category trends over time. Use find_category first to get category codes. BUSINESS CASES: Market size analysis, seasonal trend identification, category performance comparison. EXAMPLE: Compare '패션의류' vs '화장품' trends over 6 months. (네이버 쇼핑 카테고리별 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingSchema.shape,
     },
     async (args) => {
@@ -268,7 +268,7 @@ export function createNaverSearchServer({
     "datalab_shopping_by_device",
     {
       description:
-        "📱 Analyze shopping trends by device (PC vs Mobile). Use find_category first. BUSINESS CASES: Mobile commerce strategy, responsive design priority, device-specific campaigns. EXAMPLE: 'PC 사용자가 더 많이 구매하는 카테고리는?' For current device trends, use get_current_korean_time to set proper analysis period. (기기별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 기기 트렌드 분석시 get_current_korean_time으로 적절한 분석 기간 설정)",
+        "📱 Analyze shopping trends by device (PC vs Mobile). Use find_category first. BUSINESS CASES: Mobile commerce strategy, responsive design priority, device-specific campaigns. EXAMPLE: 'PC 사용자가 더 많이 구매하는 카테고리는?' (기기별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingDeviceSchema.pick({
         startDate: true,
         endDate: true,
@@ -289,7 +289,7 @@ export function createNaverSearchServer({
     "datalab_shopping_by_gender",
     {
       description:
-        "👥 Analyze shopping trends by gender (Male vs Female). Use find_category first. BUSINESS CASES: Gender-targeted marketing, product positioning, demographic analysis. EXAMPLE: '화장품 쇼핑에서 남녀 비율은?' For current gender trends, use get_current_korean_time to set proper analysis period. (성별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 성별 트렌드 분석시 get_current_korean_time으로 적절한 분석 기간 설정)",
+        "👥 Analyze shopping trends by gender (Male vs Female). Use find_category first. BUSINESS CASES: Gender-targeted marketing, product positioning, demographic analysis. EXAMPLE: '화장품 쇼핑에서 남녀 비율은?' (성별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingGenderSchema.pick({
         startDate: true,
         endDate: true,
@@ -310,7 +310,7 @@ export function createNaverSearchServer({
     "datalab_shopping_by_age",
     {
       description:
-        "👶👦👨👴 Analyze shopping trends by age groups (10s, 20s, 30s, 40s, 50s, 60s+). Use find_category first. BUSINESS CASES: Age-targeted products, generational preferences, lifecycle marketing. EXAMPLE: '개발 도구는 어느 연령대가 많이 구매하나?' For current age trends, use get_current_korean_time to set proper analysis period. (연령별 쇼핑 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 연령 트렌드 분석시 get_current_korean_time으로 적절한 분석 기간 설정)",
+        "👶👦👨👴 Analyze shopping trends by age groups (10s, 20s, 30s, 40s, 50s, 60s+). Use find_category first. BUSINESS CASES: Age-targeted products, generational preferences, lifecycle marketing. EXAMPLE: '개발 도구는 어느 연령대가 많이 구매하나?' (연령별 쇼핑 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingAgeSchema.pick({
         startDate: true,
         endDate: true,
@@ -331,7 +331,7 @@ export function createNaverSearchServer({
     "datalab_shopping_keywords",
     {
       description:
-        "🔍 Compare specific keywords within a shopping category. Use find_category first. BUSINESS CASES: Product keyword optimization, competitor analysis, search trend identification. EXAMPLE: Within '패션' category, compare '원피스' vs '자켓' vs '드레스' trends. For current keyword trends, use get_current_korean_time to set proper analysis period. (카테고리 내 키워드 비교 - 먼저 find_category 도구로 카테고리 코드를 찾고, 현재 키워드 트렌드 분석시 get_current_korean_time으로 적절한 분석 기간 설정)",
+        "🔍 Compare specific keywords within a shopping category. Use find_category first. BUSINESS CASES: Product keyword optimization, competitor analysis, search trend identification. EXAMPLE: Within '패션' category, compare '원피스' vs '자켓' vs '드레스' trends. (카테고리 내 키워드 비교 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingKeywordsSchema.shape,
     },
     async (args) => {
