@@ -1,3 +1,46 @@
+# Release 1.0.49 - NAVER API HUB Migration
+
+## Summary
+
+Naver is moving the Search, Search Trend, and Shopping Insight APIs from the Naver Developers Center to NAVER API HUB on NAVER Cloud Platform. This release supports both platforms from a single version, and removes three tools whose APIs Naver is shutting down entirely.
+
+## Breaking Changes
+
+- **Removed**: `search_shop`, `search_book`, `search_academic`. Naver shuts down the Shopping / Book / Academic-document search APIs on 2026-07-31 with no grace period and no replacement on any platform — they already return 404 on NAVER API HUB. See https://developers.naver.com/notice/article/32564
+- Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a different API and are **not** affected. They continue to work on both platforms.
+- **Error type changed**: API errors now throw a plain `Error` instead of propagating the raw `AxiosError`. A consumer branching on `error.response?.status` will now see `undefined`. The `Error.message` carries the same information instead: the platform, the HTTP status, and the response body.
+
+## New Features
+
+- **NAVER API HUB support**: set `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY` to call NAVER API HUB. Existing `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` keep working unchanged.
+- The platform is selected by which variable pair you set, never by inspecting key values — the two platforms' credentials are indistinguishable by sight, and Developers Center keys cannot be used against API HUB at all. NAVER API HUB wins if both pairs are set.
+- If only one HUB variable is set while a complete Developers Center pair exists, the server starts on the legacy platform and warns which HUB variable is missing, instead of refusing to start.
+- Error messages now name the platform and the HTTP status. On 401 they suggest checking whether a key was placed in the other platform's variables.
+
+## Migration Timeline
+
+| Date | What happens |
+|---|---|
+| 2026-06-25 | NAVER API HUB launched |
+| 2026-07-31 | Developers Center stops accepting new applications |
+| 2027-06-30 | Developers Center support ends — existing keys stop working |
+
+Existing Developers Center keys keep working until 2027-06-30. To migrate, get a key from the NAVER Cloud Platform console and set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`.
+
+## Verification
+
+Both platforms were exercised against the live APIs with valid credentials — all 17 endpoints on each (8 searches, 1 search trend, 8 shopping insight), with every response checked for its expected non-empty payload rather than merely a 2xx status.
+
+The URLs the new code produces for the Developers Center path are also byte-identical to the pre-migration code, confirmed independently three times, so existing users upgrade onto the same requests they were already making.
+
+## Installation
+
+```bash
+npx -y @isnow890/naver-search-mcp@1.0.49
+```
+
+---
+
 # Release 1.0.48 - find_category Data Path Fix
 
 ## Summary

@@ -3,13 +3,9 @@ import {
   NaverSearchType,
   NaverSearchConfig,
   NaverLocalSearchParams,
-  NaverDocumentSearchParams,
   SearchArgs,
 } from "../schemas/search.schemas.js";
-import {
-  NaverDocumentSearchResponse,
-  NaverLocalSearchResponse,
-} from "../types/search.types.js";
+import { NaverLocalSearchResponse } from "../types/search.types.js";
 import {
   DatalabSearchRequest,
   DatalabShoppingResponse,
@@ -78,15 +74,6 @@ export class NaverSearchClient extends NaverApiCoreClient {
   }
 
   /**
-   * 전문자료 검색 메서드
-   */
-  async searchAcademic(
-    params: NaverDocumentSearchParams
-  ): Promise<NaverDocumentSearchResponse> {
-    return this.get(`${this.searchBaseUrl}/doc`, params);
-  }
-
-  /**
    * 지역 검색 메서드
    */
   async searchLocal(
@@ -99,7 +86,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
    * 검색어 트렌드 분석 메서드
    */
   async searchTrend(params: DatalabSearchRequest): Promise<any> {
-    return this.post(`${this.datalabBaseUrl}/search`, params);
+    return this.post(this.trendUrl, params);
   }
 
   /**
@@ -108,7 +95,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingCategory(
     params: DatalabShoppingCategoryRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(`${this.datalabBaseUrl}/shopping/categories`, params);
+    return this.post(`${this.shoppingBaseUrl}/categories`, params);
   }
 
   /**
@@ -117,7 +104,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingByDevice(
     params: DatalabShoppingDeviceRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(`${this.datalabBaseUrl}/shopping/category/device`, params);
+    return this.post(`${this.shoppingBaseUrl}/category/device`, params);
   }
 
   /**
@@ -126,7 +113,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingByGender(
     params: DatalabShoppingGenderRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(`${this.datalabBaseUrl}/shopping/category/gender`, params);
+    return this.post(`${this.shoppingBaseUrl}/category/gender`, params);
   }
 
   /**
@@ -135,7 +122,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingByAge(
     params: DatalabShoppingAgeRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(`${this.datalabBaseUrl}/shopping/category/age`, params);
+    return this.post(`${this.shoppingBaseUrl}/category/age`, params);
   }
 
   /**
@@ -144,10 +131,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingKeywords(
     params: DatalabShoppingKeywordsRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(
-      `${this.datalabBaseUrl}/shopping/category/keywords`,
-      params
-    );
+    return this.post(`${this.shoppingBaseUrl}/category/keywords`, params);
   }
 
   /**
@@ -157,7 +141,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
     params: DatalabShoppingKeywordRequest
   ): Promise<DatalabShoppingResponse> {
     return this.post(
-      `${this.datalabBaseUrl}/shopping/category/keyword/device`,
+      `${this.shoppingBaseUrl}/category/keyword/device`,
       params
     );
   }
@@ -169,7 +153,7 @@ export class NaverSearchClient extends NaverApiCoreClient {
     params: DatalabShoppingKeywordRequest
   ): Promise<DatalabShoppingResponse> {
     return this.post(
-      `${this.datalabBaseUrl}/shopping/category/keyword/gender`,
+      `${this.shoppingBaseUrl}/category/keyword/gender`,
       params
     );
   }
@@ -180,9 +164,6 @@ export class NaverSearchClient extends NaverApiCoreClient {
   async datalabShoppingKeywordByAge(
     params: DatalabShoppingKeywordRequest
   ): Promise<DatalabShoppingResponse> {
-    return this.post(
-      `${this.datalabBaseUrl}/shopping/category/keyword/age`,
-      params
-    );
+    return this.post(`${this.shoppingBaseUrl}/category/keyword/age`, params);
   }
 }

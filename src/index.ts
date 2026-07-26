@@ -22,11 +22,23 @@ import {
 } from "./schemas/datalab.schemas.js";
 import { FindCategorySchema } from "./schemas/category.schemas.js";
 import { findCategoryHandler, clearCategoriesCache } from "./handlers/category.handlers.js";
+import { resolveCredentials } from "./config/credentials.js";
 
 // Configuration schema for programmatic server creation and stdio startup
 export const configSchema = z.object({
-  NAVER_CLIENT_ID: z.string().describe("Naver API Client ID"),
-  NAVER_CLIENT_SECRET: z.string().describe("Naver API Client Secret"),
+  NAVER_CLIENT_ID: z.string().optional().describe("네이버 개발자센터 Client ID"),
+  NAVER_CLIENT_SECRET: z
+    .string()
+    .optional()
+    .describe("네이버 개발자센터 Client Secret"),
+  NCP_APIGW_API_KEY_ID: z
+    .string()
+    .optional()
+    .describe("NAVER API HUB Client ID"),
+  NCP_APIGW_API_KEY: z
+    .string()
+    .optional()
+    .describe("NAVER API HUB Client Secret"),
 });
 
 // Global server instance to prevent memory leaks
@@ -58,7 +70,9 @@ function isConfigChanged(newConfig: z.infer<typeof configSchema>): boolean {
   if (!currentConfig) return true;
   return (
     currentConfig.NAVER_CLIENT_ID !== newConfig.NAVER_CLIENT_ID ||
-    currentConfig.NAVER_CLIENT_SECRET !== newConfig.NAVER_CLIENT_SECRET
+    currentConfig.NAVER_CLIENT_SECRET !== newConfig.NAVER_CLIENT_SECRET ||
+    currentConfig.NCP_APIGW_API_KEY_ID !== newConfig.NCP_APIGW_API_KEY_ID ||
+    currentConfig.NCP_APIGW_API_KEY !== newConfig.NCP_APIGW_API_KEY
   );
 }
 
@@ -81,15 +95,23 @@ export function createNaverSearchServer({
   // Create a new MCP server only once
   const server = new McpServer({
     name: "naver-search",
-    version: "1.0.44",
+    version: "1.0.49",
   });
 
   // Initialize Naver client with config
+  const credentials = resolveCredentials(config);
+  console.error(
+    `Using ${
+      credentials.provider === "hub"
+        ? "NAVER API HUB"
+        : "네이버 개발자센터 (2027-06-30 지원 종료 예정)"
+    }`
+  );
+  if (credentials.warning) {
+    console.error(`[경고] ${credentials.warning}`);
+  }
   const client = NaverSearchClient.getInstance();
-  client.initialize({
-    clientId: config.NAVER_CLIENT_ID,
-    clientSecret: config.NAVER_CLIENT_SECRET,
-  });
+  client.initialize(credentials);
 
   server.registerTool(
     "search_webkr",
@@ -137,21 +159,6 @@ export function createNaverSearchServer({
   );
 
   server.registerTool(
-    "search_shop",
-    {
-      description:
-        "🛒 Search Naver Shopping for products, prices, and shopping deals. Compare prices across vendors, find product specifications, and discover shopping trends in Korea. For current deals or today's specials, use get_current_korean_time first. (네이버 쇼핑 검색 - 상품 정보와 가격 비교, 현재 할인이나 오늘 특가를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_shop(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
     "search_image",
     {
       description:
@@ -182,21 +189,6 @@ export function createNaverSearchServer({
   );
 
   server.registerTool(
-    "search_book",
-    {
-      description:
-        "📚 Search for books, publications, and literary content. Find book reviews, author information, publication details, and reading recommendations in Korean literature and translated works. For new releases or current bestsellers, use get_current_korean_time first. (네이버 책 검색 - 도서 정보와 서평, 신간도서나 현재 베스트셀러를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_book(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
     "search_encyc",
     {
       description:
@@ -205,21 +197,6 @@ export function createNaverSearchServer({
     },
     async (args) => {
       const result = await searchToolHandlers.search_encyc(args);
-      return {
-        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-      };
-    }
-  );
-
-  server.registerTool(
-    "search_academic",
-    {
-      description:
-        "🎓 Search academic papers, research documents, and scholarly content. Access Korean academic resources, research papers, theses, and professional publications. For recent publications or current research, use get_current_korean_time first. (네이버 전문자료 검색 - 학술 논문과 전문 자료, 최근 발표나 현재 연구를 찾을 때는 먼저 get_current_korean_time으로 현재 시간을 확인하세요)",
-      inputSchema: SearchArgsSchema.shape,
-    },
-    async (args) => {
-      const result = await searchToolHandlers.search_academic(args);
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
       };
@@ -490,33 +467,31 @@ async function main() {
   try {
     console.error("Starting Naver Search MCP Server...");
 
-    // Get config from environment variables - check for empty strings too
-    const clientId = process.env.NAVER_CLIENT_ID?.trim();
-    const clientSecret = process.env.NAVER_CLIENT_SECRET?.trim();
+    // Get config from environment variables
+    const config = {
+      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID,
+      NAVER_CLIENT_SECRET: process.env.NAVER_CLIENT_SECRET,
+      NCP_APIGW_API_KEY_ID: process.env.NCP_APIGW_API_KEY_ID,
+      NCP_APIGW_API_KEY: process.env.NCP_APIGW_API_KEY,
+    };
 
     console.error("Environment variables:", {
-      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID
-        ? `[${process.env.NAVER_CLIENT_ID.length} chars]`
+      NAVER_CLIENT_ID: config.NAVER_CLIENT_ID
+        ? `[${config.NAVER_CLIENT_ID.length} chars]`
         : "undefined",
-      NAVER_CLIENT_SECRET: process.env.NAVER_CLIENT_SECRET
-        ? `[${process.env.NAVER_CLIENT_SECRET.length} chars]`
+      NAVER_CLIENT_SECRET: config.NAVER_CLIENT_SECRET
+        ? `[${config.NAVER_CLIENT_SECRET.length} chars]`
+        : "undefined",
+      NCP_APIGW_API_KEY_ID: config.NCP_APIGW_API_KEY_ID
+        ? `[${config.NCP_APIGW_API_KEY_ID.length} chars]`
+        : "undefined",
+      NCP_APIGW_API_KEY: config.NCP_APIGW_API_KEY
+        ? `[${config.NCP_APIGW_API_KEY.length} chars]`
         : "undefined",
     });
 
-    if (!clientId || !clientSecret) {
-      throw new Error(`Missing required environment variables:
-        NAVER_CLIENT_ID: ${clientId ? "provided" : "missing"}
-        NAVER_CLIENT_SECRET: ${clientSecret ? "provided" : "missing"}
-        
-        Please set these environment variables before running the server.`);
-    }
-
-    const config = {
-      NAVER_CLIENT_ID: clientId,
-      NAVER_CLIENT_SECRET: clientSecret,
-    };
-
-    console.error("Config loaded successfully");
+    // 자격증명 유효성은 여기서 먼저 확인한다 (실패 시 명확한 안내와 함께 종료)
+    resolveCredentials(config);
 
     // Validate config
     const validatedConfig = configSchema.parse(config);
