@@ -26,22 +26,22 @@ export function resolveDate(dateStr: string): string {
 
 /**
  * Get current Korean Standard Time (KST) date string
- * KST is UTC+9
+ *
+ * 직접 오프셋을 더하지 않는다. now.getTime() 은 이미 UTC 기준 epoch 이라
+ * 거기에 9시간과 getTimezoneOffset() 을 함께 더하면 프로세스의 로컬
+ * 타임존만큼 이중 보정된다. TZ=Asia/Seoul 인 호스트에서는 00:00~09:00 KST
+ * 사이에 하루 전 날짜가 나온다. 타임존 변환은 Intl 에 맡긴다.
+ * en-CA 로케일이 yyyy-mm-dd 를 준다.
  *
  * @returns Date string in yyyy-mm-dd format
  */
 export function getKoreanToday(): string {
-  const now = new Date();
-
-  // Convert to KST (UTC+9)
-  const kstOffset = 9 * 60 * 60 * 1000; // 9 hours in milliseconds
-  const kstTime = new Date(now.getTime() + kstOffset + (now.getTimezoneOffset() * 60 * 1000));
-
-  const year = kstTime.getUTCFullYear();
-  const month = String(kstTime.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(kstTime.getUTCDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
 }
 
 /**

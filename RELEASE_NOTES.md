@@ -1,3 +1,36 @@
+# Release 1.0.50 - KST "today" Date Fix
+
+## Summary
+
+`getKoreanToday()` returned the wrong date on hosts whose local timezone is not UTC. Since `"today"` is the documented way to pass DataLab date parameters, this silently shifted the query window by a day. This release fixes the conversion and removes stale tool-description references to a tool that no longer exists.
+
+## Bug Fixes
+
+- **`"today"` resolved to the wrong date outside UTC**: `getKoreanToday()` added 9 hours *and* `getTimezoneOffset()` to `Date.getTime()`. Since `getTime()` is already UTC-based, the local offset was applied twice. On a host running `TZ=Asia/Seoul` — the common case for Korean users running the server via `npx` — any call between 00:00 and 09:00 KST resolved `"today"` to the **previous day**.
+
+  ```
+  Actual time 2026-07-27 01:00 KST, host TZ=Asia/Seoul
+    before → 2026-07-26   (one day behind)
+    after  → 2026-07-27
+  ```
+
+  The conversion is now delegated to `Intl.DateTimeFormat` with `timeZone: 'Asia/Seoul'`, so it no longer depends on the host timezone. Naver returns HTTP 200 with valid data for a shifted window, so this failed silently rather than raising an error.
+
+- **Tool descriptions referenced a tool that does not exist**: 14 tool descriptions instructed the model to call `get_current_korean_time` first. That tool was removed in 1.0.47, but the descriptions were left behind, so a model following them hit `tool not found`. Removed 28 occurrences (14 English, 14 Korean). No behavior change — the tool list is still 18.
+
+## Verification
+
+- 40 unit tests pass, including new `date.utils` coverage run under `TZ=UTC`, `Asia/Seoul`, `America/New_York`, `Europe/London`, and `Pacific/Auckland`.
+- A regression test pins the old double-correction behavior with an explicit offset, so it cannot silently return.
+
+## Installation
+
+```bash
+npx -y @isnow890/naver-search-mcp@1.0.50
+```
+
+---
+
 # Release 1.0.49 - NAVER API HUB Migration
 
 ## Summary
