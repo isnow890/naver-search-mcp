@@ -20,6 +20,8 @@ Naver is moving Search, Search Trend, and Shopping Insight from the Naver Develo
 
 **Already running with Developers Center keys?** Nothing to change. They keep working until 2027-06-30, and this version supports both platforms from the same install. When you're ready, get a HUB key and swap the two environment variables — no other changes.
 
+**Support plan for this server:** both platforms stay supported side by side through Naver's 2027-06-30 cutoff. The Developers Center path will be dropped in a later major version only after that date, once it can no longer work for anyone — so upgrading in the meantime will never take your working setup away.
+
 **Three tools were removed in 2.0.0**: `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform, so there is nothing this server can do to keep them. Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a *different* API and are **not** affected.
 
 ## Available on ClawHub for OpenClaw
