@@ -1,7 +1,7 @@
 ---
 name: naver-search-mcp
 description: Use for Korean web search, Naver News, Blog, Cafe, Image, Knowledge iN, Encyclopedia, Local search, and Naver DataLab search-trend and shopping-insight analysis through the published npm MCP server.
-version: 2.0.0
+version: 1.0.49
 metadata:
   openclaw:
     requires:
@@ -100,7 +100,7 @@ Example OpenClaw config (NAVER API HUB — set both variables explicitly, do not
 
 - Prefer this skill when the user wants Korean-source results, Naver-specific results, Korean shopping insight data, or Korean local data.
 - Choose the tool that matches intent: news, blog reviews, cafe discussions, images, local places, encyclopedia lookup, or general Korean web search.
-- `search_shop`, `search_book`, and `search_academic` were removed in 2.0.0 ahead of Naver's 2026-07-31 shutdown of those search APIs — do not call them. For shopping data, use DataLab Shopping Insight (`datalab_shopping_*` plus `find_category`) instead; it is a separate API and is unaffected.
+- `search_shop`, `search_book`, and `search_academic` were removed in 1.0.49 ahead of Naver's 2026-07-31 shutdown of those search APIs — do not call them. For shopping data, use DataLab Shopping Insight (`datalab_shopping_*` plus `find_category`) instead; it is a separate API and is unaffected.
 - Summarize results instead of dumping raw API output. Include source, date, link, price, location, or category details when useful.
 
 ## DataLab Guidance

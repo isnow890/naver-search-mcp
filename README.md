@@ -24,7 +24,7 @@ Source: [Naver Developers Center official notice](https://developers.naver.com/n
 
 **Support plan for this server:** both platforms stay supported side by side through Naver's 2027-06-30 cutoff. The Developers Center path will be dropped in a later major version only after that date, once it can no longer work for anyone — so upgrading in the meantime will never take your working setup away.
 
-**Three tools were removed in 2.0.0**: `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform, so there is nothing this server can do to keep them. Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a *different* API and are **not** affected.
+**Three tools were removed in 1.0.49**: `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform, so there is nothing this server can do to keep them. Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a *different* API and are **not** affected.
 
 ## Available on ClawHub for OpenClaw
 
@@ -59,7 +59,7 @@ You can use this server immediately without API keys through [Kakao PlayMCP](htt
 - **search_encyc**: Search Naver encyclopedia
 - **search_local**: Search Naver local places
 
-> **Removed in 2.0.0:** `search_shop`, `search_book`, `search_academic`.
+> **Removed in 1.0.49:** `search_shop`, `search_book`, `search_academic`.
 > Naver shuts down the Shopping / Book / Academic search APIs on 2026-07-31 with
 > no replacement on any platform. This is not a limitation of this server.
 > Shopping **Insight** (`datalab_shopping_*`) is a different API and is unaffected.

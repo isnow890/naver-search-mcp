@@ -22,7 +22,7 @@ Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 
 
 **이 서버의 지원 계획:** 네이버가 정한 2027-06-30까지는 두 플랫폼을 나란히 지원합니다. 개발자센터 경로는 그 날짜가 지나 누구에게도 동작할 수 없게 된 뒤에야 별도 메이저 버전에서 제거합니다. 그때까지는 버전을 올려도 쓰고 계신 설정이 끊기는 일은 없습니다.
 
-**2.0.0에서 툴 3개가 제거되었습니다**: `search_shop`, `search_book`, `search_academic`. 네이버가 2026-07-31에 해당 검색 API를 종료하며 어느 플랫폼에도 대체 API가 없어서, 이 서버가 살려둘 방법이 없습니다. 쇼핑 **인사이트**(`datalab_shopping_*`)와 `find_category`는 *별개의* API이므로 영향받지 **않습니다**.
+**1.0.49에서 툴 3개가 제거되었습니다**: `search_shop`, `search_book`, `search_academic`. 네이버가 2026-07-31에 해당 검색 API를 종료하며 어느 플랫폼에도 대체 API가 없어서, 이 서버가 살려둘 방법이 없습니다. 쇼핑 **인사이트**(`datalab_shopping_*`)와 `find_category`는 *별개의* API이므로 영향받지 **않습니다**.
 
 ## OpenClaw용 ClawHub 지원
 
@@ -57,7 +57,7 @@ ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, Ope
 - **search_encyc**: 백과사전 검색
 - **search_local**: 지역 장소 검색
 
-> **2.0.0에서 제거됨:** `search_shop`, `search_book`, `search_academic`
+> **1.0.49에서 제거됨:** `search_shop`, `search_book`, `search_academic`
 > 네이버는 2026-07-31에 쇼핑·책·전문자료 검색 API를 종료하며 대체 API가 없습니다.
 > 쇼핑 **인사이트**(`datalab_shopping_*`)는 별개의 API이며 영향받지 않습니다.
 

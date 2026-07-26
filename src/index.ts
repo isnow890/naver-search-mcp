@@ -95,7 +95,7 @@ export function createNaverSearchServer({
   // Create a new MCP server only once
   const server = new McpServer({
     name: "naver-search",
-    version: "2.0.0",
+    version: "1.0.49",
   });
 
   // Initialize Naver client with config

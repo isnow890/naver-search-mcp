@@ -1,4 +1,4 @@
-# Release 2.0.0 - NAVER API HUB Migration
+# Release 1.0.49 - NAVER API HUB Migration
 
 ## Summary
 
@@ -36,7 +36,7 @@ The URLs the new code produces for the Developers Center path are also byte-iden
 ## Installation
 
 ```bash
-npx -y @isnow890/naver-search-mcp@2.0.0
+npx -y @isnow890/naver-search-mcp@1.0.49
 ```
 
 ---
