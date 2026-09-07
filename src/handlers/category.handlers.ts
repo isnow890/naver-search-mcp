@@ -219,9 +219,9 @@ export const findCategoryHandler = async ({ query, max_results = 10 }: any) => {
       })),
       next_steps: {
         trend_analysis: `이제 datalab_shopping_category 도구로 각 카테고리의 트렌드 분석이 가능합니다`,
-        age_analysis: `datalab_shopping_age 도구로 연령별 쇼핑 패턴을 분석할 수 있습니다`,
-        gender_analysis: `datalab_shopping_gender 도구로 성별 쇼핑 패턴을 분석할 수 있습니다`,
-        device_analysis: `datalab_shopping_device 도구로 디바이스별 쇼핑 패턴을 분석할 수 있습니다`
+        age_analysis: `datalab_shopping_by_age 도구로 연령별 쇼핑 패턴을 분석할 수 있습니다`,
+        gender_analysis: `datalab_shopping_by_gender 도구로 성별 쇼핑 패턴을 분석할 수 있습니다`,
+        device_analysis: `datalab_shopping_by_device 도구로 디바이스별 쇼핑 패턴을 분석할 수 있습니다`
       }
     };
     
