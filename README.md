@@ -1,173 +1,151 @@
 # Naver Search MCP Server
 
-[![한국어](https://img.shields.io/badge/한국어-README-yellow)](README-ko.md)
-
-[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/isnow890/naver-search-mcp)](https://archestra.ai/mcp-catalog/isnow890__naver-search-mcp)
+[![English](https://img.shields.io/badge/English-README-yellow)](README-en.md)
 [![MCP.so](https://img.shields.io/badge/MCP.so-Naver%20Search%20MCP-blue)](https://mcp.so/server/naver-search-mcp/isnow890)
 
-MCP server for Naver Search API and DataLab API integration, enabling comprehensive search across various Naver services and data trend analysis.
+Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
 
-## ⚠️ Naver is migrating these APIs — read this before you set up
+## ⚠️ 네이버 API 이관 안내 — 설치 전에 읽어주세요
 
-Naver is moving Search, Search Trend, and Shopping Insight from the Naver Developers Center to **NAVER API HUB** on NAVER Cloud Platform, and is shutting down three search APIs entirely.
+네이버가 검색·검색어 트렌드·쇼핑 인사이트 API를 개발자센터에서 네이버 클라우드 플랫폼의 **NAVER API HUB**로 이관합니다. 그와 별개로 검색 API 3종은 완전히 종료됩니다.
 
-| Date | What happens |
+| 날짜 | 내용 |
 |---|---|
-| **2026-07-31** | Developers Center stops accepting **new** key applications.<br>Shopping / Book / Academic search APIs shut down completely. |
-| **2027-06-30** | Developers Center support ends — **existing keys stop working**. |
+| **2026-07-31** | 개발자센터에서 **신규** 키 발급 신청이 차단됩니다.<br>쇼핑·책·전문자료 검색 API가 완전히 종료됩니다. |
+| **2027-06-30** | 개발자센터 지원이 종료되어 **기존 키도 사용할 수 없게 됩니다**. |
 
-Source: [Naver Developers Center official notice](https://developers.naver.com/notice/article/32530) (Korean) — "Search API, Search Trend, Shopping Insight 서비스 종료 및 NAVER API HUB 이관 안내".
+출처: [네이버 개발자센터 공지 — Search API, Search Trend, Shopping Insight 서비스 종료 및 NAVER API HUB 이관 안내](https://developers.naver.com/notice/article/32530)
 
-**Setting this up for the first time?** Get your keys from NAVER API HUB. The Developers Center path closes to new applicants on 2026-07-31, so it is no longer the place to start. Step-by-step instructions are in [Option A: NAVER API HUB](#option-a-naver-api-hub-recommended--the-forward-path) below.
+**처음 설치하시나요?** NAVER API HUB에서 키를 발급받으세요. 개발자센터는 2026-07-31부터 신규 신청을 받지 않으므로 더 이상 시작점이 아닙니다. 발급 절차는 아래 [방법 A: NAVER API HUB](#방법-a-naver-api-hub-권장--앞으로의-방향)에 단계별로 정리해 두었습니다.
 
-**Already running with Developers Center keys?** Nothing to change. They keep working until 2027-06-30, and this version supports both platforms from the same install. When you're ready, get a HUB key and swap the two environment variables — no other changes.
+**이미 개발자센터 키로 쓰고 계신가요?** 바꿀 것이 없습니다. 2027-06-30까지 그대로 동작하고, 이 버전은 두 플랫폼을 같은 설치본에서 지원합니다. 이관하실 때가 되면 HUB 키를 발급받아 환경변수 두 개만 바꾸면 되고, 그 외에 손댈 것은 없습니다.
 
-**Support plan for this server:** both platforms stay supported side by side through Naver's 2027-06-30 cutoff. The Developers Center path will be dropped in a later major version only after that date, once it can no longer work for anyone — so upgrading in the meantime will never take your working setup away.
+**이 서버의 지원 계획:** 네이버가 정한 2027-06-30까지는 두 플랫폼을 나란히 지원합니다. 개발자센터 경로는 그 날짜가 지나 누구에게도 동작할 수 없게 된 뒤에야 별도 메이저 버전에서 제거합니다. 그때까지는 버전을 올려도 쓰고 계신 설정이 끊기는 일은 없습니다.
 
-**Three tools were removed in 1.0.49**: `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform, so there is nothing this server can do to keep them. Shopping **Insight** (`datalab_shopping_*`) and `find_category` are a *different* API and are **not** affected.
+**1.0.49에서 툴 3개가 제거되었습니다**: `search_shop`, `search_book`, `search_academic`. 네이버가 2026-07-31에 해당 검색 API를 종료하며 어느 플랫폼에도 대체 API가 없어서, 이 서버가 살려둘 방법이 없습니다. 쇼핑 **인사이트**(`datalab_shopping_*`)와 `find_category`는 *별개의* API이므로 영향받지 **않습니다**.
 
-## Available on ClawHub for OpenClaw
+## OpenClaw용 ClawHub 지원
 
-You can install this MCP server as an OpenClaw skill from ClawHub:
+이 MCP 서버는 ClawHub에 OpenClaw skill로 배포되어 있습니다:
 
 ```bash
 openclaw skills install naver-search-mcp
 ```
 
-The ClawHub skill uses the published npm package internally and needs **one** credential pair in your OpenClaw environment — either the NAVER API HUB pair (`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) or the Developers Center pair (`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw's `apiKey` field maps to `NAVER_CLIENT_SECRET`; HUB users should set both HUB variables explicitly in the environment instead of using `apiKey`.
+ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, OpenClaw 환경에 **한 쌍**의 자격증명을 설정해야 합니다 — NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`) 중 하나입니다. OpenClaw의 `apiKey` 필드는 `NAVER_CLIENT_SECRET`에 매핑되므로, HUB 사용자는 `apiKey` 대신 두 HUB 변수를 환경에 직접 설정하세요.
 
-## Quick Start: Use Without API Key
+## 빠른 시작: API 키 없이 사용하기
 
-You can use this server immediately without API keys through [Kakao PlayMCP](https://playmcp.kakao.com/mcp/154). Simply visit the link and start using it right away!
+[Kakao PlayMCP](https://playmcp.kakao.com/mcp/154)를 통해 API 키 없이 즉시 사용할 수 있습니다. 링크를 방문하여 바로 시작하세요!
 
-## Tool Details
+## 도구 세부 정보
 
-### Available tools:
+### 사용 가능한 도구:
 
-#### 🆕 Category Search
+#### 🆕 카테고리 검색
 
-- **find_category**: Category search tool so you no longer need to manually check category numbers in URLs for trend and shopping insight searches. Just describe the category in natural language.
+- **find_category**: 카테고리 검색 도구 - 이제 트렌드와 쇼핑 인사이트 검색을 위하여 카테고리 번호를 url로 일일히 찾을 필요가 없습니다. 편하게 자연어로 검색하세요.
 
-#### Search Tools
+#### 검색 도구
 
-- **search_webkr**: Search Naver web documents
-- **search_news**: Search Naver news
-- **search_blog**: Search Naver blogs
-- **search_cafearticle**: Search Naver cafe articles
-- **search_image**: Search Naver images
-- **search_kin**: Search Naver KnowledgeiN
-- **search_encyc**: Search Naver encyclopedia
-- **search_local**: Search Naver local places
+- **search_webkr**: 웹 문서 검색
+- **search_news**: 뉴스 검색
+- **search_blog**: 블로그 검색
+- **search_cafearticle**: 카페글 검색
+- **search_image**: 이미지 검색
+- **search_kin**: 지식iN 검색
+- **search_encyc**: 백과사전 검색
+- **search_local**: 지역 장소 검색
 
-> **Removed in 1.0.49:** `search_shop`, `search_book`, `search_academic`.
-> Naver shuts down the Shopping / Book / Academic search APIs on 2026-07-31 with
-> no replacement on any platform. This is not a limitation of this server.
-> Shopping **Insight** (`datalab_shopping_*`) is a different API and is unaffected.
+> **1.0.49에서 제거됨:** `search_shop`, `search_book`, `search_academic`
+> 네이버는 2026-07-31에 쇼핑·책·전문자료 검색 API를 종료하며 대체 API가 없습니다.
+> 쇼핑 **인사이트**(`datalab_shopping_*`)는 별개의 API이며 영향받지 않습니다.
 
-#### DataLab Tools
+#### DataLab 도구
 
-- **datalab_search**: Analyze search term trends
-- **datalab_shopping_category**: Analyze shopping category trends
-- **datalab_shopping_by_device**: Analyze shopping trends by device
-- **datalab_shopping_by_gender**: Analyze shopping trends by gender
-- **datalab_shopping_by_age**: Analyze shopping trends by age group
-- **datalab_shopping_keywords**: Analyze shopping keyword trends
-- **datalab_shopping_keyword_by_device**: Analyze shopping keyword trends by device
-- **datalab_shopping_keyword_by_gender**: Analyze shopping keyword trends by gender
-- **datalab_shopping_keyword_by_age**: Analyze shopping keyword trends by age group
+- **datalab_search**: 검색어 트렌드 분석
+- **datalab_shopping_category**: 쇼핑 카테고리 트렌드 분석
+- **datalab_shopping_by_device**: 기기별 쇼핑 트렌드 분석
+- **datalab_shopping_by_gender**: 성별 쇼핑 트렌드 분석
+- **datalab_shopping_by_age**: 연령대별 쇼핑 트렌드 분석
+- **datalab_shopping_keywords**: 쇼핑 키워드 트렌드 분석
+- **datalab_shopping_keyword_by_device**: 쇼핑 키워드 기기별 트렌드 분석
+- **datalab_shopping_keyword_by_gender**: 쇼핑 키워드 성별 트렌드 분석
+- **datalab_shopping_keyword_by_age**: 쇼핑 키워드 연령별 트렌드 분석
 
-## Getting API Keys
+## API 키 얻기
 
-Two platforms issue keys for this server. Set **one** pair of environment variables — see
-[Configuration](#configuration) below for how the pair you set determines the platform used.
+이 서버는 두 플랫폼 중 하나에서 키를 발급받아 사용합니다. 환경변수 **한 쌍만** 설정하세요 —
+어느 쌍을 설정하는지에 따라 사용되는 플랫폼이 정해지는 원리는 아래 [설정](#설정)을 참고하세요.
 
-### Option A: NAVER API HUB (recommended — the forward path)
+### 방법 A: NAVER API HUB (권장 — 앞으로의 방향)
 
-1. Go to the [NAVER Cloud Platform console](https://www.ncloud.com) and sign up or log in.
-2. Click the region & platform selector in the top right of the console, choose your region/platform, and click **Apply**.
-3. Open **Menu > All Services > Application Services > [NAVER API HUB](https://www.ncloud.com/product/applicationService/naverApiHub)**.
-4. Click **Application**, select (or create) your application, then under API management click **인증 정보 (Authentication Info)**.
-5. Copy the **Client ID** and **Client Secret** shown in the popup.
-6. Use these as `NCP_APIGW_API_KEY_ID` (Client ID) and `NCP_APIGW_API_KEY` (Client Secret) in the configuration below.
+1. [네이버 클라우드 플랫폼 콘솔](https://www.ncloud.com)에서 회원가입하거나 로그인
+2. 콘솔 화면 우측 상단의 리전 & 플랫폼 선택 버튼을 클릭해 이용 중인 리전과 플랫폼을 선택한 후 **적용** 클릭
+3. **Menu > All Services > Application Services > [NAVER API HUB](https://www.ncloud.com/product/applicationService/naverApiHub)** 클릭
+4. 좌측의 **Application** 메뉴를 클릭하고 애플리케이션을 선택(또는 생성)한 다음, API 관리 하위의 **인증 정보** 버튼 클릭
+5. 팝업 창에 표시된 **Client ID**와 **Client Secret** 복사
+6. 아래 설정에서 Client ID는 `NCP_APIGW_API_KEY_ID`로, Client Secret은 `NCP_APIGW_API_KEY`로 사용하세요
 
-### Option B: Naver Developers (legacy — existing keys only)
+### 방법 B: 네이버 개발자센터 (기존 — 기존 키 보유자 전용)
 
-> Naver Developers Center stops accepting new applications on **2026-07-31**. If you don't
-> already have a Client ID/Secret from this platform, use NAVER API HUB above instead.
-> Existing Developers Center keys keep working until 2027-06-30.
+> 네이버 개발자센터는 **2026-07-31**부터 신규 애플리케이션 등록을 받지 않습니다.
+> 이 플랫폼의 Client ID/Secret이 아직 없다면 위 NAVER API HUB를 이용하세요.
+> 기존에 발급받은 개발자센터 키는 2027-06-30까지 계속 동작합니다.
 
-1. Visit [Naver Developers](https://developers.naver.com/apps/#/register) and log in with your Naver account
-2. Click the "Application Registration" (애플리케이션 등록) button
-3. Fill in the application information:
-   - **Application Name**: Enter any name (e.g., "Naver Search MCP")
-   - **Usage**: Select "Search" (검색)
-4. In the API Settings section, check ALL of the following APIs:
-   - **Search** (검색) - Required for blog, news, cafe article, web, image, kin, encyclopedia, and local search
-   - **DataLab - Search Trends** (데이터랩 - 검색어 트렌드) - Required for search term trend analysis
-   - **DataLab - Shopping Insight** (데이터랩 - 쇼핑인사이트) - Required for shopping trend analysis
-5. Click "Register" to complete registration
-6. After registration, you'll see your **Client ID** and **Client Secret** on the application detail page
-7. Use these as `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` in the configuration below
+1. [Naver Developers](https://developers.naver.com/apps/#/register)에 방문하여 네이버 계정으로 로그인
+2. "애플리케이션 등록" 버튼 클릭
+3. 애플리케이션 정보 입력:
+   - **애플리케이션 이름**: 원하는 이름 입력 (예: "Naver Search MCP")
+   - **사용 API**: "검색" 선택
+4. API 설정에서 다음 API를 **모두 체크**:
+   - **검색** - 블로그, 뉴스, 카페글, 웹문서, 이미지, 지식iN, 백과사전, 지역 검색에 필요
+   - **데이터랩 - 검색어 트렌드** - 검색어 트렌드 분석에 필요
+   - **데이터랩 - 쇼핑인사이트** - 쇼핑 트렌드 분석에 필요
+5. "등록하기" 버튼 클릭하여 등록 완료
+6. 등록 완료 후 애플리케이션 상세 페이지에서 **Client ID**와 **Client Secret** 확인
+7. 아래 설정에서 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`로 사용하세요
 
-## Configuration
+## 설정
 
-### Credentials
+### 자격증명
 
-Two platforms are supported. Set **one** pair — the server picks the platform from
-which variables you set, since the key strings themselves are indistinguishable.
+두 플랫폼을 지원합니다. **한 쌍만** 설정하세요. 키 문자열만으로는 어느 플랫폼 키인지
+구분할 수 없기 때문에, 어느 환경변수에 넣었는지로 플랫폼을 판단합니다.
 
-| Variables | Platform | Endpoint |
+| 환경변수 | 플랫폼 | 호출 대상 |
 |---|---|---|
 | `NCP_APIGW_API_KEY_ID`, `NCP_APIGW_API_KEY` | NAVER API HUB (NCP) | `naverapihub.apigw.ntruss.com` |
-| `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | Naver Developers (legacy) | `openapi.naver.com` |
+| `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` | 네이버 개발자센터 (기존) | `openapi.naver.com` |
 
-If both pairs are set, NAVER API HUB wins.
+두 쌍을 모두 설정하면 NAVER API HUB를 사용합니다.
 
-The installation examples below use the legacy `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`
-pair; swap in the HUB pair from the table above if that's what you have.
+아래 설치 예시는 기존 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` 쌍을 사용합니다.
+NAVER API HUB 키를 가지고 있다면 위 표의 HUB 쌍으로 바꿔 넣으세요.
 
-### Migration to NAVER API HUB
+### NAVER API HUB 이관 안내
 
-Naver is moving these APIs from the Developers Center to NAVER API HUB on NAVER Cloud Platform.
+네이버는 이 API들을 개발자센터에서 네이버 클라우드 플랫폼의 NAVER API HUB로 이관하고 있습니다.
 
-| Date | What happens |
+| 날짜 | 내용 |
 |---|---|
-| 2026-06-25 | NAVER API HUB launched |
-| 2026-07-31 | Developers Center stops accepting new applications |
-| 2027-06-30 | Developers Center support ends — existing keys stop working |
+| 2026-06-25 | NAVER API HUB 출시 |
+| 2026-07-31 | 개발자센터 신규 신청 차단 |
+| 2027-06-30 | 개발자센터 지원 종료 — 기존 키도 사용 불가 |
 
-Existing keys keep working until 2027-06-30. To migrate, get a key from the
-NAVER Cloud Platform console and set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`.
-Developers Center keys cannot be used against NAVER API HUB.
+기존 키는 2027-06-30까지 그대로 동작합니다. 이관하려면 네이버 클라우드 플랫폼 콘솔에서
+NAVER API HUB 키를 발급받아 `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`에 넣으세요.
+개발자센터 키는 NAVER API HUB에서 사용할 수 없습니다.
 
-## Installation
+## 설치
 
-### Method 1: NPX Installation (Recommended)
+### 방법 1: NPX 설치 (권장)
 
-The most reliable way to use this MCP server is through NPX. For detailed package information, see the [NPM package page](https://www.npmjs.com/package/@isnow890/naver-search-mcp).
+이 MCP 서버를 사용하는 가장 안정적인 방법은 NPX 직접 설치입니다. 자세한 패키지 정보는 [NPM 패키지 페이지](https://www.npmjs.com/package/@isnow890/naver-search-mcp)를 참조하세요.
 
-#### Claude Desktop Configuration
+#### Claude Desktop 설정
 
-Add to Claude Desktop config file (`%APPDATA%\Claude\claude_desktop_config.json` on Windows, `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS/Linux):
-
-```json
-{
-  "mcpServers": {
-    "naver-search": {
-      "command": "npx",
-      "args": ["-y", "@isnow890/naver-search-mcp"],
-      "env": {
-        "NAVER_CLIENT_ID": "your_client_id",
-        "NAVER_CLIENT_SECRET": "your_client_secret"
-      }
-    }
-  }
-}
-```
-
-#### Claude Code Configuration
-
-Add to your Claude Code settings:
+Claude Desktop 설정 파일에 다음을 추가하세요 (Windows: `%APPDATA%\Claude\claude_desktop_config.json`, macOS/Linux: `~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -184,29 +162,48 @@ Add to your Claude Code settings:
 }
 ```
 
-### Method 2: ClawHub Installation for OpenClaw
+#### Claude Code 설정
 
-This MCP server can also be used from OpenClaw through the ClawHub skill wrapper. Install it with:
+Claude Code 설정에 다음을 추가하세요:
+
+```json
+{
+  "mcpServers": {
+    "naver-search": {
+      "command": "npx",
+      "args": ["-y", "@isnow890/naver-search-mcp"],
+      "env": {
+        "NAVER_CLIENT_ID": "your_client_id",
+        "NAVER_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
+### 방법 2: OpenClaw용 ClawHub 설치
+
+이 MCP 서버는 ClawHub skill wrapper를 통해 OpenClaw에서도 사용할 수 있습니다. 다음 명령으로 설치하세요:
 
 ```bash
 openclaw skills install naver-search-mcp
 ```
 
-The ClawHub skill uses the same published npm package internally:
+ClawHub skill은 내부적으로 동일한 npm 패키지를 사용합니다:
 
 ```bash
 npx -y @isnow890/naver-search-mcp
 ```
 
-Make sure **one** credential pair is configured in your OpenClaw environment before using the skill — the NAVER API HUB pair (`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) or the Developers Center pair (`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw's `apiKey` field maps to `NAVER_CLIENT_SECRET`; HUB users should set both HUB variables explicitly instead.
+사용 전에 OpenClaw 환경에 **한 쌍**의 자격증명을 설정해야 합니다 — NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`). OpenClaw의 `apiKey`는 `NAVER_CLIENT_SECRET`에 매핑되므로, HUB 사용자는 `apiKey` 대신 두 HUB 변수를 직접 설정하세요.
 
-### Method 3: Local Installation
+### 방법 3: 로컬 설치
 
-For local development or custom modifications:
+로컬 개발이나 커스텀 수정이 필요한 경우:
 
-#### Step 1: Download and Build Source Code
+#### 1단계: 소스 코드 다운로드 및 빌드
 
-##### Clone with Git
+##### Git으로 클론하기
 
 ```bash
 git clone https://github.com/isnow890/naver-search-mcp.git
@@ -215,11 +212,11 @@ npm install
 npm run build
 ```
 
-##### Or Download ZIP File
+##### 또는 ZIP 파일로 다운로드
 
-1. Download the latest version from [GitHub Releases](https://github.com/isnow890/naver-search-mcp)
-2. Extract the ZIP file to your desired location
-3. Navigate to the extracted folder in terminal:
+1. [GitHub 릴리스 페이지](https://github.com/isnow890/naver-search-mcp/)에서 최신 버전을 다운로드
+2. ZIP 파일을 원하는 위치에 압축 해제
+3. 터미널에서 압축 해제된 폴더로 이동:
 
 ```bash
 cd /path/to/naver-search-mcp
@@ -227,19 +224,19 @@ npm install
 npm run build
 ```
 
-⚠️ **Important**: You must run `npm run build` after installation to generate the `dist` folder that contains the compiled JavaScript files.
+⚠️ **중요**: 설치 후 반드시 `npm run build`를 실행하여 컴파일된 JavaScript 파일이 포함된 `dist` 폴더를 생성해야 합니다.
 
-#### Step 2: Claude Desktop Configuration
+#### 2단계: Claude Desktop 설정
 
-After building, you'll need the following information:
+빌드 완료 후 다음 정보가 필요합니다:
 
-- **NAVER_CLIENT_ID**: Client ID from Naver Developers
-- **NAVER_CLIENT_SECRET**: Client Secret from Naver Developers
-- **Installation Path**: Absolute path to the downloaded folder
+- **NAVER_CLIENT_ID**: Naver Developers에서 발급받은 클라이언트 ID
+- **NAVER_CLIENT_SECRET**: Naver Developers에서 발급받은 클라이언트 시크릿
+- **설치 경로**: 다운로드한 폴더의 절대 경로
 
-##### Windows Configuration
+##### Windows 설정
 
-Add to Claude Desktop config file (`%APPDATA%\Claude\claude_desktop_config.json`):
+Claude Desktop 설정 파일(`%APPDATA%\Claude\claude_desktop_config.json`)에 다음을 추가:
 
 ```json
 {
@@ -262,9 +259,9 @@ Add to Claude Desktop config file (`%APPDATA%\Claude\claude_desktop_config.json`
 }
 ```
 
-##### macOS/Linux Configuration
+##### macOS/Linux 설정
 
-Add to Claude Desktop config file (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Claude Desktop 설정 파일(`~/Library/Application Support/Claude/claude_desktop_config.json`)에 다음을 추가:
 
 ```json
 {
@@ -283,102 +280,104 @@ Add to Claude Desktop config file (`~/Library/Application Support/Claude/claude_
 }
 ```
 
-##### Path Configuration Important Notes
+##### 경로 설정 주의사항
 
-⚠️ **Important**: You must change the following paths in the above configuration to your actual installation paths:
+⚠️ **중요**: 위 설정에서 다음 경로들을 실제 설치 경로로 변경해야 합니다:
 
-- **Windows**: Change `C:\\path\\to\\naver-search-mcp` to your actual downloaded folder path
-- **macOS/Linux**: Change `/path/to/naver-search-mcp` to your actual downloaded folder path
-- **Build Path**: Make sure the path points to `dist/src/index.js` (not just `index.js`)
+- **Windows**: `C:\\path\\to\\naver-search-mcp`를 실제 다운로드한 폴더 경로로 변경
+- **macOS/Linux**: `/path/to/naver-search-mcp`를 실제 다운로드한 폴더 경로로 변경
+- **빌드 경로**: 경로가 `dist/src/index.js`를 가리키는지 확인 (`index.js`만이 아님)
 
-Finding your path:
+경로 찾기:
 
 ```bash
-# Check current location
+# 현재 위치 확인
 pwd
 
-# Absolute path examples
-# Windows: C:\Users\username\Downloads\naver-search-mcp
-# macOS: /Users/username/Downloads/naver-search-mcp
-# Linux: /home/username/Downloads/naver-search-mcp
+# 절대 경로 예시
+# Windows: C:\Users\홍길동\Downloads\naver-search-mcp
+# macOS: /Users/홍길동/Downloads/naver-search-mcp
+# Linux: /home/홍길동/Downloads/naver-search-mcp
 ```
 
-#### Step 3: Restart Claude Desktop
+#### 3단계: Claude Desktop 재시작
 
-After completing the configuration, completely close and restart Claude Desktop to activate the Naver Search MCP server.
+설정 완료 후 Claude Desktop을 완전히 종료하고 다시 시작하면 Naver Search MCP 서버가 활성화됩니다.
 
-## Prerequisites
+## 필수 요구 사항
 
-- A credential pair for one platform — NAVER API HUB or Naver Developers (see [Getting API Keys](#getting-api-keys))
-- Node.js 18 or higher
-- NPM 8 or higher
+- 두 플랫폼 중 하나의 자격증명 — NAVER API HUB 또는 Naver Developers ([API 키 얻기](#api-키-얻기) 참고)
+- Node.js 18 이상
+- NPM 8 이상
 
-## License
+## 라이선스
 
-MIT License
+MIT 라이선스
 
 ---
 
-## Version History
+## 버전 히스토리
 
 ### 1.0.49 (2026-07-26)
 
-- NAVER API HUB support: set `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY` to call the new platform. Existing `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` keep working unchanged — the platform is chosen by which variable pair you set
-- **Removed** `search_shop`, `search_book`, `search_academic`. Naver shuts those search APIs down on 2026-07-31 with no replacement on any platform
-- API errors now throw a plain `Error` instead of the raw `AxiosError`. Code branching on `error.response?.status` sees `undefined`; the same detail is in `Error.message`
-- Error messages name the platform and HTTP status, and 401s suggest checking whether a key was set on the other platform's variables
+- NAVER API HUB 지원: `NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`를 설정하면 새 플랫폼으로 호출합니다. 기존 `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`은 그대로 동작하며, 어느 변수 쌍을 설정했는지로 플랫폼이 결정됩니다
+- `search_shop`, `search_book`, `search_academic` **제거**. 네이버가 2026-07-31에 해당 검색 API를 종료하며 어느 플랫폼에도 대체가 없습니다
+- API 에러가 raw `AxiosError` 대신 일반 `Error`로 던져집니다. `error.response?.status`로 분기하던 코드는 `undefined`를 보게 되며, 같은 정보는 `Error.message`에 담깁니다
+- 에러 메시지에 플랫폼과 HTTP 상태가 표시되고, 401일 때는 키를 다른 플랫폼 변수에 넣지 않았는지 확인하도록 안내합니다
 
 ### 1.0.48 (2026-05-12)
 
-- Fixed `find_category` data loading when the MCP server is launched by `npx` from a different working directory
-- Category data is now resolved relative to the installed package before falling back to local development paths
+- `npx`로 실행될 때 현재 작업 디렉터리가 달라도 `find_category`가 카테고리 데이터를 정상적으로 읽도록 수정
+- 카테고리 데이터를 설치된 패키지 위치 기준으로 먼저 찾고, 로컬 개발 경로는 fallback으로 사용하도록 변경
 
 ### 1.0.47 (2025-01-03)
 
-- **Added "today" keyword support** for all DataLab date parameters - no need to call separate time tool
-- **Fixed server termination issue** - MCP server now properly exits when client disconnects
-- **Added graceful shutdown handlers** for SIGINT, SIGTERM, and transport close events
-- **Removed get_current_korean_time tool** - redundant with new "today" keyword feature
-- **Removed memory monitoring module** - resolved setInterval blocking process exit
-- **Special thanks to @gloomyrobot** for reporting the server termination issue
+- **"today" 키워드 지원 추가** - 모든 DataLab 날짜 파라미터에서 별도 시간 도구 호출 불필요
+- **서버 종료 문제 해결** - 클라이언트 연결 해제 시 MCP 서버가 정상적으로 종료
+- **정상 종료 핸들러 추가** - SIGINT, SIGTERM, 전송 닫기 이벤트 처리
+- **get_current_korean_time 도구 제거** - "today" 키워드 기능으로 중복 제거
+- **메모리 모니터링 모듈 제거** - setInterval로 인한 프로세스 종료 방지 문제 해결
+- **@gloomyrobot님께 감사** - 서버 종료 문제를 보고해주셔서 해결할 수 있었습니다
 
 ### 1.0.45 (2025-09-28)
 
-- Resolved platform compatibility issues for hosted MCP installations
-- Replaced the Excel export in category search with JSON for better compatibility
-- Restored the `search_webkr` tool for Korean web search
-- Improved hosted platform installation compatibility
+- 호스팅 MCP 설치 환경 호환성 문제 해결
+- 카테고리 검색에서 엑셀 호환성 문제 해결 - JSON 기능으로 교체
+- 웹 한국어 검색(`search_webkr`) 기능 복구
+- 호스팅 플랫폼 설치 호환성 개선
 
 ### 1.0.44 (2025-08-31)
 
-- Added the `get_current_korean_time` tool for essential Korea Standard Time context
-- Referenced the time tool across existing tool descriptions for temporal queries
-- Improved handling of "today", "now", and "current" searches with temporal context
-- Expanded Korean date and time formatting outputs with multiple formats
+- `get_current_korean_time` 도구 추가 - 한국 시간대를 위한 필수 시간 컨텍스트 도구
+- 시간적 쿼리를 위한 시간 도구 참조로 모든 기존 도구 설명 강화
+- "오늘", "지금", "현재" 검색을 위한 시간적 컨텍스트 처리 개선
+- 다양한 출력 형식의 포괄적인 한국어 시간 포맷팅
 
 ### 1.0.40 (2025-08-21)
 
-- Added the `find_category` tool with fuzzy matching so you no longer need to check category numbers manually in URLs
-- Enhanced parameter validation with Zod schema
-- Improved the category search workflow
-- Implemented a level-based category ranking system that prioritizes top-level categories
+- `find_category` 도구 추가
+**이제 트렌드와 쇼핑 인사이트 검색을 위하여 카테고리 번호를 url로 일일히 찾을 필요가 없습니다. 편하게 자연어로 검색하세요.**
+
+- Zod 스키마 기반 매개변수 검증 강화
+- 카테고리 검색 워크플로우 개선
+- 레벨 기반 카테고리 순위 시스템 구현 (대분류 우선)
 
 ### 1.0.30 (2025-08-04)
 
-- MCP SDK upgraded to 1.17.1
-- Fixed compatibility issues with hosted MCP platform specification changes
-- Added comprehensive DataLab shopping category code documentation
+- MCP SDK 1.17.1로 업그레이드
+- 호스팅 MCP 플랫폼 스펙 변경으로 인한 호환성 오류 수정
+- DataLab 쇼핑 카테고리 코드 상세 문서화 추가
 
 ### 1.0.2 (2025-04-26)
 
-- README updated: cafe article search tool and version history section improved
+- README 업데이트: 카페글 검색 도구 및 버전 히스토리 안내 개선
 
 ### 1.0.1 (2025-04-26)
 
-- Cafe article search feature added
-- Shopping category info added to zod
-- Source code refactored
+- 카페글 검색 기능 추가
+- zod에 쇼핑 카테고리 정보 추가
+- 소스코드 리팩토링
 
 ### 1.0.0 (2025-04-08)
 
-- Initial release
+- 오픈오픈
