@@ -1,3 +1,37 @@
+# Release 1.0.51 - find_category next_steps Tool Name Fix
+
+## Summary
+
+`find_category` returned `next_steps` guidance that pointed at three tool names which are not registered, so a model following the output called tools that do not exist. This release corrects the names. No behavior or signature changes.
+
+## Bug Fixes
+
+- **`find_category` `next_steps` referenced non-existent tools**: the returned guidance used the shortened names `datalab_shopping_age`, `datalab_shopping_gender`, and `datalab_shopping_device`, but the registered names include `by_`:
+
+  | next_steps (before) | registered tool (after) |
+  |---|---|
+  | `datalab_shopping_age` | `datalab_shopping_by_age` |
+  | `datalab_shopping_gender` | `datalab_shopping_by_gender` |
+  | `datalab_shopping_device` | `datalab_shopping_by_device` |
+
+  `datalab_shopping_category` was already correct. This is the same class of dangling tool reference fixed in 1.0.50 (`get_current_korean_time`).
+
+  (PR #18 by @wookja-0)
+
+## Verification
+
+- `src/handlers/category.handlers.ts` guidance strings updated (3 lines).
+- 40 unit tests pass.
+- After build, `find_category` output was checked against `datalabToolHandlers`: all four referenced names now resolve (`missing: []`).
+
+## Installation
+
+```bash
+npx -y @isnow890/naver-search-mcp@1.0.51
+```
+
+---
+
 # Release 1.0.50 - KST "today" Date Fix
 
 ## Summary
