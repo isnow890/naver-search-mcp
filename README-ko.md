@@ -1,11 +1,11 @@
 # Naver Search MCP Server
 
-[![English](https://img.shields.io/badge/English-README-yellow)](README.md)
 [![MCP.so](https://img.shields.io/badge/MCP.so-Naver%20Search%20MCP-blue)](https://mcp.so/server/naver-search-mcp/isnow890)
 
 Naver 검색 API와 DataLab API 통합을 위한 MCP 서버로, 다양한 Naver 서비스에서의 종합적인 검색과 데이터 트렌드 분석을 가능하게 합니다.
 
-## ⚠️ 네이버 API 이관 안내 — 설치 전에 읽어주세요
+
+## 네이버 API 이관 안내 (참고용)
 
 네이버가 검색·검색어 트렌드·쇼핑 인사이트 API를 개발자센터에서 네이버 클라우드 플랫폼의 **NAVER API HUB**로 이관합니다. 그와 별개로 검색 API 3종은 완전히 종료됩니다.
 
@@ -34,9 +34,9 @@ openclaw skills install naver-search-mcp
 
 ClawHub skill은 내부적으로 npm에 배포된 패키지를 사용하며, OpenClaw 환경에 **한 쌍**의 자격증명을 설정해야 합니다 — NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`) 중 하나입니다. OpenClaw의 `apiKey` 필드는 `NAVER_CLIENT_SECRET`에 매핑되므로, HUB 사용자는 `apiKey` 대신 두 HUB 변수를 환경에 직접 설정하세요.
 
-## 빠른 시작: API 키 없이 사용하기
+## ~~빠른 시작: API 키 없이 사용하기 (종료)~~
 
-[Kakao PlayMCP](https://playmcp.kakao.com/mcp/154)를 통해 API 키 없이 즉시 사용할 수 있습니다. 링크를 방문하여 바로 시작하세요!
+> **안내:** 네이버 API 정책 변경(2026.09)에 따라 [Kakao PlayMCP](https://playmcp.kakao.com/mcp/154) 즉시 사용 서비스는 종료되었습니다.
 
 ## 도구 세부 정보
 
