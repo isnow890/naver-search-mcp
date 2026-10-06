@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://img1.kakaocdn.net/thumb/R0x200a.i/?fname=https%3A%2F%2Ft1.kakaocdn.net%2Fkomi%2Fupload-files%2Fmcp%2Fimages%2FnQzoe8vIxql0oK7Rwi239dxO2iYrxozLLQCIPRpVjmOjwGyPw0ZNUnNJfGkO1kAZmKf16eLZPAYi8NIS8XaBZJ.png" alt="Naver Search MCP Server Logo" width="128" />
+</p>
+
 # Naver Search MCP Server
 
 [![npm version](https://img.shields.io/npm/v/@isnow890/naver-search-mcp.svg)](https://www.npmjs.com/package/@isnow890/naver-search-mcp)
