@@ -1,7 +1,7 @@
 ---
 name: naver-search-mcp
 description: Use for Korean web search, Naver News, Blog, Cafe, Image, Knowledge iN, Encyclopedia, Local search, and Naver DataLab search-trend and shopping-insight analysis through the published npm MCP server.
-version: 1.0.49
+version: 1.0.54
 metadata:
   openclaw:
     requires:
