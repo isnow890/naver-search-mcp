@@ -56,6 +56,15 @@ Using legacy keys issued from the Naver Developers Center (`openapi.naver.com`) 
 }
 ```
 
+### 3. OpenClaw (ClawHub)
+If you use OpenClaw, you can install it as a ClawHub skill:
+
+```bash
+openclaw skills install naver-search-mcp
+```
+
+> **Note:** Configure **one** credential pair in your OpenClaw environment — either the NAVER API HUB pair (`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) or the Developers Center pair (`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`).
+
 ---
 
 ## API Credentials Guide

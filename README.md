@@ -56,6 +56,15 @@ Claude Desktop, Cursor, Claude Code, Cline 등 사용하시는 MCP 클라이언�
 }
 ```
 
+### 3. OpenClaw (ClawHub)
+OpenClaw를 사용하는 경우 ClawHub 스킬로 즉시 설치할 수 있습니다:
+
+```bash
+openclaw skills install naver-search-mcp
+```
+
+> **참고:** OpenClaw 환경에 NAVER API HUB 쌍(`NCP_APIGW_API_KEY_ID` / `NCP_APIGW_API_KEY`) 또는 개발자센터 쌍(`NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET`) 중 **한 쌍**을 설정해야 합니다.
+
 ---
 
 ## API 키 발급 안내
