@@ -13,20 +13,20 @@ metadata:
       bins:
         - node
         - npx
-    primaryEnv: NAVER_CLIENT_SECRET
+    primaryEnv: NCP_APIGW_API_KEY
     envVars:
       - name: NCP_APIGW_API_KEY_ID
         required: false
-        description: NAVER API HUB Client ID (forward path, recommended for new setups). Pair with NCP_APIGW_API_KEY. Set this pair, or the legacy pair below — not both partially.
+        description: NAVER API HUB Client ID (NAVER Cloud Platform console > NAVER API HUB). Recommended for all new setups.
       - name: NCP_APIGW_API_KEY
         required: false
-        description: NAVER API HUB Client Secret (forward path, recommended for new setups). Pair with NCP_APIGW_API_KEY_ID.
+        description: NAVER API HUB Client Secret. Recommended for all new setups.
       - name: NAVER_CLIENT_ID
         required: false
-        description: Naver Developers (legacy) application Client ID. Existing keys only — Developers Center stops accepting new applications on 2026-07-31.
+        description: Naver Developers Center (legacy) Client ID. Supported for existing key holders until 2027-06-30.
       - name: NAVER_CLIENT_SECRET
         required: false
-        description: Naver Developers (legacy) application Client Secret. Existing keys only — Developers Center stops accepting new applications on 2026-07-31.
+        description: Naver Developers Center (legacy) Client Secret. Supported for existing key holders until 2027-06-30.
     install:
       - kind: node
         package: "@isnow890/naver-search-mcp"
@@ -53,14 +53,12 @@ npx -y @isnow890/naver-search-mcp
 
 - Install from ClawHub with `openclaw skills install naver-search-mcp`.
 - Supply **one** credential pair — never a partial mix of the two:
-  - **NAVER API HUB** (forward path, recommended): `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY`.
-  - **Naver Developers** (legacy, existing keys only): `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET`. Developers Center stops accepting new applications on 2026-07-31; existing keys keep working until 2027-06-30.
-- In OpenClaw, `apiKey` maps to `NAVER_CLIENT_SECRET` because this skill declares `primaryEnv: NAVER_CLIENT_SECRET` (kept for backward compatibility with existing legacy installs). HUB users should set both `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY` as explicit environment variables instead of using `apiKey`, since `apiKey` only ever maps to the legacy secret.
-- Provide the other variable in the pair through the skill `env` config or OpenClaw environment (legacy users: `NAVER_CLIENT_ID`).
+  - **NAVER API HUB** (Recommended / New setups): `NCP_APIGW_API_KEY_ID` and `NCP_APIGW_API_KEY` from NAVER Cloud Platform console.
+  - **Naver Developers** (Legacy / Existing keys only): `NAVER_CLIENT_ID` and `NAVER_CLIENT_SECRET` (Supported until 2027-06-30).
+- In OpenClaw, `apiKey` maps to `NCP_APIGW_API_KEY`. Set `NCP_APIGW_API_KEY_ID` in the skill `env` configuration.
 - Restart OpenClaw or the Gateway after changing credentials.
-- Do not ask users to clone this repository for normal use; cloning is only for development.
 
-Example OpenClaw config (Naver Developers, legacy, using `apiKey`):
+### Example OpenClaw Config (NAVER API HUB - Recommended)
 
 ```json
 {
@@ -68,9 +66,9 @@ Example OpenClaw config (Naver Developers, legacy, using `apiKey`):
     "entries": {
       "naver-search-mcp": {
         "enabled": true,
-        "apiKey": "your_naver_client_secret",
+        "apiKey": "your_ncp_apigw_api_key",
         "env": {
-          "NAVER_CLIENT_ID": "your_naver_client_id"
+          "NCP_APIGW_API_KEY_ID": "your_ncp_apigw_api_key_id"
         }
       }
     }
@@ -78,7 +76,9 @@ Example OpenClaw config (Naver Developers, legacy, using `apiKey`):
 }
 ```
 
-Example OpenClaw config (NAVER API HUB — set both variables explicitly, do not use `apiKey`):
+### Example OpenClaw Config (Naver Developers - Legacy)
+
+For users with existing Naver Developers keys, specify both variables explicitly in `env`:
 
 ```json
 {
@@ -87,8 +87,8 @@ Example OpenClaw config (NAVER API HUB — set both variables explicitly, do not
       "naver-search-mcp": {
         "enabled": true,
         "env": {
-          "NCP_APIGW_API_KEY_ID": "your_ncp_apigw_api_key_id",
-          "NCP_APIGW_API_KEY": "your_ncp_apigw_api_key"
+          "NAVER_CLIENT_ID": "your_naver_client_id",
+          "NAVER_CLIENT_SECRET": "your_naver_client_secret"
         }
       }
     }
@@ -100,14 +100,12 @@ Example OpenClaw config (NAVER API HUB — set both variables explicitly, do not
 
 - Prefer this skill when the user wants Korean-source results, Naver-specific results, Korean shopping insight data, or Korean local data.
 - Choose the tool that matches intent: news, blog reviews, cafe discussions, images, local places, encyclopedia lookup, or general Korean web search.
-- `search_shop`, `search_book`, and `search_academic` were removed in 1.0.49 ahead of Naver's 2026-07-31 shutdown of those search APIs — do not call them. For shopping data, use DataLab Shopping Insight (`datalab_shopping_*` plus `find_category`) instead; it is a separate API and is unaffected.
+- For shopping data, use DataLab Shopping Insight (`datalab_shopping_*` plus `find_category`).
 - Summarize results instead of dumping raw API output. Include source, date, link, price, location, or category details when useful.
 
 ## DataLab Guidance
 
 - Use `datalab_search` for keyword trend comparisons.
-- For shopping insight requests, call `find_category` first when the user gives a natural-language category such as `화장품`, `노트북`, or `여성의류`.
-- `find_category` is the main advantage of this MCP: users should not have to inspect Naver Shopping or DataLab URLs manually to find category codes.
-- After selecting a category code, use the matching shopping trend tool for overall, device, gender, age, or keyword analysis.
-- Ask the user only when multiple category candidates are genuinely ambiguous.
-- For relative dates like today, recent, or current, use `"today"` when supported or state the assumed date range clearly.
+- For shopping insight requests, call `find_category` first when the user provides a natural-language category name (e.g. `화장품`, `노트북`, `여성의류`).
+- `find_category` provides direct category codes so you do not need to look up category URLs manually.
+- Date parameters support the `"today"` keyword (e.g. `endDate: "today"`).
