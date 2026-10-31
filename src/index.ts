@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { readFileSync, realpathSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -23,6 +26,15 @@ import {
 import { FindCategorySchema } from "./schemas/category.schemas.js";
 import { findCategoryHandler, clearCategoriesCache } from "./handlers/category.handlers.js";
 import { resolveCredentials } from "./config/credentials.js";
+
+// 빌드 결과물(dist/src/index.js) 기준 두 단계 위가 패키지 루트다.
+// 버전을 하드코딩하면 릴리스할 때마다 serverInfo가 뒤처진다.
+const { version: PACKAGE_VERSION } = JSON.parse(
+  readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), "..", "..", "package.json"),
+    "utf8"
+  ).toString()
+);
 
 // Configuration schema for programmatic server creation and stdio startup
 export const configSchema = z.object({
@@ -88,14 +100,15 @@ export function createNaverSearchServer({
   }
 
   // Reuse existing server instance to prevent memory leaks
+  // 첫 호출과 같은 타입(Server)을 돌려줘야 호출 횟수에 따라 반환값이 달라지지 않는다.
   if (globalServerInstance) {
-    return globalServerInstance;
+    return globalServerInstance.server;
   }
 
   // Create a new MCP server only once
   const server = new McpServer({
     name: "naver-search",
-    version: "1.0.49",
+    version: PACKAGE_VERSION,
   });
 
   // Initialize Naver client with config
@@ -520,35 +533,25 @@ async function main() {
 console.error("Starting MCP server initialization...");
 console.error("process.argv:", process.argv);
 
-// Check if running as main module - compatible with both ESM and CommonJS
-let isMainModule = false;
-try {
-  // Try ESM approach first
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    console.error("import.meta.url:", import.meta.url);
-    isMainModule =
-      import.meta.url === `file://${process.argv[1]}` ||
-      import.meta.url.endsWith(process.argv[1]) ||
-      process.argv[1].endsWith("index.js");
-  } else {
-    // Fallback for CommonJS or when import.meta is not available
-    isMainModule =
-      process.argv[1].endsWith("index.js") ||
-      process.argv[1].includes("naver-search-mcp");
+/**
+ * 이 파일이 진입점으로 실행됐는지 판별한다.
+ * npx·전역 설치는 bin 심볼릭 링크로 실행되므로 argv[1]과 이 파일을 realpath로 비교한다.
+ * 파일명("index.js")이나 argv 문자열("naver-search-mcp")로 추측하면, 이 모듈을
+ * import만 한 다른 프로그램에서도 stdio 서버가 떠서 프로세스를 가로챈다.
+ */
+function isEntryPoint(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    return (
+      realpathSync(process.argv[1]) ===
+      realpathSync(fileURLToPath(import.meta.url))
+    );
+  } catch {
+    return false;
   }
-  
-  // Additional check for NPX execution
-  if (!isMainModule && process.argv.some(arg => arg.includes('naver-search-mcp'))) {
-    isMainModule = true;
-    console.error("Detected NPX execution, forcing main module mode");
-  }
-} catch (error) {
-  // Fallback for environments where import.meta causes issues
-  isMainModule =
-    process.argv[1].endsWith("index.js") ||
-    process.argv[1].includes("naver-search-mcp");
 }
 
+const isMainModule = isEntryPoint();
 console.error("isMainModule:", isMainModule);
 
 if (isMainModule) {

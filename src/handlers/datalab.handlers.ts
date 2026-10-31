@@ -12,8 +12,9 @@ import {
   DatalabShoppingKeywordAge,
 } from "../schemas/datalab.schemas.js";
 
-// 클라이언트 인스턴스 (싱글톤)
-const client = NaverSearchClient.getInstance();
+// 클라이언트는 호출 시점에 꺼낸다. 모듈 로드 시점에 잡아두면 설정 변경으로
+// resetServerInstance()가 싱글톤을 교체한 뒤에도 비워진 옛 인스턴스를 계속 쓴다.
+const client = () => NaverSearchClient.getInstance();
 
 /**
  * 데이터랩 도구 핸들러 맵
@@ -67,7 +68,7 @@ export const datalabToolHandlers: Record<string, (args: any) => Promise<any>> =
  */
 export async function handleSearchTrend(params: DatalabSearch) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.searchTrend({ ...params, startDate, endDate });
+  return client().searchTrend({ ...params, startDate, endDate });
 }
 
 /**
@@ -77,7 +78,7 @@ export async function handleSearchTrend(params: DatalabSearch) {
  */
 export async function handleShoppingCategoryTrend(params: DatalabShopping) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingCategory({ ...params, startDate, endDate });
+  return client().datalabShoppingCategory({ ...params, startDate, endDate });
 }
 
 /**
@@ -89,7 +90,7 @@ export async function handleShoppingByDeviceTrend(
   params: DatalabShoppingDevice
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingByDevice({
+  return client().datalabShoppingByDevice({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -107,7 +108,7 @@ export async function handleShoppingByGenderTrend(
   params: DatalabShoppingGender
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingByGender({
+  return client().datalabShoppingByGender({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -123,7 +124,7 @@ export async function handleShoppingByGenderTrend(
  */
 export async function handleShoppingByAgeTrend(params: DatalabShoppingAge) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingByAge({
+  return client().datalabShoppingByAge({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -141,7 +142,7 @@ export async function handleShoppingKeywordsTrend(
   params: DatalabShoppingKeywords
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingKeywords({
+  return client().datalabShoppingKeywords({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -159,7 +160,7 @@ export async function handleShoppingKeywordByDeviceTrend(
   params: DatalabShoppingKeywordDevice
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingKeywordByDevice({
+  return client().datalabShoppingKeywordByDevice({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -178,7 +179,7 @@ export async function handleShoppingKeywordByGenderTrend(
   params: DatalabShoppingKeywordGender
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingKeywordByGender({
+  return client().datalabShoppingKeywordByGender({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
@@ -197,7 +198,7 @@ export async function handleShoppingKeywordByAgeTrend(
   params: DatalabShoppingKeywordAge
 ) {
   const { startDate, endDate } = resolveDateRange(params.startDate, params.endDate);
-  return client.datalabShoppingKeywordByAge({
+  return client().datalabShoppingKeywordByAge({
     startDate,
     endDate,
     timeUnit: params.timeUnit,
