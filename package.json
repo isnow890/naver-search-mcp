@@ -1,6 +1,6 @@
 {
   "name": "@isnow890/naver-search-mcp",
-  "version": "1.0.54",
+  "version": "1.0.55",
   "description": "Naver Search MCP Server",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
