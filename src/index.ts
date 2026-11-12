@@ -266,7 +266,7 @@ export function createNaverSearchServer({
     "datalab_shopping_category",
     {
       description:
-        "🛍️ STEP 2: Analyze shopping category trends over time. Use find_category first to get category codes. BUSINESS CASES: Market size analysis, seasonal trend identification, category performance comparison. EXAMPLE: Compare '패션의류' vs '화장품' trends over 6 months. (네이버 쇼핑 카테고리별 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+        "🛍️ STEP 2: Analyze shopping category trends over time. Use find_category first to get category codes. BUSINESS CASES: Market size analysis, seasonal trend identification, category performance comparison. EXAMPLE: Compare '패션의류' vs '화장품' trends over 6 months. Optional device/gender/ages filters narrow the audience (e.g. women in their 20s on mobile). (네이버 쇼핑 카테고리별 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingSchema.shape,
     },
     async (args) => {
@@ -281,14 +281,8 @@ export function createNaverSearchServer({
     "datalab_shopping_by_device",
     {
       description:
-        "📱 Analyze shopping trends by device (PC vs Mobile). Use find_category first. BUSINESS CASES: Mobile commerce strategy, responsive design priority, device-specific campaigns. EXAMPLE: 'PC 사용자가 더 많이 구매하는 카테고리는?' (기기별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingDeviceSchema.pick({
-        startDate: true,
-        endDate: true,
-        timeUnit: true,
-        category: true,
-        device: true,
-      }).shape,
+        "📱 Analyze shopping trends by device (PC vs Mobile). Use find_category first. Leave `device` empty to get PC and mobile side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. BUSINESS CASES: Mobile commerce strategy, responsive design priority, device-specific campaigns. EXAMPLE: 'PC 사용자가 더 많이 구매하는 카테고리는?' (기기별 쇼핑 트렌드 분석 - device를 비우면 PC/모바일을 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+      inputSchema: DatalabShoppingDeviceSchema.shape,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_device(args);
@@ -302,14 +296,8 @@ export function createNaverSearchServer({
     "datalab_shopping_by_gender",
     {
       description:
-        "👥 Analyze shopping trends by gender (Male vs Female). Use find_category first. BUSINESS CASES: Gender-targeted marketing, product positioning, demographic analysis. EXAMPLE: '화장품 쇼핑에서 남녀 비율은?' (성별 쇼핑 트렌드 분석 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingGenderSchema.pick({
-        startDate: true,
-        endDate: true,
-        timeUnit: true,
-        category: true,
-        gender: true,
-      }).shape,
+        "👥 Analyze shopping trends by gender (Male vs Female). Use find_category first. Leave `gender` empty to get female and male side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. BUSINESS CASES: Gender-targeted marketing, product positioning, demographic analysis. EXAMPLE: '화장품 쇼핑에서 남녀 비율은?' (성별 쇼핑 트렌드 분석 - gender를 비우면 남녀를 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+      inputSchema: DatalabShoppingGenderSchema.shape,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_gender(args);
@@ -323,14 +311,8 @@ export function createNaverSearchServer({
     "datalab_shopping_by_age",
     {
       description:
-        "👶👦👨👴 Analyze shopping trends by age groups (10s, 20s, 30s, 40s, 50s, 60s+). Use find_category first. BUSINESS CASES: Age-targeted products, generational preferences, lifecycle marketing. EXAMPLE: '개발 도구는 어느 연령대가 많이 구매하나?' (연령별 쇼핑 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
-      inputSchema: DatalabShoppingAgeSchema.pick({
-        startDate: true,
-        endDate: true,
-        timeUnit: true,
-        category: true,
-        ages: true,
-      }).shape,
+        "👶👦👨👴 Analyze shopping trends by age groups (10s, 20s, 30s, 40s, 50s, 60s+). Use find_category first. Leave `ages` empty to get every age group side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. BUSINESS CASES: Age-targeted products, generational preferences, lifecycle marketing. EXAMPLE: '개발 도구는 어느 연령대가 많이 구매하나?' (연령별 쇼핑 트렌드 - ages를 비우면 전 연령대를 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+      inputSchema: DatalabShoppingAgeSchema.shape,
     },
     async (args) => {
       const result = await datalabToolHandlers.datalab_shopping_by_age(args);
@@ -344,7 +326,7 @@ export function createNaverSearchServer({
     "datalab_shopping_keywords",
     {
       description:
-        "🔍 Compare specific keywords within a shopping category. Use find_category first. BUSINESS CASES: Product keyword optimization, competitor analysis, search trend identification. EXAMPLE: Within '패션' category, compare '원피스' vs '자켓' vs '드레스' trends. (카테고리 내 키워드 비교 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+        "🔍 Compare specific keywords within a shopping category. Use find_category first. BUSINESS CASES: Product keyword optimization, competitor analysis, search trend identification. EXAMPLE: Within '패션' category, compare '원피스' vs '자켓' vs '드레스' trends. Optional device/gender/ages filters narrow the audience (e.g. women in their 20s on mobile). (카테고리 내 키워드 비교 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingKeywordsSchema.shape,
     },
     async (args) => {
@@ -359,7 +341,7 @@ export function createNaverSearchServer({
     "datalab_shopping_keyword_by_device",
     {
       description:
-        "📱🔍 Analyze keyword performance by device within shopping categories. Use find_category first to get category codes. Perfect for understanding mobile vs desktop shopping behavior for specific products. (쇼핑 키워드 기기별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+        "📱🔍 Analyze keyword performance by device within shopping categories. Use find_category first to get category codes. Leave `device` empty to get PC and mobile side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. Perfect for understanding mobile vs desktop shopping behavior for specific products. (쇼핑 키워드 기기별 트렌드 - device를 비우면 PC/모바일을 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingKeywordDeviceSchema.shape,
     },
     async (args) => {
@@ -375,7 +357,7 @@ export function createNaverSearchServer({
     "datalab_shopping_keyword_by_gender",
     {
       description:
-        "👥🔍 Analyze keyword performance by gender within shopping categories. Use find_category first to get category codes. Essential for gender-targeted marketing and product positioning strategies. (쇼핑 키워드 성별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+        "👥🔍 Analyze keyword performance by gender within shopping categories. Use find_category first to get category codes. Leave `gender` empty to get female and male side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. Essential for gender-targeted marketing and product positioning strategies. (쇼핑 키워드 성별 트렌드 - gender를 비우면 남녀를 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingKeywordGenderSchema.shape,
     },
     async (args) => {
@@ -391,7 +373,7 @@ export function createNaverSearchServer({
     "datalab_shopping_keyword_by_age",
     {
       description:
-        "👶👦👨👴🔍 Analyze keyword performance by age groups within shopping categories. Use find_category first to get category codes. Perfect for age-targeted marketing and understanding generational shopping preferences. (쇼핑 키워드 연령별 트렌드 - 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
+        "👶👦👨👴🔍 Analyze keyword performance by age groups within shopping categories. Use find_category first to get category codes. Leave `ages` empty to get every age group side by side in one response (data[].group); set it only to restrict to specific group(s). Optional device/gender/ages filters narrow the audience. Perfect for age-targeted marketing and understanding generational shopping preferences. (쇼핑 키워드 연령별 트렌드 - ages를 비우면 전 연령대를 함께 비교합니다. 먼저 find_category 도구로 카테고리 코드를 찾으세요)",
       inputSchema: DatalabShoppingKeywordAgeSchema.shape,
     },
     async (args) => {
