@@ -7,8 +7,32 @@ export const DatalabBaseSchema = z.object({
   timeUnit: z.enum(["date", "week", "month"]).describe("Time unit"),
 });
 
+// 검색어 트렌드 선택 필터
+// 쇼핑인사이트와 달리 연령 코드가 1~11(더 잘게 나뉜 구간)이고,
+// 필터를 줘도 결과가 그룹별로 나뉘지 않고 해당 조건의 검색 사용자만 집계된다.
+export const SearchTrendFilterSchema = z.object({
+  device: z
+    .enum(["pc", "mo"])
+    .optional()
+    .describe("Device filter (pc: PC, mo: mobile). Omit for all devices"),
+  gender: z
+    .enum(["m", "f"])
+    .optional()
+    .describe("Gender filter (m: male, f: female). Omit for all genders"),
+  ages: z
+    .array(
+      z.enum(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"])
+    )
+    .optional()
+    .describe(
+      "Age filter codes (1: 0-12, 2: 13-18, 3: 19-24, 4: 25-29, 5: 30-34, 6: 35-39, 7: 40-44, 8: 45-49, 9: 50-54, 10: 55-59, 11: 60+). Omit for all ages. Not the same codes as the shopping insight tools"
+    ),
+});
+
 // 검색어 트렌드 스키마
-export const DatalabSearchSchema = DatalabBaseSchema.extend({
+export const DatalabSearchSchema = DatalabBaseSchema.merge(
+  SearchTrendFilterSchema
+).extend({
   keywordGroups: z
     .array(
       z.object({

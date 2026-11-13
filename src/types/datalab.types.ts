@@ -10,6 +10,9 @@ export interface DatalabSearchRequest {
     groupName: string; // 키워드 그룹명
     keywords: string[]; // 그룹 내 키워드 목록
   }>;
+  device?: "pc" | "mo"; // 기기 구분 (생략하면 전체)
+  gender?: "m" | "f"; // 성별 (생략하면 전체)
+  ages?: string[]; // 연령 코드 "1"~"11" (생략하면 전체)
 }
 //checkpoint
 // 데이터랩 쇼핑 응답 타입
