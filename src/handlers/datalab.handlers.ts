@@ -96,6 +96,8 @@ export async function handleShoppingByDeviceTrend(
     timeUnit: params.timeUnit,
     category: params.category,
     device: params.device,
+    gender: params.gender,
+    ages: params.ages,
   });
 }
 
@@ -113,7 +115,9 @@ export async function handleShoppingByGenderTrend(
     endDate,
     timeUnit: params.timeUnit,
     category: params.category,
+    device: params.device,
     gender: params.gender,
+    ages: params.ages,
   });
 }
 
@@ -129,6 +133,8 @@ export async function handleShoppingByAgeTrend(params: DatalabShoppingAge) {
     endDate,
     timeUnit: params.timeUnit,
     category: params.category,
+    device: params.device,
+    gender: params.gender,
     ages: params.ages,
   });
 }
@@ -148,6 +154,9 @@ export async function handleShoppingKeywordsTrend(
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
+    device: params.device,
+    gender: params.gender,
+    ages: params.ages,
   });
 }
 
@@ -167,6 +176,8 @@ export async function handleShoppingKeywordByDeviceTrend(
     category: params.category,
     keyword: params.keyword,
     device: params.device,
+    gender: params.gender,
+    ages: params.ages,
   });
 }
 
@@ -185,7 +196,9 @@ export async function handleShoppingKeywordByGenderTrend(
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
+    device: params.device,
     gender: params.gender,
+    ages: params.ages,
   });
 }
 
@@ -204,6 +217,8 @@ export async function handleShoppingKeywordByAgeTrend(
     timeUnit: params.timeUnit,
     category: params.category,
     keyword: params.keyword,
+    device: params.device,
+    gender: params.gender,
     ages: params.ages,
   });
 }

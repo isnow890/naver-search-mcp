@@ -29,8 +29,15 @@ export interface DatalabShoppingResponse {
   }[];
 }
 
+// 쇼핑인사이트 공통 선택 필터 (생략하면 전체 기준)
+export interface DatalabShoppingFilters {
+  device?: "pc" | "mo"; // 기기 구분 (PC/모바일)
+  gender?: "f" | "m"; // 성별
+  ages?: string[]; // 연령대
+}
+
 // 데이터랩 쇼핑 카테고리 요청 타입
-export interface DatalabShoppingCategoryRequest {
+export interface DatalabShoppingCategoryRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일 (yyyy-mm-dd)
   endDate: string; // 분석 종료일 (yyyy-mm-dd)
   timeUnit: DatalabTimeUnit; // 분석 단위
@@ -38,40 +45,34 @@ export interface DatalabShoppingCategoryRequest {
     name: string; // 카테고리명
     param: string[]; // 카테고리 파라미터
   }>;
-  device?: "pc" | "mo"; // 기기 구분 (PC/모바일)
-  gender?: "f" | "m"; // 성별
-  ages?: string[]; // 연령대
 }
 
-// 데이터랩 쇼핑 기기별 요청 타입
-export interface DatalabShoppingDeviceRequest {
+// 데이터랩 쇼핑 기기별 요청 타입 (device를 생략하면 pc/mo로 나뉘어 온다)
+export interface DatalabShoppingDeviceRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일
   endDate: string; // 분석 종료일
   timeUnit: DatalabTimeUnit; // 분석 단위
   category: string; // 카테고리 코드
-  device: "pc" | "mo"; // 기기 구분
 }
 
-// 데이터랩 쇼핑 성별 요청 타입
-export interface DatalabShoppingGenderRequest {
+// 데이터랩 쇼핑 성별 요청 타입 (gender를 생략하면 f/m으로 나뉘어 온다)
+export interface DatalabShoppingGenderRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일
   endDate: string; // 분석 종료일
   timeUnit: DatalabTimeUnit; // 분석 단위
   category: string; // 카테고리 코드
-  gender: "f" | "m"; // 성별
 }
 
-// 데이터랩 쇼핑 연령별 요청 타입
-export interface DatalabShoppingAgeRequest {
+// 데이터랩 쇼핑 연령별 요청 타입 (ages를 생략하면 연령대별로 나뉘어 온다)
+export interface DatalabShoppingAgeRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일
   endDate: string; // 분석 종료일
   timeUnit: DatalabTimeUnit; // 분석 단위
   category: string; // 카테고리 코드
-  ages: string[]; // 연령대
 }
 
 // 데이터랩 쇼핑 키워드 그룹 요청 타입
-export interface DatalabShoppingKeywordsRequest {
+export interface DatalabShoppingKeywordsRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일
   endDate: string; // 분석 종료일
   timeUnit: DatalabTimeUnit; // 분석 단위
@@ -83,13 +84,10 @@ export interface DatalabShoppingKeywordsRequest {
 }
 
 // 데이터랩 쇼핑 키워드 단일 요청 타입
-export interface DatalabShoppingKeywordRequest {
+export interface DatalabShoppingKeywordRequest extends DatalabShoppingFilters {
   startDate: string; // 분석 시작일
   endDate: string; // 분석 종료일
   timeUnit: DatalabTimeUnit; // 분석 단위
   category: string; // 카테고리 코드
   keyword: string; // 검색 키워드
-  device?: "pc" | "mo"; // 기기 구분
-  gender?: "f" | "m"; // 성별
-  ages?: string[]; // 연령대
 }
