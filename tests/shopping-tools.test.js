@@ -7,8 +7,19 @@ import {
   resetServerInstance,
 } from "../dist/src/index.js";
 import { NaverSearchClient } from "../dist/src/clients/naver-search.client.js";
+import {
+  DatalabShoppingSchema,
+  DatalabShoppingKeywordsSchema,
+  DatalabShoppingCategoryDeviceSchema,
+  DatalabShoppingKeywordTrendSchema,
+} from "../dist/src/schemas/datalab.schemas.js";
 
 const RANGE = { startDate: "2026-08-01", endDate: "2026-10-31", timeUnit: "month" };
+
+test("기존에 배포한 쇼핑 스키마 export는 호환용 별칭으로 유지된다", () => {
+  assert.equal(DatalabShoppingCategoryDeviceSchema, DatalabShoppingSchema);
+  assert.equal(DatalabShoppingKeywordTrendSchema, DatalabShoppingKeywordsSchema);
+});
 
 // 툴 이름 → 호출되는 클라이언트 메서드, 분석 축(없으면 null), 필수 입력
 const TOOLS = {

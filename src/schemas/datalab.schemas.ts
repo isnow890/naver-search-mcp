@@ -155,6 +155,12 @@ export const DatalabShoppingKeywordAgeSchema = DatalabBaseSchema.merge(
   ages: AgesBreakdown,
 });
 
+/** @deprecated Use DatalabShoppingSchema instead. */
+export const DatalabShoppingCategoryDeviceSchema = DatalabShoppingSchema;
+
+/** @deprecated Use DatalabShoppingKeywordsSchema instead. */
+export const DatalabShoppingKeywordTrendSchema = DatalabShoppingKeywordsSchema;
+
 export type DatalabSearch = z.infer<typeof DatalabSearchSchema>;
 export type DatalabShopping = z.infer<typeof DatalabShoppingSchema>;
 export type DatalabShoppingDevice = z.infer<typeof DatalabShoppingDeviceSchema>;
@@ -163,4 +169,4 @@ export type DatalabShoppingAge = z.infer<typeof DatalabShoppingAgeSchema>;
 export type DatalabShoppingKeywords = z.infer<typeof DatalabShoppingKeywordsSchema>;
 export type DatalabShoppingKeywordDevice = z.infer<typeof DatalabShoppingKeywordDeviceSchema>;
 export type DatalabShoppingKeywordGender = z.infer<typeof DatalabShoppingKeywordGenderSchema>;
-export type DatalabShoppingKeywordAge = z.infer<typeof DatalabShoppingKeywordAgeSchema>; 
+export type DatalabShoppingKeywordAge = z.infer<typeof DatalabShoppingKeywordAgeSchema>;
