@@ -251,7 +251,7 @@ export function createNaverSearchServer({
     "datalab_search",
     {
       description:
-        "📊 Analyze search keyword trends over time using Naver DataLab. Track popularity changes, seasonal patterns, and compare multiple keywords. Perfect for market research and trend analysis. (네이버 데이터랩 검색어 트렌드 분석)",
+        "📊 Analyze search keyword trends over time using Naver DataLab. Track popularity changes, seasonal patterns, and compare multiple keywords. Perfect for market research and trend analysis. Optional device/gender/ages filters count only matching searchers (e.g. mobile searches by women aged 19-29: device 'mo', gender 'f', ages ['3','4']); results are not split by segment, so call once per segment to compare segments. (네이버 데이터랩 검색어 트렌드 분석 - device/gender/ages로 검색 사용자 조건을 좁힐 수 있습니다)",
       inputSchema: DatalabSearchSchema.shape,
     },
     async (args) => {
