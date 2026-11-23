@@ -10,6 +10,9 @@ import { searchToolHandlers } from "./handlers/search.handlers.js";
 import { datalabToolHandlers } from "./handlers/datalab.handlers.js";
 import {
   SearchArgsSchema,
+  SearchWithoutSortArgsSchema,
+  KinSearchArgsSchema,
+  ImageSearchArgsSchema,
   NaverLocalSearchParamsSchema,
 } from "./schemas/search.schemas.js";
 import {
@@ -131,7 +134,7 @@ export function createNaverSearchServer({
     {
       description:
         "🌐 Search Korean web documents and general content. Comprehensive search across Korean websites and online content. Find articles, information, and documents from various Korean sources. (네이버 웹문서 검색 - 한국 웹사이트 종합 검색)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchWithoutSortArgsSchema.shape,
     },
     async (args) => {
       const result = await searchToolHandlers.search_webkr(args);
@@ -175,8 +178,8 @@ export function createNaverSearchServer({
     "search_image",
     {
       description:
-        "🖼️ Search for images with Korean context and relevance. Find visual content, infographics, charts, and photos related to your search terms. Great for visual research and content discovery. (네이버 이미지 검색 - 시각적 컨텐츠 발견)",
-      inputSchema: SearchArgsSchema.shape,
+        "🖼️ Search for images with Korean context and relevance. Find visual content, infographics, charts, and photos related to your search terms. Great for visual research and content discovery. Use `filter` (large/medium/small) to restrict image size. (네이버 이미지 검색 - 시각적 컨텐츠 발견)",
+      inputSchema: ImageSearchArgsSchema.shape,
     },
     async (args) => {
       const result = await searchToolHandlers.search_image(args);
@@ -190,8 +193,8 @@ export function createNaverSearchServer({
     "search_kin",
     {
       description:
-        "❓ Search Naver KnowledgeiN for Q&A and community-driven answers. Find solutions to problems, get expert advice, and discover community insights on various topics. (네이버 지식iN 검색 - 질문과 답변, 커뮤니티 지식)",
-      inputSchema: SearchArgsSchema.shape,
+        "❓ Search Naver KnowledgeiN for Q&A and community-driven answers. Find solutions to problems, get expert advice, and discover community insights on various topics. Sort by `point` to rank by rating. (네이버 지식iN 검색 - 질문과 답변, 커뮤니티 지식)",
+      inputSchema: KinSearchArgsSchema.shape,
     },
     async (args) => {
       const result = await searchToolHandlers.search_kin(args);
@@ -206,7 +209,7 @@ export function createNaverSearchServer({
     {
       description:
         "📖 Search Naver Encyclopedia for authoritative knowledge and definitions. Best for academic research, getting reliable information, and understanding Korean concepts and terminology. (네이버 지식백과 검색 - 신뢰할 수 있는 정보와 정의)",
-      inputSchema: SearchArgsSchema.shape,
+      inputSchema: SearchWithoutSortArgsSchema.shape,
     },
     async (args) => {
       const result = await searchToolHandlers.search_encyc(args);
@@ -220,7 +223,7 @@ export function createNaverSearchServer({
     "search_local",
     {
       description:
-        "📍 Search for local businesses, restaurants, and places in Korea. Find location information, reviews, contact details, and business hours for Korean establishments. (네이버 지역 검색 - 지역 업체와 장소 정보)",
+        "📍 Search for local businesses, restaurants, and places in Korea. Find location information, reviews, contact details, and business hours for Korean establishments. Returns 1 result by default; set `display` up to 5. There is no next page: `start` only supports 1. (네이버 지역 검색 - 지역 업체와 장소 정보, 기본 1개·최대 5개)",
       inputSchema: NaverLocalSearchParamsSchema.shape,
     },
     async (args) => {

@@ -4,6 +4,9 @@ import {
   NaverSearchConfig,
   NaverLocalSearchParams,
   SearchArgs,
+  SearchWithoutSortArgs,
+  KinSearchArgs,
+  ImageSearchArgs,
 } from "../schemas/search.schemas.js";
 import { NaverLocalSearchResponse } from "../types/search.types.js";
 import {
@@ -69,7 +72,10 @@ export class NaverSearchClient extends NaverApiCoreClient {
    * @param type 검색 타입(카테고리)
    * @param params 검색 파라미터
    */
-  async search(type: NaverSearchType, params: SearchArgs): Promise<any> {
+  async search(
+    type: NaverSearchType,
+    params: SearchArgs | SearchWithoutSortArgs | KinSearchArgs | ImageSearchArgs
+  ): Promise<any> {
     return this.get(`${this.searchBaseUrl}/${type}`, params);
   }
 
