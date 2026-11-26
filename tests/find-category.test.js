@@ -70,7 +70,7 @@ test("자체 코드가 없는 분류로 검색하면 결과가 하위 분류라�
     assert.match(c.category, /^패션의류 > 여성의류 > /);
     assert.equal(c.match_type, "정확일치(중분류의 하위 분류)");
   }
-  assert.match(res.note, /"여성의류"\(중분류\) 자체의 카테고리 코드는 없습니다/);
+  assert.match(res.note, /"패션의류 > 여성의류" 경로 자체의 카테고리 코드가 없습니다/);
   assert.match(res.note, new RegExp(TOP_LEVEL.패션의류));
 });
 
@@ -99,4 +99,15 @@ test("같은 점수면 이름이 정확히 일치하는 분류가 하위 분류�
   const { categories } = await findCategoryHandler({ query: "정가제free", max_results: 3 });
   assert.match(categories[0].category, / > 정가제free$/);
   assert.doesNotMatch(categories[0].match_type, /하위 분류/);
+});
+
+test("동명 분류의 코드 부재 안내는 결과 개수와 관계없이 해당 경로에 한정된다", async () => {
+  const res = await findCategoryHandler({ query: "뜨개질" });
+  assert.match(res.note, /"가구\/인테리어 > 수예 > 뜨개질" 경로 자체의 카테고리 코드가 없습니다/);
+  const exact = res.categories.find(c => c.code === "50007209");
+  assert.equal(exact.category, "여가/생활편의 > 원데이클래스 > 수공예 클래스 > 뜨개질");
+  assert.equal(exact.match_type, "정확일치(세분류)");
+
+  const first = await findCategoryHandler({ query: "뜨개질", max_results: 1 });
+  assert.equal(first.note, res.note);
 });

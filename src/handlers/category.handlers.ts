@@ -260,12 +260,14 @@ export const findCategoryHandler = async ({ query, max_results = 10 }: any) => {
     // 알리지 않으면 하위 분류 하나의 코드를 검색한 분류 전체로 오해해 분석하게 된다.
     const top = results[0];
     if (top.isSubcategory && top.matchedValue.toLowerCase() === query.toLowerCase().trim()) {
+      const depth = ['대분류', '중분류', '소분류', '세분류'].indexOf(top.matchedLevel) + 1;
+      const path = [top.level1, top.level2, top.level3, top.level4].slice(0, depth).join(' > ');
       const parentCode = (await loadCategoryData()).find(
         c => c.level1 === top.level1 && !c.level2
       )?.code;
       responseData.note =
-        `"${top.matchedValue}"(${top.matchedLevel}) 자체의 카테고리 코드는 없습니다. ` +
-        `하위 분류로 표시된 코드는 "${top.matchedValue}" 전체가 아니라 그 하위 분류 하나만 가리킵니다.` +
+        `현재 데이터에는 "${path}" 경로 자체의 카테고리 코드가 없습니다. ` +
+        `이 경로 아래의 검색 결과는 각각 개별 하위 분류를 가리킵니다.` +
         (parentCode && top.matchedLevel !== '대분류'
           ? ` 더 넓은 범위가 필요하면 대분류 코드 ${parentCode}(${top.level1})도 사용할 수 있습니다.`
           : '');
