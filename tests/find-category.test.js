@@ -63,3 +63,40 @@ test("하위 분류 검색 결과는 바뀌지 않는다", async () => {
     assert.equal(categories[0].code, code, query);
   }
 });
+
+test("자체 코드가 없는 분류로 검색하면 결과가 하위 분류라고 표시하고 안내한다", async () => {
+  const res = await findCategoryHandler({ query: "여성의류", max_results: 3 });
+  for (const c of res.categories) {
+    assert.match(c.category, /^패션의류 > 여성의류 > /);
+    assert.equal(c.match_type, "정확일치(중분류의 하위 분류)");
+  }
+  assert.match(res.note, /"여성의류"\(중분류\) 자체의 카테고리 코드는 없습니다/);
+  assert.match(res.note, new RegExp(TOP_LEVEL.패션의류));
+});
+
+test("자체 코드가 있는 분류는 기존 표시를 유지하고 안내하지 않는다", async () => {
+  for (const [query, code, matchType] of [
+    ["노트북", "50000151", "정확일치(중분류)"],
+    ["립스틱", "50000391", "정확일치(소분류)"],
+    ["패션의류", TOP_LEVEL.패션의류, "정확일치(대분류)"],
+  ]) {
+    const res = await findCategoryHandler({ query, max_results: 2 });
+    assert.equal(res.categories[0].code, code, query);
+    assert.equal(res.categories[0].match_type, matchType, query);
+    assert.equal(res.note, undefined, query);
+  }
+  // 대분류 아래 하위 분류는 하위 분류로 표시된다.
+  const res = await findCategoryHandler({ query: "패션의류", max_results: 2 });
+  assert.equal(res.categories[1].match_type, "정확일치(대분류의 하위 분류)");
+});
+
+test("검색어가 분류 이름의 일부일 때는 안내하지 않는다", async () => {
+  const res = await findCategoryHandler({ query: "여성", max_results: 3 });
+  assert.equal(res.note, undefined);
+});
+
+test("같은 점수면 이름이 정확히 일치하는 분류가 하위 분류보다 먼저 나온다", async () => {
+  const { categories } = await findCategoryHandler({ query: "정가제free", max_results: 3 });
+  assert.match(categories[0].category, / > 정가제free$/);
+  assert.doesNotMatch(categories[0].match_type, /하위 분류/);
+});

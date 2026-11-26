@@ -70,14 +70,29 @@ async function loadCategoryData(): Promise<CategoryData[]> {
 /**
  * Smart category search with fuzzy matching and ranking
  */
-async function smartCategorySearch(query: string, maxResults: number = 10): Promise<Array<CategoryData & { score: number, matchType: string }>> {
+// 검색 결과 한 건. matchedLevel/matchedValue는 검색어와 일치한 단계와 그 이름이다.
+// isSubcategory는 일치한 단계가 이 행 자체가 아니라 상위 단계라는 뜻이다
+// (예: "여성의류"로 찾은 "패션의류 > 여성의류 > 코디세트"). 이때 code는 상위 분류 전체가 아니라
+// 코디세트 하나만 가리킨다.
+type CategoryMatch = CategoryData & {
+  score: number;
+  matchType: string;
+  matchedLevel: string;
+  matchedValue: string;
+  isSubcategory: boolean;
+};
+
+async function smartCategorySearch(query: string, maxResults: number = 10): Promise<CategoryMatch[]> {
   const categories = await loadCategoryData();
   const searchQuery = query.toLowerCase().trim();
-  const results: Array<CategoryData & { score: number, matchType: string }> = [];
+  const results: CategoryMatch[] = [];
   
   for (const category of categories) {
     let bestScore = 0;
     let bestMatchType = '';
+    let bestLevel = '';
+    let bestValue = '';
+    let bestIsSubcategory = false;
     
     // Check all levels for matches
     const levels = [
@@ -86,6 +101,8 @@ async function smartCategorySearch(query: string, maxResults: number = 10): Prom
       { value: category.level3, name: '소분류' },
       { value: category.level4, name: '세분류' }
     ];
+    // 이 행의 코드가 실제로 가리키는 단계 (비어 있지 않은 가장 깊은 단계)
+    const ownLevel = [...levels].reverse().find(level => level.value)?.name;
     
     for (const level of levels) {
       if (!level.value) continue;
@@ -125,9 +142,16 @@ async function smartCategorySearch(query: string, maxResults: number = 10): Prom
         }
       }
       
-      if (score > bestScore) {
+      const isSubcategory = level.name !== ownLevel;
+      if (score > bestScore || (score > 0 && score === bestScore && !isSubcategory)) {
         bestScore = score;
-        bestMatchType = matchType;
+        // 상위 단계로 일치한 행은 그 단계 자체가 아니라 하위 분류이므로 표시를 구분한다.
+        bestMatchType = isSubcategory
+          ? matchType.replace(')', '의 하위 분류)')
+          : matchType;
+        bestLevel = level.name;
+        bestValue = level.value;
+        bestIsSubcategory = isSubcategory;
       }
     }
     
@@ -135,16 +159,23 @@ async function smartCategorySearch(query: string, maxResults: number = 10): Prom
       results.push({
         ...category,
         score: bestScore,
-        matchType: bestMatchType
+        matchType: bestMatchType,
+        matchedLevel: bestLevel,
+        matchedValue: bestValue,
+        isSubcategory: bestIsSubcategory
       });
     }
   }
   
-  // Sort by score (descending), then by category code (ascending for 대분류 priority)
+  // Sort by score (descending), then the category's own match before its subcategories,
+  // then by category code (ascending for 대분류 priority)
   return results
     .sort((a, b) => {
       if (b.score !== a.score) {
         return b.score - a.score; // Higher score first
+      }
+      if (a.isSubcategory !== b.isSubcategory) {
+        return a.isSubcategory ? 1 : -1;
       }
       // If same score, prioritize by category code (대분류 codes are typically smaller)
       return a.code.localeCompare(b.code);
@@ -224,6 +255,21 @@ export const findCategoryHandler = async ({ query, max_results = 10 }: any) => {
         device_analysis: `datalab_shopping_by_device 도구로 디바이스별 쇼핑 패턴을 분석할 수 있습니다`
       }
     };
+    
+    // 검색어와 정확히 일치한 분류가 자체 코드 없이 하위 분류로만 나오면 그 사실을 알린다.
+    // 알리지 않으면 하위 분류 하나의 코드를 검색한 분류 전체로 오해해 분석하게 된다.
+    const top = results[0];
+    if (top.isSubcategory && top.matchedValue.toLowerCase() === query.toLowerCase().trim()) {
+      const parentCode = (await loadCategoryData()).find(
+        c => c.level1 === top.level1 && !c.level2
+      )?.code;
+      responseData.note =
+        `"${top.matchedValue}"(${top.matchedLevel}) 자체의 카테고리 코드는 없습니다. ` +
+        `하위 분류로 표시된 코드는 "${top.matchedValue}" 전체가 아니라 그 하위 분류 하나만 가리킵니다.` +
+        (parentCode && top.matchedLevel !== '대분류'
+          ? ` 더 넓은 범위가 필요하면 대분류 코드 ${parentCode}(${top.level1})도 사용할 수 있습니다.`
+          : '');
+    }
     
     return responseData;
   } catch (error: any) {
